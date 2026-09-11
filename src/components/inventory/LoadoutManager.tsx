@@ -1,9 +1,11 @@
 import type { GearSlot } from '../../game/types/gear';
+import type { IconName } from '../../game/types/icon';
 import { getGear, getGearForSlot } from '../../game/content/gear';
 import { useMetaStore } from '../../state/metaStore';
+import { Icon } from '../common/Icon';
 
 const SLOT_LABEL: Record<GearSlot, string> = { weapon: 'Weapon', armor: 'Armor', tool: 'Tool' };
-const SLOT_ICON: Record<GearSlot, string> = { weapon: '🗡️', armor: '🛡️', tool: '🔧' };
+const SLOT_ICON: Record<GearSlot, IconName> = { weapon: 'sword', armor: 'shield', tool: 'wrench' };
 const SLOTS: GearSlot[] = ['weapon', 'armor', 'tool'];
 
 export function LoadoutManager() {
@@ -22,7 +24,9 @@ export function LoadoutManager() {
           return (
             <div key={slot} className="loadout-slot">
               <div className="loadout-slot__header">
-                <span className="loadout-slot__icon">{SLOT_ICON[slot]}</span>
+                <span className="loadout-slot__icon">
+                  <Icon name={SLOT_ICON[slot]} />
+                </span>
                 <span className="loadout-slot__label">{SLOT_LABEL[slot]}</span>
                 <span className="loadout-slot__current">{equipped ? equipped.name : '— empty —'}</span>
               </div>

@@ -1,0 +1,17 @@
+export type IconName =
+  | 'mountain'
+  | 'gem'
+  | 'flask'
+  | 'pickaxe'
+  | 'lamp'
+  | 'cog'
+  | 'bomb'
+  | 'sparkles'
+  | 'door'
+  | 'home'
+  | 'collectors'
+  | 'backpack'
+  | 'sword'
+  | 'shield'
+  | 'wrench'
+  | 'scroll';

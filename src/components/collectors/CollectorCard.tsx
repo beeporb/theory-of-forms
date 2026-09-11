@@ -6,6 +6,8 @@ import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
 import { getRequiredVersionIds, isMasterSetComplete, masterSetPercent } from '../../game/logic/masterSet';
 import { qualityScore } from '../../game/logic/quality';
+import { itemQualityFilter } from '../../game/logic/itemStyle';
+import { Icon } from '../common/Icon';
 
 interface CollectorCardProps {
   definition: CollectorDefinition;
@@ -46,7 +48,9 @@ export function CollectorCard({ definition, progress, stash, onDonate }: Collect
               const form = getItemForm(version.formId);
               return (
                 <li key={item.instanceId} className="item-list__row">
-                  <span className="item-list__icon">{form.icon}</span>
+                  <span className="item-list__icon">
+                    <Icon name={form.icon} filter={itemQualityFilter(item.condition, item.weirdness)} />
+                  </span>
                   <span className="item-list__name">{version.name}</span>
                   <span className="item-list__badges">
                     <span className="badge">{CONDITION_LABEL[item.condition]}</span>

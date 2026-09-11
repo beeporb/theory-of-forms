@@ -3,6 +3,8 @@ import { CONDITION_LABEL } from '../../game/types/condition';
 import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { itemQualityFilter } from '../../game/logic/itemStyle';
+import { Icon } from '../common/Icon';
 
 interface InventoryPanelProps {
   title: string;
@@ -53,7 +55,9 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
             const form = getItemForm(version.formId);
             return (
               <li key={entry.key} className="item-list__row">
-                <span className="item-list__icon">{form.icon}</span>
+                <span className="item-list__icon">
+                  <Icon name={form.icon} filter={itemQualityFilter(entry.condition, entry.weirdness)} />
+                </span>
                 <span className="item-list__name">{version.name}</span>
                 <span className="item-list__badges">
                   <span className="badge">{CONDITION_LABEL[entry.condition]}</span>
