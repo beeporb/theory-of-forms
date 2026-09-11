@@ -58,6 +58,7 @@ export function resolveCell(run: RunState, x: number, y: number): ResolveCellRes
     health,
     inventory,
     status,
+    log: [...run.log, { x, y, outcome }],
   };
 
   return { run: nextRun, outcome };

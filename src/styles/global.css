@@ -489,6 +489,17 @@ button {
   touch-action: manipulation;
 }
 
+.status-bar__log {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-height: 40px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 /* Outcome modal */
 .outcome-modal-backdrop {
   position: fixed;
@@ -545,6 +556,57 @@ button {
   font-weight: 600;
   cursor: pointer;
   touch-action: manipulation;
+}
+
+/* Run log modal */
+.run-log-modal {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.run-log-modal__title {
+  margin: 0 0 12px;
+}
+
+.run-log-modal__empty {
+  color: var(--text-dim);
+}
+
+.run-log-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.run-log-modal__entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.run-log-modal__icon {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.run-log-modal__text {
+  flex: 1;
+}
+
+.run-log-modal__coords {
+  color: var(--text-dim);
+  font-size: 0.75rem;
 }
 
 /* Death screen */
