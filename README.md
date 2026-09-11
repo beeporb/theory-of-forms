@@ -1,32 +1,44 @@
-# React + TypeScript + Vite
+# Theory of Forms
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A mobile-first PWA about exploring the pocket dimensions left behind after
+the end of the world. The old world's objects — precious minerals, tools,
+oddities — have coalesced into disparate pocket universes. You explore them
+as a grid of unopened squares, each an abstraction of a place within that
+universe (an aisle, a shaft, a corner of a warehouse floor).
 
-Currently, two official plugins are available:
+Every item exists as a concrete instance of an unobtainable perfect "Form,"
+in a rarity ladder from broken to cartoon to fully anthropomorphized. Back
+at the hub — the last bastion of society, still getting by — collectors
+like the Miner want a complete Master Set of the things they care about.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+There's no safe stash mid-run: whatever loadout and inventory you carry
+into a pocket dimension is lost for good if you die there. Extract before
+that happens, and it all comes home with you.
 
-## React Compiler
+## Status
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Early scaffold: one pocket dimension (The Old Warehouse), one collector
+(the Miner), and the full core loop — explore, find, survive or don't,
+extract or lose it all.
 
-## Expanding the Oxlint configuration
+## Stack
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- React + TypeScript + Vite
+- [zustand](https://github.com/pmndrs/zustand) for state, split into a
+  persisted meta store (stash, collector progress) and an ephemeral
+  per-run store
+- [idb-keyval](https://github.com/jakearchibald/idb-keyval) backing that
+  persistence via IndexedDB — no backend, no accounts, for now
+- [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) for installability
+  (manifest + service worker, works offline after first visit)
+- [vitest](https://vitest.dev/) for the pure game-logic tests
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Development
+
+```bash
+npm install
+npm run dev       # start the dev server
+npm run test      # run the unit tests
+npm run build     # typecheck + production build
+npm run preview   # serve the production build locally
 ```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
