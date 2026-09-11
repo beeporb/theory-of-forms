@@ -27,8 +27,9 @@ export function resolveCell(run: RunState, x: number, y: number): ResolveCellRes
     case 'loot': {
       const instance: ItemInstance = {
         instanceId: crypto.randomUUID(),
-        formId: outcome.formId,
-        rarity: outcome.rarity,
+        versionId: outcome.versionId,
+        condition: outcome.condition,
+        weirdness: outcome.weirdness,
       };
       inventory = [...inventory, instance];
       break;

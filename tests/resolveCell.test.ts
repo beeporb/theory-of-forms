@@ -19,19 +19,21 @@ function makeRun(outcome: Outcome, overrides: Partial<RunState> = {}): RunState 
 
 describe('resolveCell', () => {
   it('adds a loot item to inventory and marks the cell opened', () => {
-    const run = makeRun({ kind: 'loot', formId: 'iron-ore', rarity: 'broken' });
+    const run = makeRun({ kind: 'loot', versionId: 'iron-ore-standard', condition: 'worn', weirdness: 'mundane' });
     const { run: next, outcome } = resolveCell(run, 0, 0);
 
     expect(outcome.kind).toBe('loot');
     expect(next.inventory).toHaveLength(1);
-    expect(next.inventory[0].formId).toBe('iron-ore');
+    expect(next.inventory[0].versionId).toBe('iron-ore-standard');
+    expect(next.inventory[0].condition).toBe('worn');
+    expect(next.inventory[0].weirdness).toBe('mundane');
     expect(next.dimension.cells[0][0].status).toBe('opened');
   });
 
   it('applies hazard damage and can steal an item', () => {
     const run = makeRun(
       { kind: 'hazard', damage: 20, stealsItem: true, message: 'ouch' },
-      { inventory: [{ instanceId: '1', formId: 'iron-ore', rarity: 'broken' }] },
+      { inventory: [{ instanceId: '1', versionId: 'iron-ore-standard', condition: 'worn', weirdness: 'mundane' }] },
     );
     const { run: next } = resolveCell(run, 0, 0);
 

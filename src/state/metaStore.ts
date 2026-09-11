@@ -2,6 +2,10 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PlayerMeta } from '../game/types/player';
 import type { ItemInstance } from '../game/types/item';
+import { getCollector } from '../game/content/collectors';
+import { getVersion } from '../game/content/versions';
+import { getRequiredVersionIds } from '../game/logic/masterSet';
+import { qualityScore } from '../game/logic/quality';
 import { createIdbStorage } from '../persistence/storage';
 
 interface MetaStore {
@@ -28,10 +32,14 @@ export const useMetaStore = create<MetaStore>()(
         const item = meta.stash.find((i) => i.instanceId === instanceId);
         if (!item) return;
 
-        const existing = meta.collectors[collectorId] ?? { collectorId, turnedInFormIds: [] };
-        const turnedInFormIds = existing.turnedInFormIds.includes(item.formId)
-          ? existing.turnedInFormIds
-          : [...existing.turnedInFormIds, item.formId];
+        const version = getVersion(item.versionId);
+        const collector = getCollector(collectorId);
+        if (!getRequiredVersionIds(collector).includes(version.id)) return;
+
+        const progress = meta.collectors[collectorId] ?? { collectorId, donated: {} };
+        const held = progress.donated[version.id];
+        const newScore = qualityScore(item.condition, item.weirdness);
+        if (held && qualityScore(held.condition, held.weirdness) >= newScore) return;
 
         set({
           meta: {
@@ -39,7 +47,13 @@ export const useMetaStore = create<MetaStore>()(
             stash: meta.stash.filter((i) => i.instanceId !== instanceId),
             collectors: {
               ...meta.collectors,
-              [collectorId]: { collectorId, turnedInFormIds },
+              [collectorId]: {
+                collectorId,
+                donated: {
+                  ...progress.donated,
+                  [version.id]: { condition: item.condition, weirdness: item.weirdness },
+                },
+              },
             },
           },
         });
@@ -51,7 +65,7 @@ export const useMetaStore = create<MetaStore>()(
       },
     }),
     {
-      name: 'tof-meta-v1',
+      name: 'tof-meta-v2',
       storage: createJSONStorage(createIdbStorage),
     },
   ),

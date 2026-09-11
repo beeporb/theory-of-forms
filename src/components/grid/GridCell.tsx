@@ -1,5 +1,6 @@
 import type { Cell } from '../../game/types/grid';
 import { getItemForm } from '../../game/content/items';
+import { getVersion } from '../../game/content/versions';
 
 interface GridCellProps {
   cell: Cell;
@@ -12,7 +13,7 @@ function cellIcon(cell: Cell): string {
   if (!outcome) return '';
   switch (outcome.kind) {
     case 'loot':
-      return getItemForm(outcome.formId).icon;
+      return getItemForm(getVersion(outcome.versionId).formId).icon;
     case 'hazard':
       return '💥';
     case 'positive':

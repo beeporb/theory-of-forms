@@ -1,4 +1,5 @@
-import type { Rarity } from './rarity';
+import type { Condition } from './condition';
+import type { Weirdness } from './weirdness';
 
 export interface ItemForm {
   id: string;
@@ -9,6 +10,7 @@ export interface ItemForm {
 
 export interface ItemInstance {
   instanceId: string;
-  formId: string;
-  rarity: Rarity;
+  versionId: string;
+  condition: Condition;
+  weirdness: Weirdness;
 }

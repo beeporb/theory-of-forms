@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generateDimension } from '../src/game/logic/generateDimension';
+import { getVersion } from '../src/game/content/versions';
 import type { PocketDimensionDefinition } from '../src/game/types/grid';
 
 const definition: PocketDimensionDefinition = {
@@ -40,14 +41,16 @@ describe('generateDimension', () => {
     }
   });
 
-  it('only rolls loot forms from the dimension item pool', () => {
-    // Run many times since outcomes are random; loot forms must always come from the pool.
+  it('only rolls loot versions belonging to a form in the dimension item pool', () => {
+    // Run many times since outcomes are random; loot versions must always resolve
+    // back to a form that's actually in the pool.
     for (let i = 0; i < 200; i++) {
       const instance = generateDimension(definition);
       for (const row of instance.cells) {
         for (const cell of row) {
           if (cell.outcome?.kind === 'loot') {
-            expect(definition.itemPoolFormIds).toContain(cell.outcome.formId);
+            const version = getVersion(cell.outcome.versionId);
+            expect(definition.itemPoolFormIds).toContain(version.formId);
           }
         }
       }

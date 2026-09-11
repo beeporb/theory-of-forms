@@ -1,3 +1,6 @@
+import type { Condition } from './condition';
+import type { Weirdness } from './weirdness';
+
 export interface CollectorDefinition {
   id: string;
   name: string;
@@ -5,7 +8,12 @@ export interface CollectorDefinition {
   requiredFormIds: string[];
 }
 
+export interface DonatedEntry {
+  condition: Condition;
+  weirdness: Weirdness;
+}
+
 export interface CollectorProgress {
   collectorId: string;
-  turnedInFormIds: string[];
+  donated: Record<string, DonatedEntry>;
 }

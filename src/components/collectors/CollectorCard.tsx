@@ -1,7 +1,11 @@
 import type { CollectorDefinition, CollectorProgress } from '../../game/types/collector';
 import type { ItemInstance } from '../../game/types/item';
+import { CONDITION_LABEL } from '../../game/types/condition';
+import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
-import { isMasterSetComplete, masterSetPercent } from '../../game/logic/masterSet';
+import { getVersion } from '../../game/content/versions';
+import { getRequiredVersionIds, isMasterSetComplete, masterSetPercent } from '../../game/logic/masterSet';
+import { qualityScore } from '../../game/logic/quality';
 
 interface CollectorCardProps {
   definition: CollectorDefinition;
@@ -13,12 +17,14 @@ interface CollectorCardProps {
 export function CollectorCard({ definition, progress, stash, onDonate }: CollectorCardProps) {
   const complete = isMasterSetComplete(definition, progress);
   const percent = Math.round(masterSetPercent(definition, progress) * 100);
+  const requiredVersionIds = getRequiredVersionIds(definition);
 
-  const donatable = stash.filter(
-    (item) =>
-      definition.requiredFormIds.includes(item.formId) &&
-      !progress.turnedInFormIds.includes(item.formId),
-  );
+  const donatable = stash.filter((item) => {
+    if (!requiredVersionIds.includes(item.versionId)) return false;
+    const held = progress.donated[item.versionId];
+    if (!held) return true;
+    return qualityScore(item.condition, item.weirdness) > qualityScore(held.condition, held.weirdness);
+  });
 
   return (
     <section className="panel collector-card">
@@ -36,11 +42,16 @@ export function CollectorCard({ definition, progress, stash, onDonate }: Collect
           <p className="panel__subtitle">Donate from your stash:</p>
           <ul className="item-list">
             {donatable.map((item) => {
-              const form = getItemForm(item.formId);
+              const version = getVersion(item.versionId);
+              const form = getItemForm(version.formId);
               return (
                 <li key={item.instanceId} className="item-list__row">
                   <span className="item-list__icon">{form.icon}</span>
-                  <span className="item-list__name">{form.name}</span>
+                  <span className="item-list__name">{version.name}</span>
+                  <span className="item-list__badges">
+                    <span className="badge">{CONDITION_LABEL[item.condition]}</span>
+                    <span className="badge">{WEIRDNESS_LABEL[item.weirdness]}</span>
+                  </span>
                   <button type="button" onClick={() => onDonate(item.instanceId)}>
                     Donate
                   </button>

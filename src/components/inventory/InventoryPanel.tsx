@@ -1,6 +1,8 @@
 import type { ItemInstance } from '../../game/types/item';
+import { CONDITION_LABEL } from '../../game/types/condition';
+import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
-import { RARITY_LABEL } from '../../game/types/rarity';
+import { getVersion } from '../../game/content/versions';
 
 interface InventoryPanelProps {
   title: string;
@@ -10,20 +12,27 @@ interface InventoryPanelProps {
 
 interface GroupedEntry {
   key: string;
-  formId: string;
-  rarity: ItemInstance['rarity'];
+  versionId: string;
+  condition: ItemInstance['condition'];
+  weirdness: ItemInstance['weirdness'];
   count: number;
 }
 
 function groupItems(items: ItemInstance[]): GroupedEntry[] {
   const groups = new Map<string, GroupedEntry>();
   for (const item of items) {
-    const key = `${item.formId}:${item.rarity}`;
+    const key = `${item.versionId}:${item.condition}:${item.weirdness}`;
     const existing = groups.get(key);
     if (existing) {
       existing.count += 1;
     } else {
-      groups.set(key, { key, formId: item.formId, rarity: item.rarity, count: 1 });
+      groups.set(key, {
+        key,
+        versionId: item.versionId,
+        condition: item.condition,
+        weirdness: item.weirdness,
+        count: 1,
+      });
     }
   }
   return [...groups.values()];
@@ -40,12 +49,16 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
       ) : (
         <ul className="item-list">
           {grouped.map((entry) => {
-            const form = getItemForm(entry.formId);
+            const version = getVersion(entry.versionId);
+            const form = getItemForm(version.formId);
             return (
               <li key={entry.key} className="item-list__row">
                 <span className="item-list__icon">{form.icon}</span>
-                <span className="item-list__name">{form.name}</span>
-                <span className="item-list__rarity">{RARITY_LABEL[entry.rarity]}</span>
+                <span className="item-list__name">{version.name}</span>
+                <span className="item-list__badges">
+                  <span className="badge">{CONDITION_LABEL[entry.condition]}</span>
+                  <span className="badge">{WEIRDNESS_LABEL[entry.weirdness]}</span>
+                </span>
                 <span className="item-list__count">×{entry.count}</span>
               </li>
             );

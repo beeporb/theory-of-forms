@@ -1,6 +1,8 @@
 import type { Outcome } from '../../game/types/outcome';
+import { CONDITION_LABEL } from '../../game/types/condition';
+import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
-import { RARITY_LABEL } from '../../game/types/rarity';
+import { getVersion } from '../../game/content/versions';
 
 interface OutcomeModalProps {
   outcome: Outcome;
@@ -10,12 +12,17 @@ interface OutcomeModalProps {
 function OutcomeBody({ outcome }: { outcome: Outcome }) {
   switch (outcome.kind) {
     case 'loot': {
-      const form = getItemForm(outcome.formId);
+      const version = getVersion(outcome.versionId);
+      const form = getItemForm(version.formId);
       return (
         <>
           <div className="outcome-modal__icon">{form.icon}</div>
           <p>
-            You found a <strong>{RARITY_LABEL[outcome.rarity]}</strong> {form.name}!
+            You found a {version.name}!
+          </p>
+          <p className="outcome-modal__badges">
+            <span className="badge">{CONDITION_LABEL[outcome.condition]}</span>
+            <span className="badge">{WEIRDNESS_LABEL[outcome.weirdness]}</span>
           </p>
         </>
       );

@@ -56,7 +56,7 @@ export const useRunStore = create<RunStore>()(
       },
     }),
     {
-      name: 'tof-run-v1',
+      name: 'tof-run-v2',
       storage: createJSONStorage(createIdbStorage),
     },
   ),

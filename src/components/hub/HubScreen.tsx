@@ -4,7 +4,7 @@ import { useRunStore } from '../../state/runStore';
 import { CollectorCard } from '../collectors/CollectorCard';
 import { InventoryPanel } from '../inventory/InventoryPanel';
 
-const EMPTY_PROGRESS = { turnedInFormIds: [] as string[] };
+const EMPTY_PROGRESS = { donated: {} };
 
 export function HubScreen() {
   const meta = useMetaStore((s) => s.meta);

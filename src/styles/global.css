@@ -130,9 +130,18 @@ button {
   flex: 1;
 }
 
-.item-list__rarity {
+.item-list__badges {
+  display: flex;
+  gap: 4px;
+}
+
+.badge {
   color: var(--text-dim);
-  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  white-space: nowrap;
 }
 
 .item-list__count {
@@ -282,6 +291,12 @@ button {
 .outcome-modal__icon {
   font-size: 2.5rem;
   margin-bottom: 8px;
+}
+
+.outcome-modal__badges {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
 }
 
 .outcome-modal__stat {

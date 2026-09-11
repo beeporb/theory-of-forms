@@ -1,6 +1,8 @@
 import type { Cell, PocketDimensionDefinition, PocketDimensionInstance } from '../types/grid';
 import type { Outcome } from '../types/outcome';
-import { RARITY_WEIGHTS } from '../content/rarityTable';
+import { getVersionsForForm } from '../content/versions';
+import { CONDITION_WEIGHTS } from '../content/conditionTable';
+import { WEIRDNESS_WEIGHTS } from '../content/weirdnessTable';
 import {
   EMPTY_MESSAGES,
   HAZARD_DAMAGE_RANGE,
@@ -15,12 +17,16 @@ import { pickOne, randomInt, weightedPick } from '../utils/rng';
 function rollOutcome(itemPoolFormIds: string[]): Outcome {
   const kind = weightedPick(OUTCOME_KIND_WEIGHTS);
   switch (kind) {
-    case 'loot':
+    case 'loot': {
+      const formId = pickOne(itemPoolFormIds);
+      const version = pickOne(getVersionsForForm(formId));
       return {
         kind: 'loot',
-        formId: pickOne(itemPoolFormIds),
-        rarity: weightedPick(RARITY_WEIGHTS),
+        versionId: version.id,
+        condition: weightedPick(CONDITION_WEIGHTS),
+        weirdness: weightedPick(WEIRDNESS_WEIGHTS),
       };
+    }
     case 'hazard':
       return {
         kind: 'hazard',
