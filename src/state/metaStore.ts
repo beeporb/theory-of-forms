@@ -3,6 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PlayerMeta } from '../game/types/player';
 import type { ItemInstance } from '../game/types/item';
 import type { GearSlot } from '../game/types/gear';
+import type { PastRunRecord } from '../game/types/pastRun';
 import { getCollector } from '../game/content/collectors';
 import { getVersion } from '../game/content/versions';
 import { GEAR_CATALOG } from '../game/content/gear';
@@ -16,7 +17,10 @@ interface MetaStore {
   mergeRunInventory: (items: ItemInstance[]) => void;
   setEquipped: (slot: GearSlot, gearId: string) => void;
   loseGear: (gearIds: string[]) => void;
+  recordRun: (record: PastRunRecord) => void;
 }
+
+const MAX_PAST_RUNS = 50;
 
 const INITIAL_META: PlayerMeta = {
   version: 1,
@@ -26,6 +30,7 @@ const INITIAL_META: PlayerMeta = {
   carryCapacity: 10,
   ownedGearIds: GEAR_CATALOG.map((g) => g.id),
   equippedGearIds: { weapon: 'rusty-crowbar', armor: 'patched-jacket', tool: 'hand-lamp' },
+  pastRuns: [],
 };
 
 export const useMetaStore = create<MetaStore>()(
@@ -83,6 +88,12 @@ export const useMetaStore = create<MetaStore>()(
           Object.entries(meta.equippedGearIds).filter(([, id]) => !lost.has(id as string)),
         ) as PlayerMeta['equippedGearIds'];
         set({ meta: { ...meta, ownedGearIds, equippedGearIds } });
+      },
+
+      recordRun: (record) => {
+        const { meta } = get();
+        const pastRuns = [record, ...(meta.pastRuns ?? [])].slice(0, MAX_PAST_RUNS);
+        set({ meta: { ...meta, pastRuns } });
       },
     }),
     {

@@ -9,6 +9,7 @@ import { OutcomeModal } from '../grid/OutcomeModal';
 import { InventoryPanel } from '../inventory/InventoryPanel';
 import { LoadoutPanel } from '../inventory/LoadoutPanel';
 import { RunLogModal } from './RunLogModal';
+import { AbandonConfirmModal } from './AbandonConfirmModal';
 import { StatusBar } from './StatusBar';
 
 interface RunScreenProps {
@@ -18,8 +19,10 @@ interface RunScreenProps {
 export function RunScreen({ run }: RunScreenProps) {
   const moveTo = useRunStore((s) => s.moveTo);
   const extractRun = useRunStore((s) => s.extractRun);
+  const abandonRun = useRunStore((s) => s.abandonRun);
   const [activeOutcome, setActiveOutcome] = useState<Outcome | null>(null);
   const [showLog, setShowLog] = useState(false);
+  const [showAbandonConfirm, setShowAbandonConfirm] = useState(false);
 
   const definition = getDimensionDefinition(run.dimension.definitionId);
 
@@ -37,6 +40,7 @@ export function RunScreen({ run }: RunScreenProps) {
         movesMade={run.moveCount}
         onExtract={extractRun}
         onOpenLog={() => setShowLog(true)}
+        onAbandon={() => setShowAbandonConfirm(true)}
       />
       <GridView
         dimension={run.dimension}
@@ -50,6 +54,9 @@ export function RunScreen({ run }: RunScreenProps) {
         <OutcomeModal outcome={activeOutcome} onDismiss={() => setActiveOutcome(null)} />
       )}
       {showLog && <RunLogModal log={run.log} onDismiss={() => setShowLog(false)} />}
+      {showAbandonConfirm && (
+        <AbandonConfirmModal onConfirm={abandonRun} onCancel={() => setShowAbandonConfirm(false)} />
+      )}
     </div>
   );
 }

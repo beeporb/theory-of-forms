@@ -8,6 +8,7 @@ interface StatusBarProps {
   movesMade: number;
   onExtract: () => void;
   onOpenLog: () => void;
+  onAbandon: () => void;
 }
 
 export function StatusBar({
@@ -18,6 +19,7 @@ export function StatusBar({
   movesMade,
   onExtract,
   onOpenLog,
+  onAbandon,
 }: StatusBarProps) {
   const percent = Math.max(0, Math.round((health / maxHealth) * 100));
   const movesRemaining = minMovesToExtract - movesMade;
@@ -39,6 +41,9 @@ export function StatusBar({
       </div>
       <button type="button" className="status-bar__log" onClick={onOpenLog}>
         Log
+      </button>
+      <button type="button" className="status-bar__abandon" onClick={onAbandon}>
+        Abandon
       </button>
       <button
         type="button"

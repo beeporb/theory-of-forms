@@ -3,6 +3,7 @@ import { HubNav, type HubView } from '../nav/HubNav';
 import { HomeView } from './HomeView';
 import { CollectorsView } from './CollectorsView';
 import { InventoryView } from './InventoryView';
+import { RunsView } from './RunsView';
 
 export function HubShell() {
   const [view, setView] = useState<HubView>('home');
@@ -14,6 +15,7 @@ export function HubShell() {
         {view === 'home' && <HomeView />}
         {view === 'collectors' && <CollectorsView />}
         {view === 'inventory' && <InventoryView />}
+        {view === 'runs' && <RunsView />}
       </div>
     </div>
   );

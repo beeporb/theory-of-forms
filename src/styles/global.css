@@ -310,6 +310,63 @@ button {
   cursor: default;
 }
 
+/* Runs view */
+.runs-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.run-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.run-history-card {
+  width: 100%;
+  text-align: left;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+  color: inherit;
+  font: inherit;
+}
+
+.run-history-card__dimension {
+  font-weight: 600;
+}
+
+.run-history-card__outcome {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.run-history-card__outcome--extracted {
+  color: var(--good);
+}
+
+.run-history-card__outcome--died,
+.run-history-card__outcome--abandoned {
+  color: var(--danger);
+}
+
+.run-history-card__meta {
+  flex-basis: 100%;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
 /* Shared panel */
 .panel {
   background: var(--panel-bg);
@@ -549,6 +606,17 @@ button {
   touch-action: manipulation;
 }
 
+.status-bar__abandon {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-height: 40px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 /* Outcome modal */
 .outcome-modal-backdrop {
   position: fixed;
@@ -598,6 +666,30 @@ button {
   margin-top: 12px;
   background: var(--accent);
   color: #1a1400;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  min-height: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Abandon confirm modal */
+.abandon-confirm-modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.abandon-confirm-modal__actions .outcome-modal__dismiss {
+  margin-top: 0;
+}
+
+.abandon-confirm-modal__confirm {
+  background: var(--danger);
+  color: #fff;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
