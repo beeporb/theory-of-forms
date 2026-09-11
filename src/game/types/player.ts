@@ -2,6 +2,7 @@ import type { ItemInstance } from './item';
 import type { CollectorProgress } from './collector';
 import type { PocketDimensionInstance } from './grid';
 import type { GearItem, GearSlot } from './gear';
+import type { RunLogEntry } from './runLog';
 
 /** Persisted forever: meta-progression that survives across runs. */
 export interface PlayerMeta {
@@ -22,4 +23,5 @@ export interface RunState {
   loadout: GearItem[];
   inventory: ItemInstance[];
   status: 'active' | 'died' | 'extracted';
+  log: RunLogEntry[];
 }

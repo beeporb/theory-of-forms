@@ -13,6 +13,7 @@ function makeRun(outcome: Outcome, overrides: Partial<RunState> = {}): RunState 
     loadout: [],
     inventory: [],
     status: 'active',
+    log: [],
     ...overrides,
   };
 }
@@ -65,6 +66,15 @@ describe('resolveCell', () => {
 
     expect(next.health).toBe(0);
     expect(next.status).toBe('died');
+  });
+
+  it('appends an entry to the run log', () => {
+    const outcome: Outcome = { kind: 'empty', message: 'nothing' };
+    const run = makeRun(outcome);
+    const { run: next } = resolveCell(run, 0, 0);
+
+    expect(next.log).toHaveLength(1);
+    expect(next.log[0]).toEqual({ x: 0, y: 0, outcome });
   });
 
   it('throws when opening an already-opened cell', () => {

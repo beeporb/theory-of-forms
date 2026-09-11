@@ -33,6 +33,7 @@ export const useRunStore = create<RunStore>()(
             loadout: buildLoadoutFromEquipped(useMetaStore.getState().meta.equippedGearIds),
             inventory: [],
             status: 'active',
+            log: [],
           },
         });
       },
@@ -60,7 +61,7 @@ export const useRunStore = create<RunStore>()(
       },
     }),
     {
-      name: 'tof-run-v2',
+      name: 'tof-run-v3',
       storage: createJSONStorage(createIdbStorage),
     },
   ),
