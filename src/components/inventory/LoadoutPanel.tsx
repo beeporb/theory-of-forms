@@ -1,13 +1,15 @@
 import type { GearItem } from '../../game/types/gear';
+import type { IconName } from '../../game/types/icon';
+import { Icon } from '../common/Icon';
 
 interface LoadoutPanelProps {
   loadout: GearItem[];
 }
 
-const SLOT_ICON: Record<GearItem['slot'], string> = {
-  weapon: '🗡️',
-  armor: '🛡️',
-  tool: '🔧',
+const SLOT_ICON: Record<GearItem['slot'], IconName> = {
+  weapon: 'sword',
+  armor: 'shield',
+  tool: 'wrench',
 };
 
 export function LoadoutPanel({ loadout }: LoadoutPanelProps) {
@@ -17,7 +19,9 @@ export function LoadoutPanel({ loadout }: LoadoutPanelProps) {
       <ul className="item-list">
         {loadout.map((item) => (
           <li key={item.id} className="item-list__row">
-            <span className="item-list__icon">{SLOT_ICON[item.slot]}</span>
+            <span className="item-list__icon">
+              <Icon name={SLOT_ICON[item.slot]} />
+            </span>
             <span className="item-list__name">{item.name}</span>
           </li>
         ))}

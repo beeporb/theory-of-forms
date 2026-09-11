@@ -3,6 +3,8 @@ import { CONDITION_LABEL } from '../../game/types/condition';
 import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { itemQualityFilter } from '../../game/logic/itemStyle';
+import { Icon } from '../common/Icon';
 
 interface OutcomeModalProps {
   outcome: Outcome;
@@ -16,7 +18,9 @@ function OutcomeBody({ outcome }: { outcome: Outcome }) {
       const form = getItemForm(version.formId);
       return (
         <>
-          <div className="outcome-modal__icon">{form.icon}</div>
+          <div className="outcome-modal__icon">
+            <Icon name={form.icon} filter={itemQualityFilter(outcome.condition, outcome.weirdness)} />
+          </div>
           <p>
             You found a {version.name}!
           </p>
@@ -30,7 +34,9 @@ function OutcomeBody({ outcome }: { outcome: Outcome }) {
     case 'hazard':
       return (
         <>
-          <div className="outcome-modal__icon">💥</div>
+          <div className="outcome-modal__icon">
+            <Icon name="bomb" tone="bad" />
+          </div>
           <p>{outcome.message}</p>
           <p className="outcome-modal__stat outcome-modal__stat--bad">-{outcome.damage} HP</p>
           {outcome.stealsItem && <p className="outcome-modal__stat outcome-modal__stat--bad">An item was stolen from you!</p>}
@@ -39,7 +45,9 @@ function OutcomeBody({ outcome }: { outcome: Outcome }) {
     case 'positive':
       return (
         <>
-          <div className="outcome-modal__icon">✨</div>
+          <div className="outcome-modal__icon">
+            <Icon name="sparkles" tone="good" />
+          </div>
           <p>{outcome.message}</p>
           <p className="outcome-modal__stat outcome-modal__stat--good">+{outcome.heal} HP</p>
         </>

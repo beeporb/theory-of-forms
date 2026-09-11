@@ -1,3 +1,6 @@
+import type { IconName } from '../../game/types/icon';
+import { Icon } from '../common/Icon';
+
 export type HubView = 'home' | 'collectors' | 'inventory';
 
 interface HubNavProps {
@@ -5,10 +8,10 @@ interface HubNavProps {
   onNavigate: (view: HubView) => void;
 }
 
-const NAV_ITEMS: { id: HubView; label: string; icon: string }[] = [
-  { id: 'home', label: 'Home', icon: '🏠' },
-  { id: 'collectors', label: 'Collectors', icon: '🧑‍🤝‍🧑' },
-  { id: 'inventory', label: 'Inventory', icon: '🎒' },
+const NAV_ITEMS: { id: HubView; label: string; icon: IconName }[] = [
+  { id: 'home', label: 'Home', icon: 'home' },
+  { id: 'collectors', label: 'Collectors', icon: 'collectors' },
+  { id: 'inventory', label: 'Inventory', icon: 'backpack' },
 ];
 
 export function HubNav({ active, onNavigate }: HubNavProps) {
@@ -21,7 +24,9 @@ export function HubNav({ active, onNavigate }: HubNavProps) {
           className={`hub-nav__item${active === item.id ? ' hub-nav__item--active' : ''}`}
           onClick={() => onNavigate(item.id)}
         >
-          <span className="hub-nav__icon">{item.icon}</span>
+          <span className="hub-nav__icon">
+            <Icon name={item.icon} />
+          </span>
           <span className="hub-nav__label">{item.label}</span>
         </button>
       ))}

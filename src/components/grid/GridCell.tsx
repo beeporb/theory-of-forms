@@ -1,6 +1,8 @@
 import type { Cell } from '../../game/types/grid';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { itemQualityFilter } from '../../game/logic/itemStyle';
+import { Icon } from '../common/Icon';
 
 interface GridCellProps {
   cell: Cell;
@@ -10,19 +12,22 @@ interface GridCellProps {
   onMoveTo: () => void;
 }
 
-function cellIcon(cell: Cell): string {
-  if (cell.status === 'unopened') return '?';
+function CellIcon({ cell }: { cell: Cell }) {
+  if (cell.status === 'unopened') return <>?</>;
   const outcome = cell.outcome;
-  if (!outcome) return '';
+  if (!outcome) return null;
   switch (outcome.kind) {
-    case 'loot':
-      return getItemForm(getVersion(outcome.versionId).formId).icon;
+    case 'loot': {
+      const version = getVersion(outcome.versionId);
+      const form = getItemForm(version.formId);
+      return <Icon name={form.icon} filter={itemQualityFilter(outcome.condition, outcome.weirdness)} />;
+    }
     case 'hazard':
-      return '💥';
+      return <Icon name="bomb" tone="bad" />;
     case 'positive':
-      return '✨';
+      return <Icon name="sparkles" tone="good" />;
     case 'empty':
-      return '·';
+      return <>·</>;
   }
 }
 
@@ -55,10 +60,10 @@ export function GridCell({ cell, isCurrent, isReachable, isExtractionPoint, onMo
       disabled={!clickable}
       aria-label={label}
     >
-      {!isFog && cellIcon(cell)}
+      {!isFog && <CellIcon cell={cell} />}
       {isExtractionPoint && (
         <span className="grid-cell__badge" aria-hidden="true">
-          🚪
+          <Icon name="door" />
         </span>
       )}
     </button>

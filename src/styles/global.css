@@ -19,6 +19,22 @@
   box-sizing: border-box;
 }
 
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+}
+
+.icon--bad {
+  color: var(--danger);
+}
+
+.icon--good {
+  color: var(--good);
+}
+
 html,
 body,
 #root {
@@ -471,7 +487,7 @@ button {
   right: 2px;
   font-size: 0.7rem;
   line-height: 1;
-  color: initial;
+  color: var(--accent);
 }
 
 /* Status bar */

@@ -1,3 +1,5 @@
+import { Icon } from '../common/Icon';
+
 interface StatusBarProps {
   health: number;
   maxHealth: number;
@@ -18,11 +20,12 @@ export function StatusBar({
   onOpenLog,
 }: StatusBarProps) {
   const percent = Math.max(0, Math.round((health / maxHealth) * 100));
-  const extractHint = canExtract
+  const movesRemaining = minMovesToExtract - movesMade;
+  const extractTitle = canExtract
     ? 'Extract'
     : movesMade < minMovesToExtract
-      ? `Extract (explore ${minMovesToExtract - movesMade} more)`
-      : 'Extract (reach a 🚪)';
+      ? `Extract (explore ${movesRemaining} more)`
+      : 'Extract (reach an extraction point)';
 
   return (
     <div className="status-bar">
@@ -42,9 +45,17 @@ export function StatusBar({
         className="status-bar__extract"
         onClick={onExtract}
         disabled={!canExtract}
-        title={extractHint}
+        title={extractTitle}
       >
-        {extractHint}
+        {canExtract ? (
+          'Extract'
+        ) : movesMade < minMovesToExtract ? (
+          `Extract (explore ${movesRemaining} more)`
+        ) : (
+          <>
+            Extract (reach a <Icon name="door" />)
+          </>
+        )}
       </button>
     </div>
   );
