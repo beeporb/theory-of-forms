@@ -25,6 +25,13 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'mining-lantern',
       'ore-cart-wheel',
     ],
+    entry: { x: 0, y: 0 },
+    extractionPoints: [
+      { x: 4, y: 0 },
+      { x: 0, y: 4 },
+      { x: 4, y: 4 },
+    ],
+    minMovesToExtract: 4,
   },
 ];
 

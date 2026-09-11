@@ -1,6 +1,6 @@
 import type { ItemInstance } from './item';
 import type { CollectorProgress } from './collector';
-import type { PocketDimensionInstance } from './grid';
+import type { GridPoint, PocketDimensionInstance } from './grid';
 import type { GearItem, GearSlot } from './gear';
 import type { RunLogEntry } from './runLog';
 
@@ -24,4 +24,6 @@ export interface RunState {
   inventory: ItemInstance[];
   status: 'active' | 'died' | 'extracted';
   log: RunLogEntry[];
+  position: GridPoint;
+  moveCount: number;
 }

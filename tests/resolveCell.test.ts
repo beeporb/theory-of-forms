@@ -14,6 +14,8 @@ function makeRun(outcome: Outcome, overrides: Partial<RunState> = {}): RunState 
     inventory: [],
     status: 'active',
     log: [],
+    position: { x: 0, y: 0 },
+    moveCount: 0,
     ...overrides,
   };
 }

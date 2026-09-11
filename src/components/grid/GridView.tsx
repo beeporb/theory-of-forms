@@ -1,12 +1,15 @@
-import type { PocketDimensionInstance } from '../../game/types/grid';
+import type { GridPoint, PocketDimensionInstance } from '../../game/types/grid';
+import { isAdjacent } from '../../game/logic/adjacency';
 import { GridCell } from './GridCell';
 
 interface GridViewProps {
   dimension: PocketDimensionInstance;
-  onOpenCell: (x: number, y: number) => void;
+  position: GridPoint;
+  extractionPoints: GridPoint[];
+  onMoveTo: (x: number, y: number) => void;
 }
 
-export function GridView({ dimension, onOpenCell }: GridViewProps) {
+export function GridView({ dimension, position, extractionPoints, onMoveTo }: GridViewProps) {
   const cols = dimension.cells[0]?.length ?? 0;
 
   return (
@@ -19,7 +22,10 @@ export function GridView({ dimension, onOpenCell }: GridViewProps) {
           <GridCell
             key={`${cell.x}-${cell.y}`}
             cell={cell}
-            onOpen={() => onOpenCell(cell.x, cell.y)}
+            isCurrent={cell.x === position.x && cell.y === position.y}
+            isReachable={cell.exists && isAdjacent(position, cell)}
+            isExtractionPoint={extractionPoints.some((p) => p.x === cell.x && p.y === cell.y)}
+            onMoveTo={() => onMoveTo(cell.x, cell.y)}
           />
         )),
       )}
