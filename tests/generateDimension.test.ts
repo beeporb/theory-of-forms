@@ -11,6 +11,9 @@ const definition: PocketDimensionDefinition = {
     [true, true],
   ],
   itemPoolFormIds: ['iron-ore', 'quartz-shard'],
+  entry: { x: 0, y: 0 },
+  extractionPoints: [{ x: 0, y: 1 }],
+  minMovesToExtract: 1,
 };
 
 describe('generateDimension', () => {

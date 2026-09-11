@@ -4,7 +4,10 @@ import { getVersion } from '../../game/content/versions';
 
 interface GridCellProps {
   cell: Cell;
-  onOpen: () => void;
+  isCurrent: boolean;
+  isReachable: boolean;
+  isExtractionPoint: boolean;
+  onMoveTo: () => void;
 }
 
 function cellIcon(cell: Cell): string {
@@ -23,20 +26,41 @@ function cellIcon(cell: Cell): string {
   }
 }
 
-export function GridCell({ cell, onOpen }: GridCellProps) {
+export function GridCell({ cell, isCurrent, isReachable, isExtractionPoint, onMoveTo }: GridCellProps) {
   if (!cell.exists) {
     return <div className="grid-cell grid-cell--void" aria-hidden="true" />;
   }
 
+  const isFog = cell.status === 'unopened' && !isReachable;
+  const clickable = isReachable && !isCurrent;
+
+  const classes = ['grid-cell', `grid-cell--${cell.status}`];
+  if (isFog) classes.push('grid-cell--fog');
+  if (isCurrent) classes.push('grid-cell--current');
+  if (isExtractionPoint) classes.push('grid-cell--extraction');
+
+  const label = isFog
+    ? 'Unexplored'
+    : isCurrent
+      ? 'Your current location'
+      : cell.status === 'unopened'
+        ? `Move to cell ${cell.x}, ${cell.y}`
+        : undefined;
+
   return (
     <button
       type="button"
-      className={`grid-cell grid-cell--${cell.status}`}
-      onClick={onOpen}
-      disabled={cell.status === 'opened'}
-      aria-label={cell.status === 'unopened' ? `Search cell ${cell.x}, ${cell.y}` : undefined}
+      className={classes.join(' ')}
+      onClick={onMoveTo}
+      disabled={!clickable}
+      aria-label={label}
     >
-      {cellIcon(cell)}
+      {!isFog && cellIcon(cell)}
+      {isExtractionPoint && (
+        <span className="grid-cell__badge" aria-hidden="true">
+          🚪
+        </span>
+      )}
     </button>
   );
 }
