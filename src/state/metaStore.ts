@@ -2,8 +2,10 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PlayerMeta } from '../game/types/player';
 import type { ItemInstance } from '../game/types/item';
+import type { GearSlot } from '../game/types/gear';
 import { getCollector } from '../game/content/collectors';
 import { getVersion } from '../game/content/versions';
+import { GEAR_CATALOG } from '../game/content/gear';
 import { getRequiredVersionIds } from '../game/logic/masterSet';
 import { qualityScore } from '../game/logic/quality';
 import { createIdbStorage } from '../persistence/storage';
@@ -12,6 +14,8 @@ interface MetaStore {
   meta: PlayerMeta;
   donateItem: (collectorId: string, instanceId: string) => void;
   mergeRunInventory: (items: ItemInstance[]) => void;
+  setEquipped: (slot: GearSlot, gearId: string) => void;
+  loseGear: (gearIds: string[]) => void;
 }
 
 const INITIAL_META: PlayerMeta = {
@@ -20,6 +24,8 @@ const INITIAL_META: PlayerMeta = {
   collectors: {},
   unlockedDimensionIds: ['warehouse'],
   carryCapacity: 10,
+  ownedGearIds: GEAR_CATALOG.map((g) => g.id),
+  equippedGearIds: { weapon: 'rusty-crowbar', armor: 'patched-jacket', tool: 'hand-lamp' },
 };
 
 export const useMetaStore = create<MetaStore>()(
@@ -63,9 +69,24 @@ export const useMetaStore = create<MetaStore>()(
         const { meta } = get();
         set({ meta: { ...meta, stash: [...meta.stash, ...items] } });
       },
+
+      setEquipped: (slot, gearId) => {
+        const { meta } = get();
+        set({ meta: { ...meta, equippedGearIds: { ...meta.equippedGearIds, [slot]: gearId } } });
+      },
+
+      loseGear: (gearIds) => {
+        const { meta } = get();
+        const lost = new Set(gearIds);
+        const ownedGearIds = meta.ownedGearIds.filter((id) => !lost.has(id));
+        const equippedGearIds = Object.fromEntries(
+          Object.entries(meta.equippedGearIds).filter(([, id]) => !lost.has(id as string)),
+        ) as PlayerMeta['equippedGearIds'];
+        set({ meta: { ...meta, ownedGearIds, equippedGearIds } });
+      },
     }),
     {
-      name: 'tof-meta-v2',
+      name: 'tof-meta-v3',
       storage: createJSONStorage(createIdbStorage),
     },
   ),

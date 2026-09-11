@@ -1,10 +1,10 @@
-import type { LoadoutItem } from '../../game/types/player';
+import type { GearItem } from '../../game/types/gear';
 
 interface LoadoutPanelProps {
-  loadout: LoadoutItem[];
+  loadout: GearItem[];
 }
 
-const SLOT_ICON: Record<LoadoutItem['slot'], string> = {
+const SLOT_ICON: Record<GearItem['slot'], string> = {
   weapon: '🗡️',
   armor: '🛡️',
   tool: '🔧',

@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { RunState } from '../game/types/player';
 import { getDimensionDefinition } from '../game/content/dimensions';
 import { generateDimension } from '../game/logic/generateDimension';
-import { createStartingLoadout } from '../game/logic/loadout';
+import { buildLoadoutFromEquipped } from '../game/logic/loadout';
 import { resolveCell } from '../game/logic/resolveCell';
 import { createIdbStorage } from '../persistence/storage';
 import { useMetaStore } from './metaStore';
@@ -30,7 +30,7 @@ export const useRunStore = create<RunStore>()(
             dimension: generateDimension(definition),
             health: STARTING_HEALTH,
             maxHealth: STARTING_HEALTH,
-            loadout: createStartingLoadout(),
+            loadout: buildLoadoutFromEquipped(useMetaStore.getState().meta.equippedGearIds),
             inventory: [],
             status: 'active',
           },
@@ -52,6 +52,10 @@ export const useRunStore = create<RunStore>()(
       },
 
       abandonDeadRun: () => {
+        const { run } = get();
+        if (run) {
+          useMetaStore.getState().loseGear(run.loadout.map((g) => g.id));
+        }
         set({ run: null });
       },
     }),

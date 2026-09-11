@@ -1,9 +1,9 @@
-import type { LoadoutItem } from '../types/player';
+import type { GearItem } from '../types/gear';
+import type { PlayerMeta } from '../types/player';
+import { getGear } from '../content/gear';
 
-export function createStartingLoadout(): LoadoutItem[] {
-  return [
-    { id: 'rusty-crowbar', name: 'Rusty Crowbar', slot: 'weapon' },
-    { id: 'patched-jacket', name: 'Patched Jacket', slot: 'armor' },
-    { id: 'hand-lamp', name: 'Hand Lamp', slot: 'tool' },
-  ];
+export function buildLoadoutFromEquipped(equipped: PlayerMeta['equippedGearIds']): GearItem[] {
+  return Object.values(equipped)
+    .filter((id): id is string => !!id)
+    .map(getGear);
 }

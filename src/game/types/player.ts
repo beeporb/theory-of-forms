@@ -1,12 +1,7 @@
 import type { ItemInstance } from './item';
 import type { CollectorProgress } from './collector';
 import type { PocketDimensionInstance } from './grid';
-
-export interface LoadoutItem {
-  id: string;
-  name: string;
-  slot: 'weapon' | 'armor' | 'tool';
-}
+import type { GearItem, GearSlot } from './gear';
 
 /** Persisted forever: meta-progression that survives across runs. */
 export interface PlayerMeta {
@@ -15,6 +10,8 @@ export interface PlayerMeta {
   collectors: Record<string, CollectorProgress>;
   unlockedDimensionIds: string[];
   carryCapacity: number;
+  ownedGearIds: string[];
+  equippedGearIds: Partial<Record<GearSlot, string>>;
 }
 
 /** Ephemeral: exists only for the duration of a single pocket-dimension run. */
@@ -22,7 +19,7 @@ export interface RunState {
   dimension: PocketDimensionInstance;
   health: number;
   maxHealth: number;
-  loadout: LoadoutItem[];
+  loadout: GearItem[];
   inventory: ItemInstance[];
   status: 'active' | 'died' | 'extracted';
 }
