@@ -6,6 +6,7 @@ export function LoginGate() {
 
   return (
     <div className="screen login-gate">
+      <img className="login-gate__logo" src="/favicon.svg" alt="" width={72} height={69} />
       <h1>Theory of Forms</h1>
       <p className="login-gate__message">
         {status === 'error'
