@@ -1025,6 +1025,25 @@ button {
   flex-shrink: 0;
 }
 
+.collector-card__title-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  touch-action: manipulation;
+}
+
+.collector-card__title-button:hover {
+  color: var(--accent);
+}
+
 .collector-card--secret .collector-card__icon {
   color: var(--text-dim);
 }
@@ -1039,6 +1058,43 @@ button {
   color: var(--text-dim);
   font-size: 0.85rem;
   margin: 0 0 10px;
+}
+
+.collector-detail-modal__title {
+  margin-bottom: 8px;
+}
+
+.collector-detail-modal__list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.collector-detail-modal__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.collector-detail-modal__row--done {
+  color: var(--text);
+}
+
+.collector-detail-modal__row--done .item-list__icon {
+  color: var(--good);
+}
+
+.collector-detail-modal__missing {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
 }
 
 .collector-card__progress-track {
