@@ -149,4 +149,39 @@ describe('generateDimension', () => {
     const instance = generateDimension({ ...definition, actorPool: [], actorCountRange: [1, 3] });
     expect(instance.actors).toHaveLength(0);
   });
+
+  it('makes hazards more frequent and more damaging farther from the entry', () => {
+    // The entry is always depth 0; extraction points are drawn from the
+    // farther half of the layout (see generateLayout), so comparing outcomes
+    // rolled at each across many samples gives a reliable near-vs-far signal.
+    let nearHazards = 0;
+    let nearTotal = 0;
+    let nearDamageSum = 0;
+    let farHazards = 0;
+    let farTotal = 0;
+    let farDamageSum = 0;
+
+    for (let i = 0; i < 300; i++) {
+      const instance = generateDimension(definition);
+
+      const nearOutcome = instance.cells[instance.entry.y][instance.entry.x].outcome;
+      nearTotal++;
+      if (nearOutcome?.kind === 'hazard') {
+        nearHazards++;
+        nearDamageSum += nearOutcome.damage;
+      }
+
+      for (const point of instance.extractionPoints) {
+        const farOutcome = instance.cells[point.y][point.x].outcome;
+        farTotal++;
+        if (farOutcome?.kind === 'hazard') {
+          farHazards++;
+          farDamageSum += farOutcome.damage;
+        }
+      }
+    }
+
+    expect(farHazards / farTotal).toBeGreaterThan(nearHazards / nearTotal);
+    expect(farDamageSum / farHazards).toBeGreaterThan(nearDamageSum / nearHazards);
+  });
 });

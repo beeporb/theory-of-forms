@@ -11,6 +11,13 @@ export const HAZARD_DAMAGE_RANGE: [min: number, max: number] = [10, 30];
 export const HAZARD_STEAL_CHANCE = 0.35;
 export const POSITIVE_HEAL_RANGE: [min: number, max: number] = [10, 25];
 
+// Danger escalates with distance from the entry: a cell at the far edge of
+// the floor plan (depthFactor 1) rolls hazards both more often and harder
+// than one right by the entry (depthFactor 0), so pushing deeper for more
+// loot is a real risk/reward trade-off instead of a flat cell-by-cell roll.
+export const HAZARD_DEPTH_WEIGHT_BONUS = 20;
+export const HAZARD_DEPTH_DAMAGE_MULTIPLIER_BONUS = 0.5;
+
 export const HAZARD_MESSAGES = [
   'A shelving unit collapses as you brush past it.',
   'Something skitters out of the dark and takes a bite.',

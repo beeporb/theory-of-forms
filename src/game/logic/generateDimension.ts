@@ -9,6 +9,8 @@ import { WEIRDNESS_WEIGHTS } from '../content/weirdnessTable';
 import {
   EMPTY_MESSAGES,
   HAZARD_DAMAGE_RANGE,
+  HAZARD_DEPTH_DAMAGE_MULTIPLIER_BONUS,
+  HAZARD_DEPTH_WEIGHT_BONUS,
   HAZARD_MESSAGES,
   HAZARD_STEAL_CHANCE,
   OUTCOME_KIND_WEIGHTS,
@@ -17,7 +19,7 @@ import {
 } from '../content/encounterTable';
 import { pickOne, randomInt, weightedPick } from '../utils/rng';
 import { BASE_RUN_MODIFIERS, type RunModifiers } from './characterEffects';
-import { generateLayout } from './generateLayout';
+import { generateLayout, pointKey } from './generateLayout';
 
 function spawnActors(
   shape: boolean[][],
@@ -51,10 +53,13 @@ function biasedPick<T>(order: readonly T[], picked: T, bias: number): T {
   return order[biasedIndex];
 }
 
-function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers): Outcome {
-  const outcomeWeights = OUTCOME_KIND_WEIGHTS.map((entry) =>
-    entry.value === 'loot' ? { ...entry, weight: entry.weight + modifiers.lootWeightBonus } : entry,
-  );
+/** `depthFactor` is 0 at the entry and 1 at the farthest reachable cell in this layout. */
+function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers, depthFactor: number): Outcome {
+  const outcomeWeights = OUTCOME_KIND_WEIGHTS.map((entry) => {
+    if (entry.value === 'loot') return { ...entry, weight: entry.weight + modifiers.lootWeightBonus };
+    if (entry.value === 'hazard') return { ...entry, weight: entry.weight + depthFactor * HAZARD_DEPTH_WEIGHT_BONUS };
+    return entry;
+  });
   const kind = weightedPick(outcomeWeights);
   switch (kind) {
     case 'loot': {
@@ -67,13 +72,18 @@ function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers): Outcom
         weirdness: biasedPick(WEIRDNESS_ORDER, weightedPick(WEIRDNESS_WEIGHTS), modifiers.weirdnessTierBias),
       };
     }
-    case 'hazard':
+    case 'hazard': {
+      const depthDamageMultiplier = 1 + depthFactor * HAZARD_DEPTH_DAMAGE_MULTIPLIER_BONUS;
       return {
         kind: 'hazard',
-        damage: Math.max(1, Math.round(randomInt(...HAZARD_DAMAGE_RANGE) * modifiers.hazardDamageMultiplier)),
+        damage: Math.max(
+          1,
+          Math.round(randomInt(...HAZARD_DAMAGE_RANGE) * modifiers.hazardDamageMultiplier * depthDamageMultiplier),
+        ),
         stealsItem: Math.random() < HAZARD_STEAL_CHANCE * modifiers.hazardStealChanceMultiplier,
         message: pickOne(HAZARD_MESSAGES),
       };
+    }
     case 'positive':
       return {
         kind: 'positive',
@@ -89,16 +99,20 @@ export function generateDimension(
   definition: PocketDimensionDefinition,
   modifiers: RunModifiers = BASE_RUN_MODIFIERS,
 ): PocketDimensionInstance {
-  const { shape, entry, extractionPoints } = generateLayout(definition);
+  const { shape, entry, extractionPoints, distances } = generateLayout(definition);
+  const maxDistance = Math.max(1, ...distances.values());
 
   const cells: Cell[][] = shape.map((row, y) =>
-    row.map((exists, x): Cell => ({
-      x,
-      y,
-      exists,
-      status: 'unopened',
-      outcome: exists ? rollOutcome(definition.itemPoolFormIds, modifiers) : null,
-    })),
+    row.map((exists, x): Cell => {
+      const depthFactor = (distances.get(pointKey({ x, y })) ?? 0) / maxDistance;
+      return {
+        x,
+        y,
+        exists,
+        status: 'unopened',
+        outcome: exists ? rollOutcome(definition.itemPoolFormIds, modifiers, depthFactor) : null,
+      };
+    }),
   );
 
   const minMovesToExtract = randomInt(...definition.minMovesToExtractRange);
