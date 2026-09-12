@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import { DiscordLoginButton } from '../account/DiscordLoginButton';
+import { ChangelogModal } from './ChangelogModal';
 
 interface HomeViewProps {
   onStartRun: () => void;
 }
 
 export function HomeView({ onStartRun }: HomeViewProps) {
+  const [showChangelog, setShowChangelog] = useState(false);
+
   return (
     <div className="home-view">
       <header className="home-view__header">
@@ -19,6 +23,15 @@ export function HomeView({ onStartRun }: HomeViewProps) {
       <button type="button" className="primary-button" onClick={onStartRun}>
         Start a Run
       </button>
+
+      <p className="home-view__version">
+        v{__APP_VERSION__} ·{' '}
+        <button type="button" className="home-view__changelog-link" onClick={() => setShowChangelog(true)}>
+          What's New
+        </button>
+      </p>
+
+      {showChangelog && <ChangelogModal onDismiss={() => setShowChangelog(false)} />}
     </div>
   );
 }
