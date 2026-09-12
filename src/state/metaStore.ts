@@ -9,7 +9,9 @@ import { getCollector } from '../game/content/collectors';
 import { STARTER_GEAR_IDS } from '../game/content/gear';
 import { DIMENSIONS } from '../game/content/dimensions';
 import { getTrait } from '../game/content/traits';
+import { getQuest } from '../game/content/quests';
 import { canDonate, applyDonation } from '../game/logic/donation';
+import { applyQuestReward, canCompleteQuest, removeQuestItems } from '../game/logic/quest';
 import { withDimensionUnlocks } from '../game/logic/dimensionUnlocks';
 import { degradeCondition, mergeFoundGear } from '../game/logic/gearCondition';
 import {
@@ -32,6 +34,7 @@ interface MetaStore {
   recordRun: (record: PastRunRecord) => void;
   allocateAttributePoint: (attributeId: AttributeId) => void;
   selectTrait: (traitId: string) => void;
+  completeQuest: (questId: string) => void;
 }
 
 const MAX_PAST_RUNS = 50;
@@ -47,6 +50,9 @@ const INITIAL_META: PlayerMeta = {
   gearCondition: Object.fromEntries(STARTER_GEAR_IDS.map((id) => [id, 'sound' as const])),
   pastRuns: [],
   character: createInitialCharacter(),
+  widgets: 0,
+  materials: {},
+  completedQuestIds: [],
 };
 
 export const useMetaStore = create<MetaStore>()(
@@ -179,6 +185,27 @@ export const useMetaStore = create<MetaStore>()(
               traitPoints: character.traitPoints - 1,
               traitIds: [...character.traitIds, traitId],
             },
+          },
+        });
+      },
+
+      completeQuest: (questId) => {
+        const { meta } = get();
+        const quest = getQuest(questId);
+        if (!canCompleteQuest(quest, meta.stash, meta.completedQuestIds)) return;
+
+        const stash = removeQuestItems(meta.stash, quest);
+        const { widgets, materials, ownedGearIds, gearCondition } = applyQuestReward(quest.reward, meta);
+
+        set({
+          meta: {
+            ...meta,
+            stash,
+            widgets,
+            materials,
+            ownedGearIds,
+            gearCondition,
+            completedQuestIds: [...meta.completedQuestIds, questId],
           },
         });
       },

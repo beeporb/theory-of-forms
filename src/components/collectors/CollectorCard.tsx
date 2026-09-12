@@ -76,7 +76,12 @@ export function CollectorCard({ definition, progress, stash, onDonate }: Collect
       )}
 
       {showDetail && (
-        <CollectorDetailModal definition={definition} progress={progress} onDismiss={() => setShowDetail(false)} />
+        <CollectorDetailModal
+          definition={definition}
+          progress={progress}
+          stash={stash}
+          onDismiss={() => setShowDetail(false)}
+        />
       )}
     </section>
   );

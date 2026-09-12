@@ -20,6 +20,12 @@ export interface PlayerMeta {
   gearCondition: Record<string, Condition>;
   pastRuns: PastRunRecord[];
   character: CharacterProgress;
+  /** Generic currency paid out by quests. Flat counter, not tied to any item/condition system. */
+  widgets: number;
+  /** Crafting materials by material id — the resource #54 (crafting) will consume. */
+  materials: Record<string, number>;
+  /** Quests are one-time per player; completing one just adds its id here. */
+  completedQuestIds: string[];
 }
 
 /** Ephemeral: exists only for the duration of a single pocket-dimension run. */
