@@ -43,18 +43,19 @@ export const useRunStore = create<RunStore>()(
 
       startRun: (dimensionId) => {
         const definition = getDimensionDefinition(dimensionId);
+        const dimension = generateDimension(definition);
         const baseRun: RunState = {
-          dimension: generateDimension(definition),
+          dimension,
           health: STARTING_HEALTH,
           maxHealth: STARTING_HEALTH,
           loadout: buildLoadoutFromEquipped(useMetaStore.getState().meta.equippedGearIds),
           inventory: [],
           status: 'active',
           log: [],
-          position: definition.entry,
+          position: dimension.entry,
           moveCount: 0,
         };
-        const { run } = resolveCell(baseRun, definition.entry.x, definition.entry.y);
+        const { run } = resolveCell(baseRun, dimension.entry.x, dimension.entry.y);
         set({ run });
       },
 

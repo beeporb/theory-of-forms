@@ -10,7 +10,7 @@ function makeCell(x: number, y: number, outcome: Outcome | null = { kind: 'empty
 
 function makeRun(cells: Cell[][], overrides: Partial<RunState> = {}): RunState {
   return {
-    dimension: { definitionId: 'test', cells },
+    dimension: { definitionId: 'test', cells, entry: { x: 0, y: 0 }, extractionPoints: [], minMovesToExtract: 0 },
     health: 100,
     maxHealth: 100,
     loadout: [],

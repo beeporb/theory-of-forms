@@ -1,22 +1,9 @@
 import type { PocketDimensionDefinition } from '../types/grid';
 
-const T = true;
-const F = false;
-
-// 5x5 warehouse floor plan with a couple of blocked-off aisles (irregular shape).
-const WAREHOUSE_SHAPE: boolean[][] = [
-  [T, T, T, T, T],
-  [T, T, F, T, T],
-  [T, T, T, T, T],
-  [F, T, T, T, F],
-  [T, T, T, T, T],
-];
-
 export const DIMENSIONS: PocketDimensionDefinition[] = [
   {
     id: 'warehouse',
     name: 'The Old Warehouse',
-    shape: WAREHOUSE_SHAPE,
     itemPoolFormIds: [
       'iron-ore',
       'quartz-shard',
@@ -25,13 +12,14 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'mining-lantern',
       'ore-cart-wheel',
     ],
-    entry: { x: 0, y: 0 },
-    extractionPoints: [
-      { x: 4, y: 0 },
-      { x: 0, y: 4 },
-      { x: 4, y: 4 },
-    ],
-    minMovesToExtract: 4,
+    // Floor plan is regenerated (size, shape, entry, extraction points) each time the warehouse is entered.
+    minRows: 4,
+    maxRows: 7,
+    minCols: 4,
+    maxCols: 7,
+    fillRatioRange: [0.55, 0.85],
+    extractionPointCountRange: [2, 3],
+    minMovesToExtractRange: [3, 6],
   },
 ];
 
