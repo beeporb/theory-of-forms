@@ -1,9 +1,7 @@
 import type { Outcome } from '../../game/types/outcome';
-import { CONDITION_LABEL } from '../../game/types/condition';
-import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
-import { itemQualityFilter } from '../../game/logic/itemStyle';
+import { ItemCard } from '../inventory/ItemCard';
 import { Icon } from '../common/Icon';
 
 interface OutcomeModalProps {
@@ -18,16 +16,8 @@ function OutcomeBody({ outcome }: { outcome: Outcome }) {
       const form = getItemForm(version.formId);
       return (
         <>
-          <div className="outcome-modal__icon">
-            <Icon name={form.icon} filter={itemQualityFilter(outcome.condition, outcome.weirdness)} />
-          </div>
-          <p>
-            You found a {version.name}!
-          </p>
-          <p className="outcome-modal__badges">
-            <span className="badge">{CONDITION_LABEL[outcome.condition]}</span>
-            <span className="badge">{WEIRDNESS_LABEL[outcome.weirdness]}</span>
-          </p>
+          <p className="outcome-modal__lead">You found something!</p>
+          <ItemCard version={version} form={form} condition={outcome.condition} weirdness={outcome.weirdness} />
         </>
       );
     }

@@ -7,6 +7,7 @@ export interface ItemForm {
   name: string;
   setId: string;
   icon: IconName;
+  flavorText: string;
 }
 
 export interface ItemInstance {

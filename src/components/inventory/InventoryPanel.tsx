@@ -1,10 +1,9 @@
+import { useState } from 'react';
 import type { ItemInstance } from '../../game/types/item';
-import { CONDITION_LABEL } from '../../game/types/condition';
-import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
-import { itemQualityFilter } from '../../game/logic/itemStyle';
-import { Icon } from '../common/Icon';
+import { ItemCard } from './ItemCard';
+import { ItemDetailModal } from './ItemDetailModal';
 
 interface InventoryPanelProps {
   title: string;
@@ -42,6 +41,8 @@ function groupItems(items: ItemInstance[]): GroupedEntry[] {
 
 export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.' }: InventoryPanelProps) {
   const grouped = groupItems(items);
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const openEntry = grouped.find((entry) => entry.key === openKey) ?? null;
 
   return (
     <section className="panel">
@@ -49,26 +50,39 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
       {grouped.length === 0 ? (
         <p className="panel__empty">{emptyMessage}</p>
       ) : (
-        <ul className="item-list">
+        <div className="item-card-grid">
           {grouped.map((entry) => {
             const version = getVersion(entry.versionId);
             const form = getItemForm(version.formId);
             return (
-              <li key={entry.key} className="item-list__row">
-                <span className="item-list__icon">
-                  <Icon name={form.icon} filter={itemQualityFilter(entry.condition, entry.weirdness)} />
-                </span>
-                <span className="item-list__name">{version.name}</span>
-                <span className="item-list__badges">
-                  <span className="badge">{CONDITION_LABEL[entry.condition]}</span>
-                  <span className="badge">{WEIRDNESS_LABEL[entry.weirdness]}</span>
-                </span>
-                <span className="item-list__count">×{entry.count}</span>
-              </li>
+              <ItemCard
+                key={entry.key}
+                version={version}
+                form={form}
+                condition={entry.condition}
+                weirdness={entry.weirdness}
+                count={entry.count}
+                onClick={() => setOpenKey(entry.key)}
+              />
             );
           })}
-        </ul>
+        </div>
       )}
+      {openEntry &&
+        (() => {
+          const version = getVersion(openEntry.versionId);
+          const form = getItemForm(version.formId);
+          return (
+            <ItemDetailModal
+              version={version}
+              form={form}
+              condition={openEntry.condition}
+              weirdness={openEntry.weirdness}
+              count={openEntry.count}
+              onDismiss={() => setOpenKey(null)}
+            />
+          );
+        })()}
     </section>
   );
 }
