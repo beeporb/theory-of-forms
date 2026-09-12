@@ -8,6 +8,7 @@ import { useMetaStore } from '../../state/metaStore';
 import { LoadoutManager } from '../inventory/LoadoutManager';
 import { InventoryPanel } from '../inventory/InventoryPanel';
 import { FilterChipGroup } from '../inventory/FilterChipGroup';
+import { Icon } from '../common/Icon';
 
 const SET_OPTIONS = [...new Set(ITEM_FORMS.map((f) => f.setId))].map((setId) => ({
   value: setId,
@@ -23,17 +24,19 @@ function toggle(list: string[], value: string): string[] {
 
 export function InventoryView() {
   const stash = useMetaStore((s) => s.meta.stash);
+  const [query, setQuery] = useState('');
   const [sets, setSets] = useState<string[]>([]);
   const [conditions, setConditions] = useState<string[]>([]);
   const [weirdnesses, setWeirdnesses] = useState<string[]>([]);
 
+  const normalizedQuery = query.trim().toLowerCase();
+
   const filtered = stash.filter((item) => {
     if (conditions.length > 0 && !conditions.includes(item.condition)) return false;
     if (weirdnesses.length > 0 && !weirdnesses.includes(item.weirdness)) return false;
-    if (sets.length > 0) {
-      const form = getItemForm(getVersion(item.versionId).formId);
-      if (!sets.includes(form.setId)) return false;
-    }
+    const form = getItemForm(getVersion(item.versionId).formId);
+    if (sets.length > 0 && !sets.includes(form.setId)) return false;
+    if (normalizedQuery && !getVersion(item.versionId).name.toLowerCase().includes(normalizedQuery)) return false;
     return true;
   });
 
@@ -42,6 +45,20 @@ export function InventoryView() {
       <h2 className="view-title">Inventory</h2>
 
       <LoadoutManager />
+
+      <label className="inventory-search">
+        <span className="inventory-search__icon">
+          <Icon name="search" />
+        </span>
+        <input
+          type="text"
+          className="inventory-search__input"
+          placeholder="Search your stash…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label="Search inventory"
+        />
+      </label>
 
       <div className="inventory-filters">
         <FilterChipGroup label="Set" options={SET_OPTIONS} selected={sets} onToggle={(v) => setSets(toggle(sets, v))} />

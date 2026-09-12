@@ -7,6 +7,7 @@ export const COLLECTORS: CollectorDefinition[] = [
     name: 'The Miner',
     flavorText:
       "Used to work the deep shafts before everything ended. Says the old mines are still down there — full of ore and gear, if you're willing to go looking.",
+    icon: 'pickaxe',
     requiredFormIds: [
       'iron-ore',
       'quartz-shard',
@@ -21,6 +22,7 @@ export const COLLECTORS: CollectorDefinition[] = [
     name: 'The Jeweler',
     flavorText:
       "Doesn't care about the rusted tools, just the stones. Says a good mineral has more character now than it ever did before the world ended.",
+    icon: 'gem',
     requiredFormIds: ['iron-ore', 'quartz-shard', 'sulfur-lump'],
   },
   {
@@ -28,6 +30,7 @@ export const COLLECTORS: CollectorDefinition[] = [
     name: 'The Archivist',
     flavorText:
       "Wants one of everything, no exceptions. Nobody's sure what they're actually archiving, or for who.",
+    icon: 'book',
     requiredFormIds: [
       'iron-ore',
       'quartz-shard',

@@ -15,6 +15,9 @@ import {
   Shield,
   Wrench,
   ScrollText,
+  BookMarked,
+  Search,
+  CircleHelp,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -36,6 +39,9 @@ const ICONS: Record<IconName, LucideIcon> = {
   shield: Shield,
   wrench: Wrench,
   scroll: ScrollText,
+  book: BookMarked,
+  search: Search,
+  help: CircleHelp,
 };
 
 interface IconProps {
