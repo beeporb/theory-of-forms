@@ -22,6 +22,18 @@ import {
   Star,
   Skull,
   Coins,
+  Layers,
+  Diamond,
+  Gauge,
+  Flame,
+  Stamp,
+  Folder,
+  Paperclip,
+  Fan,
+  Watch,
+  Wallet,
+  Glasses,
+  Key,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -50,6 +62,18 @@ const ICONS: Record<IconName, LucideIcon> = {
   star: Star,
   skull: Skull,
   coins: Coins,
+  layers: Layers,
+  diamond: Diamond,
+  gauge: Gauge,
+  flame: Flame,
+  stamp: Stamp,
+  folder: Folder,
+  paperclip: Paperclip,
+  fan: Fan,
+  watch: Watch,
+  wallet: Wallet,
+  glasses: Glasses,
+  key: Key,
 };
 
 interface IconProps {

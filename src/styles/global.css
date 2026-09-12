@@ -739,9 +739,24 @@ button {
   box-shadow: 0 0 10px rgba(180, 120, 255, 0.25);
 }
 
+.item-card--unstable {
+  border-color: rgba(255, 140, 60, 0.7);
+  box-shadow: 0 0 12px rgba(255, 140, 60, 0.28);
+}
+
 .item-card--impossible {
   border-color: rgba(120, 200, 255, 0.75);
   box-shadow: 0 0 14px rgba(120, 200, 255, 0.3);
+}
+
+.item-card--paradoxical {
+  border-color: rgba(255, 80, 200, 0.8);
+  box-shadow: 0 0 16px rgba(255, 80, 200, 0.35);
+}
+
+.item-card--forbidden {
+  border-color: rgba(220, 20, 20, 0.85);
+  box-shadow: 0 0 20px rgba(220, 20, 20, 0.4);
 }
 
 .item-card--selected {
