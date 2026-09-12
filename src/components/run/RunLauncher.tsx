@@ -5,8 +5,8 @@ import { useRunStore } from '../../state/runStore';
 import { LoadoutManager } from '../inventory/LoadoutManager';
 import { Icon } from '../common/Icon';
 
-function countCells(shape: boolean[][]): number {
-  return shape.reduce((sum, row) => sum + row.filter(Boolean).length, 0);
+function formatRange(min: number, max: number): string {
+  return min === max ? `${min}` : `${min}–${max}`;
 }
 
 export function RunLauncher() {
@@ -38,7 +38,8 @@ export function RunLauncher() {
                 <span className="destination-card__body">
                   <span className="destination-card__name">{d.name}</span>
                   <span className="destination-card__meta">
-                    {countCells(d.shape)} cells · {d.minMovesToExtract}+ moves to extract
+                    {formatRange(d.minRows, d.maxRows)}×{formatRange(d.minCols, d.maxCols)} grid ·{' '}
+                    {formatRange(...d.minMovesToExtractRange)}+ moves to extract
                   </span>
                 </span>
               </button>
