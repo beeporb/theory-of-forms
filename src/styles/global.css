@@ -598,6 +598,80 @@ button {
   gap: 16px;
 }
 
+.step-indicator {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+
+.step-indicator__step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+}
+
+.step-indicator__dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.step-indicator__label {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.step-indicator__step--active {
+  color: var(--text);
+}
+
+.step-indicator__step--active .step-indicator__dot {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.step-indicator__step--done .step-indicator__dot {
+  border-color: var(--good);
+  color: var(--good);
+}
+
+.run-launcher__confirm-destination {
+  font-weight: 600;
+  margin: 0;
+}
+
+.run-launcher__nav {
+  display: flex;
+  gap: 10px;
+}
+
+.run-launcher__nav .primary-button {
+  flex: 1;
+}
+
+.run-launcher__back {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 10px;
+  padding: 14px 18px;
+  min-height: 44px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 .destination-list {
   display: flex;
   flex-direction: column;
