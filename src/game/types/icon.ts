@@ -36,4 +36,5 @@ export type IconName =
   | 'key'
   | 'lock'
   | 'radio'
-  | 'cpu';
+  | 'cpu'
+  | 'chevronRight';
