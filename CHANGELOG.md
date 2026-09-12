@@ -3,6 +3,29 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-09-12
+
+### Added
+
+- Two more collectors (The Clerk, The Widow) for the item sets that had
+  none, and fixed The Archivist's "wants one of everything" requirement
+  going stale as the item roster grew.
+- Opening a collector now shows the full checklist of what they want, what
+  you've already donated, and any quests they're offering.
+- Quests from collectors that pay out a new "widgets" currency, crafting
+  materials, or gear.
+- A crafting system: spend materials (and sometimes widgets) on recipes
+  for gear, including keys, or break down stash items you don't need into
+  materials.
+- Item condition and rarity are now shown when choosing what to drop from
+  a full pack, not just the item's name.
+
+### Fixed
+
+- Large dimension grids (e.g. The Deep Vein's up to 9×9 layout) no longer
+  overflow the screen — cells shrink to fit instead of forcing horizontal
+  scroll.
+
 ## [1.1.0] - 2026-09-12
 
 ### Added
