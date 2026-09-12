@@ -30,7 +30,10 @@ export function CollectorCard({ definition, progress, stash, onDonate }: Collect
 
   return (
     <section className="panel collector-card">
-      <h3 className="panel__title">
+      <h3 className="panel__title collector-card__title">
+        <span className="collector-card__icon">
+          <Icon name={definition.icon} />
+        </span>
         {definition.name} {complete && <span className="collector-card__badge">Master Set Complete</span>}
       </h3>
       <p className="collector-card__flavor">{definition.flavorText}</p>

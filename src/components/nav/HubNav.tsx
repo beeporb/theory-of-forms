@@ -18,6 +18,7 @@ const NAV_ITEMS: { id: HubView; label: string; icon: IconName }[] = [
 export function HubNav({ active, onNavigate }: HubNavProps) {
   return (
     <nav className="hub-nav">
+      <div className="hub-nav__brand">Theory of Forms</div>
       {NAV_ITEMS.map((item) => (
         <button
           key={item.id}

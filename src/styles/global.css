@@ -150,6 +150,10 @@ button {
   color: var(--accent);
 }
 
+.hub-nav__brand {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .hub-shell {
     flex-direction: row;
@@ -162,21 +166,42 @@ button {
     right: auto;
     bottom: auto;
     flex-direction: column;
-    width: 200px;
+    align-items: stretch;
+    width: 220px;
     height: 100vh;
     flex-shrink: 0;
     border-top: none;
     border-right: 1px solid var(--border);
-    padding: 24px 0;
-    gap: 4px;
+    padding: 16px 12px;
+    gap: 2px;
+  }
+
+  .hub-nav__brand {
+    display: block;
+    padding: 8px 8px 16px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
   }
 
   .hub-nav__item {
+    flex: 0 0 auto;
     flex-direction: row;
     justify-content: flex-start;
     gap: 10px;
-    padding: 12px 20px;
+    padding: 10px 8px;
+    border-radius: 8px;
     font-size: 0.9rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .hub-nav__item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+  }
+
+  .hub-nav__item--active {
+    background: rgba(201, 168, 58, 0.12);
   }
 
   .hub-nav__icon {
@@ -341,6 +366,38 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.inventory-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.inventory-search__icon {
+  color: var(--text-dim);
+  font-size: 1rem;
+  flex-shrink: 0;
+  display: flex;
+}
+
+.inventory-search__input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.inventory-search__input::placeholder {
+  color: var(--text-dim);
 }
 
 .inventory-filters {
@@ -564,6 +621,22 @@ button {
 }
 
 /* Collector card */
+.collector-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collector-card__icon {
+  font-size: 1.1rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.collector-card--secret .collector-card__icon {
+  color: var(--text-dim);
+}
+
 .collector-card__badge {
   color: var(--good);
   font-size: 0.75rem;

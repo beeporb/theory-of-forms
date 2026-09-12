@@ -14,4 +14,7 @@ export type IconName =
   | 'sword'
   | 'shield'
   | 'wrench'
-  | 'scroll';
+  | 'scroll'
+  | 'book'
+  | 'search'
+  | 'help';
