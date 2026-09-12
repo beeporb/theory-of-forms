@@ -21,4 +21,16 @@ export type IconName =
   | 'user'
   | 'star'
   | 'skull'
-  | 'coins';
+  | 'coins'
+  | 'layers'
+  | 'diamond'
+  | 'gauge'
+  | 'flame'
+  | 'stamp'
+  | 'folder'
+  | 'paperclip'
+  | 'fan'
+  | 'watch'
+  | 'wallet'
+  | 'glasses'
+  | 'key';
