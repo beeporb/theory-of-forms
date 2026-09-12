@@ -4,6 +4,7 @@ import type { GridPoint, PocketDimensionInstance } from './grid';
 import type { GearItem, GearSlot } from './gear';
 import type { RunLogEntry } from './runLog';
 import type { PastRunRecord } from './pastRun';
+import type { CharacterProgress } from './character';
 
 /** Persisted forever: meta-progression that survives across runs. */
 export interface PlayerMeta {
@@ -15,6 +16,7 @@ export interface PlayerMeta {
   ownedGearIds: string[];
   equippedGearIds: Partial<Record<GearSlot, string>>;
   pastRuns: PastRunRecord[];
+  character: CharacterProgress;
 }
 
 /** Ephemeral: exists only for the duration of a single pocket-dimension run. */

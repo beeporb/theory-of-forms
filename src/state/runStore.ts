@@ -9,6 +9,7 @@ import { buildLoadoutFromEquipped } from '../game/logic/loadout';
 import { resolveCell } from '../game/logic/resolveCell';
 import { movePlayer } from '../game/logic/movePlayer';
 import { canExtract } from '../game/logic/extraction';
+import { computeRunModifiers } from '../game/logic/characterEffects';
 import { createIdbStorage } from '../persistence/storage';
 import { useMetaStore } from './metaStore';
 
@@ -43,11 +44,13 @@ export const useRunStore = create<RunStore>()(
 
       startRun: (dimensionId) => {
         const definition = getDimensionDefinition(dimensionId);
-        const dimension = generateDimension(definition);
+        const modifiers = computeRunModifiers(useMetaStore.getState().meta.character);
+        const maxHealth = STARTING_HEALTH + modifiers.maxHealthBonus;
+        const dimension = generateDimension(definition, modifiers);
         const baseRun: RunState = {
           dimension,
-          health: STARTING_HEALTH,
-          maxHealth: STARTING_HEALTH,
+          health: maxHealth,
+          maxHealth,
           loadout: buildLoadoutFromEquipped(useMetaStore.getState().meta.equippedGearIds),
           inventory: [],
           status: 'active',

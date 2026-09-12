@@ -18,6 +18,8 @@ import {
   BookMarked,
   Search,
   CircleHelp,
+  User,
+  Star,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -42,6 +44,8 @@ const ICONS: Record<IconName, LucideIcon> = {
   book: BookMarked,
   search: Search,
   help: CircleHelp,
+  user: User,
+  star: Star,
 };
 
 interface IconProps {
