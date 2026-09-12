@@ -703,6 +703,122 @@ button {
   }
 }
 
+/* Item card */
+.item-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.item-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 10px 10px;
+  text-align: center;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.item-card:disabled {
+  cursor: default;
+}
+
+.item-card--odd {
+  border-color: rgba(140, 200, 120, 0.55);
+}
+
+.item-card--uncanny {
+  border-color: rgba(180, 120, 255, 0.65);
+  box-shadow: 0 0 10px rgba(180, 120, 255, 0.25);
+}
+
+.item-card--impossible {
+  border-color: rgba(120, 200, 255, 0.75);
+  box-shadow: 0 0 14px rgba(120, 200, 255, 0.3);
+}
+
+.item-card__count {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.item-card__icon {
+  font-size: 2rem;
+  margin-top: 4px;
+}
+
+.item-card__icon--large {
+  font-size: 3rem;
+  margin-top: 0;
+}
+
+.item-card__name {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.item-card__name--large {
+  font-size: 1.05rem;
+}
+
+.item-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+.item-card__flavor {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-style: italic;
+  margin: 2px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-card__flavor--large {
+  -webkit-line-clamp: unset;
+  font-size: 0.85rem;
+}
+
+/* Item detail modal */
+.item-detail-modal {
+  max-width: 320px;
+  width: 100%;
+  padding: 28px 24px 24px;
+  cursor: default;
+}
+
+.item-detail-modal__set {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.item-detail-modal .outcome-modal__dismiss {
+  margin-top: 16px;
+}
+
 /* Collector card */
 .collector-card__title {
   display: flex;
@@ -913,6 +1029,10 @@ button {
 .outcome-modal__icon {
   font-size: 2.5rem;
   margin-bottom: 8px;
+}
+
+.outcome-modal__lead {
+  margin: 0 0 12px;
 }
 
 .outcome-modal__badges {
