@@ -1,5 +1,6 @@
 import type { Outcome } from './outcome';
 import type { ActorInstance } from './actor';
+import type { PlayerMeta } from './player';
 
 export type CellStatus = 'unopened' | 'opened';
 
@@ -35,6 +36,8 @@ export interface PocketDimensionDefinition {
   actorPool: string[];
   /** How many roaming actors a generated layout gets. */
   actorCountRange: [number, number];
+  /** Unlocked from the very start when omitted; otherwise checked after runs/donations. */
+  unlockCondition?: (meta: PlayerMeta) => boolean;
 }
 
 export interface PocketDimensionInstance {

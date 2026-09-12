@@ -1,4 +1,6 @@
 import type { PocketDimensionDefinition } from '../types/grid';
+import { getCollector } from './collectors';
+import { isMasterSetComplete } from '../logic/masterSet';
 
 export const DIMENSIONS: PocketDimensionDefinition[] = [
   {
@@ -34,6 +36,62 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
     minMovesToExtractRange: [3, 6],
     actorPool: ['feral-scavenger', 'wandering-peddler', 'roaming-miner'],
     actorCountRange: [1, 3],
+  },
+  {
+    id: 'records-office',
+    name: 'The Records Office',
+    itemPoolFormIds: [
+      'rubber-stamp',
+      'manila-folder',
+      'paperclip-chain',
+      'desk-fan',
+      'pocket-watch',
+      'leather-wallet',
+      'reading-glasses',
+      'brass-key',
+    ],
+    // A denser maze of cubicles and filing rooms rather than open warehouse floor.
+    minRows: 4,
+    maxRows: 6,
+    minCols: 4,
+    maxCols: 6,
+    fillRatioRange: [0.65, 0.9],
+    extractionPointCountRange: [2, 3],
+    minMovesToExtractRange: [4, 7],
+    actorPool: ['feral-scavenger', 'wandering-peddler', 'roaming-miner'],
+    actorCountRange: [1, 2],
+    unlockCondition: (meta) => meta.character.level >= 3,
+  },
+  {
+    id: 'deep-vein',
+    name: 'The Deep Vein',
+    itemPoolFormIds: [
+      'iron-ore',
+      'quartz-shard',
+      'sulfur-lump',
+      'copper-vein',
+      'obsidian-shard',
+      'pickaxe-head',
+      'mining-lantern',
+      'ore-cart-wheel',
+      'pressure-gauge',
+      'blasting-fuse',
+    ],
+    // Bigger and sparser than the warehouse — a real mine, not a storeroom.
+    minRows: 6,
+    maxRows: 9,
+    minCols: 6,
+    maxCols: 9,
+    fillRatioRange: [0.5, 0.75],
+    extractionPointCountRange: [2, 4],
+    minMovesToExtractRange: [5, 9],
+    actorPool: ['feral-scavenger', 'wandering-peddler', 'roaming-miner'],
+    actorCountRange: [2, 4],
+    unlockCondition: (meta) => {
+      const miner = getCollector('the-miner');
+      const progress = meta.collectors[miner.id] ?? { collectorId: miner.id, donated: {} };
+      return isMasterSetComplete(miner, progress);
+    },
   },
 ];
 
