@@ -28,6 +28,7 @@ interface RunStore {
   startRun: (dimensionId: string) => void;
   moveTo: (x: number, y: number) => MoveResult;
   donateToCollector: (collectorId: string, instanceId: string) => void;
+  dropItem: (instanceId: string) => void;
   extractRun: () => void;
   abandonRun: () => void;
   abandonDeadRun: () => void;
@@ -62,6 +63,7 @@ export const useRunStore = create<RunStore>()(
           maxHealth,
           loadout: buildLoadoutFromEquipped(useMetaStore.getState().meta.equippedGearIds),
           inventory: [],
+          carryCapacity: useMetaStore.getState().meta.carryCapacity,
           status: 'active',
           log: [],
           position: dimension.entry,
@@ -90,6 +92,12 @@ export const useRunStore = create<RunStore>()(
         if (!canDonate(item, collector, progress)) return;
 
         useMetaStore.getState().recordDonation(collectorId, item);
+        set({ run: { ...run, inventory: run.inventory.filter((i) => i.instanceId !== instanceId) } });
+      },
+
+      dropItem: (instanceId) => {
+        const { run } = get();
+        if (!run) return;
         set({ run: { ...run, inventory: run.inventory.filter((i) => i.instanceId !== instanceId) } });
       },
 

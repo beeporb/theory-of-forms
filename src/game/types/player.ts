@@ -26,6 +26,7 @@ export interface RunState {
   maxHealth: number;
   loadout: GearItem[];
   inventory: ItemInstance[];
+  carryCapacity: number;
   status: 'active' | 'died' | 'extracted';
   log: RunLogEntry[];
   position: GridPoint;
