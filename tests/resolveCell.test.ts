@@ -19,6 +19,7 @@ function makeRun(outcome: Outcome, overrides: Partial<RunState> = {}): RunState 
     maxHealth: 100,
     loadout: [],
     inventory: [],
+    carryCapacity: 10,
     status: 'active',
     log: [],
     position: { x: 0, y: 0 },

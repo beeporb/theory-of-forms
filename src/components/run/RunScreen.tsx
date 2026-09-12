@@ -12,6 +12,7 @@ import { InventoryPanel } from '../inventory/InventoryPanel';
 import { LoadoutPanel } from '../inventory/LoadoutPanel';
 import { RunLogModal } from './RunLogModal';
 import { AbandonConfirmModal } from './AbandonConfirmModal';
+import { PackFullModal } from './PackFullModal';
 import { StatusBar } from './StatusBar';
 
 interface RunScreenProps {
@@ -21,6 +22,7 @@ interface RunScreenProps {
 export function RunScreen({ run }: RunScreenProps) {
   const moveTo = useRunStore((s) => s.moveTo);
   const donateToCollector = useRunStore((s) => s.donateToCollector);
+  const dropItem = useRunStore((s) => s.dropItem);
   const extractRun = useRunStore((s) => s.extractRun);
   const abandonRun = useRunStore((s) => s.abandonRun);
   const collectors = useMetaStore((s) => s.meta.collectors);
@@ -60,7 +62,11 @@ export function RunScreen({ run }: RunScreenProps) {
         onMoveTo={handleMoveTo}
       />
       <LoadoutPanel loadout={run.loadout} />
-      <InventoryPanel title="Run Inventory" items={run.inventory} emptyMessage="Nothing found yet." />
+      <InventoryPanel
+        title={`Run Inventory (${run.inventory.length}/${run.carryCapacity})`}
+        items={run.inventory}
+        emptyMessage="Nothing found yet."
+      />
       {run.status === 'active' && activeEncounter && (
         <ActorEncounterModal
           encounter={activeEncounter}
@@ -73,6 +79,12 @@ export function RunScreen({ run }: RunScreenProps) {
       {run.status === 'active' && !activeEncounter && activeOutcome && (
         <OutcomeModal outcome={activeOutcome} onDismiss={() => setActiveOutcome(null)} />
       )}
+      {run.status === 'active' &&
+        !activeEncounter &&
+        !activeOutcome &&
+        run.inventory.length > run.carryCapacity && (
+          <PackFullModal inventory={run.inventory} carryCapacity={run.carryCapacity} onDrop={dropItem} />
+        )}
       {showLog && <RunLogModal log={run.log} onDismiss={() => setShowLog(false)} />}
       {showAbandonConfirm && (
         <AbandonConfirmModal onConfirm={abandonRun} onCancel={() => setShowAbandonConfirm(false)} />
