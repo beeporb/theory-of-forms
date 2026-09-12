@@ -407,6 +407,20 @@ button {
   letter-spacing: 0.1em;
 }
 
+.currency-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.currency-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
 /* Inventory view */
 .inventory-view {
   display: flex;
@@ -1113,6 +1127,65 @@ button {
   color: var(--text-dim);
   font-size: 0.75rem;
   margin: 4px 0 0;
+}
+
+.collector-detail-modal__quests {
+  margin-top: 12px;
+}
+
+.quest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quest-list__row {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.quest-list__description {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+
+.quest-list__reward {
+  margin: 0 0 8px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.quest-list__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.quest-list__progress {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.quest-list__footer button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 6px 10px;
+  min-height: 32px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.quest-list__footer button:disabled {
+  border-color: var(--border);
+  color: var(--text-dim);
+  cursor: default;
 }
 
 /* Grid */

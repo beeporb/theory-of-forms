@@ -3,8 +3,10 @@ import { ITEM_FORMS, getItemForm } from '../src/game/content/items';
 import { SET_LABEL } from '../src/game/content/sets';
 import { DIMENSIONS } from '../src/game/content/dimensions';
 import { ACTORS, getActorDefinition } from '../src/game/content/actors';
-import { COLLECTORS } from '../src/game/content/collectors';
+import { COLLECTORS, getCollector } from '../src/game/content/collectors';
 import { GEAR_CATALOG, getGear } from '../src/game/content/gear';
+import { MATERIALS, getMaterial } from '../src/game/content/materials';
+import { QUESTS } from '../src/game/content/quests';
 import { EVENTS } from '../src/game/content/events';
 import { CONDITION_ORDER } from '../src/game/types/condition';
 import { CONDITION_WEIGHTS } from '../src/game/content/conditionTable';
@@ -102,6 +104,57 @@ describe('content integrity', () => {
 
   it('has a unique id per collector', () => {
     const ids = COLLECTORS.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('gives every material non-empty flavor text', () => {
+    for (const material of MATERIALS) {
+      expect(material.flavorText.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('has a unique id per material', () => {
+    const ids = MATERIALS.map((m) => m.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('resolves every quest collectorId to a real, non-secret collector', () => {
+    for (const quest of QUESTS) {
+      const collector = getCollector(quest.collectorId);
+      expect(collector.secret).toBeFalsy();
+    }
+  });
+
+  it('resolves every quest requirement.formId to a real item form', () => {
+    for (const quest of QUESTS) {
+      expect(() => getItemForm(quest.requirement.formId)).not.toThrow();
+      expect(quest.requirement.count).toBeGreaterThan(0);
+    }
+  });
+
+  it('resolves every quest reward materialId/gearId to real content', () => {
+    for (const quest of QUESTS) {
+      const { reward } = quest;
+      if (reward.materialId) {
+        expect(() => getMaterial(reward.materialId!)).not.toThrow();
+        expect(reward.materialCount).toBeGreaterThan(0);
+      }
+      if (reward.gearId) {
+        expect(() => getGear(reward.gearId!)).not.toThrow();
+      }
+    }
+  });
+
+  it('gives every quest a non-empty description and at least one reward', () => {
+    for (const quest of QUESTS) {
+      expect(quest.description.length).toBeGreaterThan(0);
+      const { reward } = quest;
+      expect(reward.widgets || reward.materialId || reward.gearId).toBeTruthy();
+    }
+  });
+
+  it('has a unique id per quest', () => {
+    const ids = QUESTS.map((q) => q.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 });
