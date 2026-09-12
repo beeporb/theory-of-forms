@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2.2',
+    date: '2026-09-12',
+    changes: [
+      'Equipment condition badges are now color-coded (red/amber/green) so gear at risk of breaking stands out at a glance instead of needing to be read.',
+    ],
+  },
+  {
     version: '1.2.1',
     date: '2026-09-12',
     changes: [

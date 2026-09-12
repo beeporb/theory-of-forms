@@ -3,6 +3,13 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.2] - 2026-09-12
+
+### Fixed
+
+- Equipment condition badges are now color-coded (red/amber/green) so gear
+  at risk of breaking stands out at a glance instead of needing to be read.
+
 ## [1.2.1] - 2026-09-12
 
 ### Fixed

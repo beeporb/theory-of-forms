@@ -43,7 +43,7 @@ export function ItemCard({
       </span>
       <span className="item-card__name">{name}</span>
       <span className="item-card__badges">
-        {condition && <span className="badge">{CONDITION_LABEL[condition]}</span>}
+        {condition && <span className={`badge badge--condition-${condition}`}>{CONDITION_LABEL[condition]}</span>}
         <span className="badge">{WEIRDNESS_LABEL[weirdness]}</span>
       </span>
       <span className="item-card__flavor">{flavorText}</span>

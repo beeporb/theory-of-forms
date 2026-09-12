@@ -841,6 +841,23 @@ button {
   white-space: nowrap;
 }
 
+/* Condition badges are color-coded so gear at risk of breaking stands out
+   without needing to read the label. */
+.badge--condition-wrecked {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.badge--condition-worn {
+  color: #d9a34a;
+  border-color: #d9a34a;
+}
+
+.badge--condition-pristine {
+  color: var(--good);
+  border-color: var(--good);
+}
+
 .item-list__count {
   color: var(--text-dim);
 }
