@@ -5,6 +5,8 @@ export interface GeneratedLayout {
   shape: boolean[][];
   entry: GridPoint;
   extractionPoints: GridPoint[];
+  /** Distance (in steps) of every existing cell from the entry, keyed by `pointKey`. */
+  distances: Map<string, number>;
 }
 
 type LayoutConfig = Pick<
@@ -12,9 +14,11 @@ type LayoutConfig = Pick<
   'minRows' | 'maxRows' | 'minCols' | 'maxCols' | 'fillRatioRange' | 'extractionPointCountRange'
 >;
 
-function key(p: GridPoint): string {
+export function pointKey(p: GridPoint): string {
   return `${p.x},${p.y}`;
 }
+
+const key = pointKey;
 
 function neighborsOf(p: GridPoint): GridPoint[] {
   return [
@@ -103,5 +107,5 @@ export function generateLayout(config: LayoutConfig): GeneratedLayout {
     extractionPoints.push(candidatePool.splice(index, 1)[0]);
   }
 
-  return { shape, entry, extractionPoints };
+  return { shape, entry, extractionPoints, distances };
 }
