@@ -14,6 +14,8 @@ interface ItemDetailModalProps {
   condition?: Condition;
   count?: number;
   metaLabel?: string;
+  breakDownLabel?: string;
+  onBreakDown?: () => void;
   onDismiss: () => void;
 }
 
@@ -25,6 +27,8 @@ export function ItemDetailModal({
   condition,
   count,
   metaLabel,
+  breakDownLabel,
+  onBreakDown,
   onDismiss,
 }: ItemDetailModalProps) {
   const filter = condition ? itemQualityFilter(condition, weirdness) : rarityFilter(weirdness);
@@ -46,9 +50,16 @@ export function ItemDetailModal({
           <span className="badge">{WEIRDNESS_LABEL[weirdness]}</span>
         </span>
         <p className="item-card__flavor item-card__flavor--large">{flavorText}</p>
-        <button type="button" className="outcome-modal__dismiss" onClick={onDismiss}>
-          Close
-        </button>
+        <div className="item-detail-modal__actions">
+          {onBreakDown && (
+            <button type="button" className="item-detail-modal__breakdown" onClick={onBreakDown}>
+              Break Down{breakDownLabel ? ` (${breakDownLabel})` : ''}
+            </button>
+          )}
+          <button type="button" className="outcome-modal__dismiss" onClick={onDismiss}>
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

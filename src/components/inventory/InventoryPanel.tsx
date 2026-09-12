@@ -2,7 +2,9 @@ import { useState } from 'react';
 import type { ItemInstance } from '../../game/types/item';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { getMaterial } from '../../game/content/materials';
 import { SET_LABEL } from '../../game/content/sets';
+import { breakdownMaterialId, breakdownYield } from '../../game/logic/breakdown';
 import { ItemCard } from './ItemCard';
 import { ItemDetailModal } from './ItemDetailModal';
 
@@ -10,6 +12,8 @@ interface InventoryPanelProps {
   title: string;
   items: ItemInstance[];
   emptyMessage?: string;
+  /** Only meaningful for the persisted stash — omitted for run-local/lost inventory views. */
+  onBreakDown?: (instanceId: string) => void;
 }
 
 interface GroupedEntry {
@@ -18,6 +22,7 @@ interface GroupedEntry {
   condition: ItemInstance['condition'];
   weirdness: ItemInstance['weirdness'];
   count: number;
+  instanceIds: string[];
 }
 
 function groupItems(items: ItemInstance[]): GroupedEntry[] {
@@ -27,6 +32,7 @@ function groupItems(items: ItemInstance[]): GroupedEntry[] {
     const existing = groups.get(key);
     if (existing) {
       existing.count += 1;
+      existing.instanceIds.push(item.instanceId);
     } else {
       groups.set(key, {
         key,
@@ -34,13 +40,14 @@ function groupItems(items: ItemInstance[]): GroupedEntry[] {
         condition: item.condition,
         weirdness: item.weirdness,
         count: 1,
+        instanceIds: [item.instanceId],
       });
     }
   }
   return [...groups.values()];
 }
 
-export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.' }: InventoryPanelProps) {
+export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.', onBreakDown }: InventoryPanelProps) {
   const grouped = groupItems(items);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const openEntry = grouped.find((entry) => entry.key === openKey) ?? null;
@@ -74,6 +81,8 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
         (() => {
           const version = getVersion(openEntry.versionId);
           const form = getItemForm(version.formId);
+          const materialId = breakdownMaterialId(form.setId);
+          const yieldAmount = breakdownYield(openEntry.condition);
           return (
             <ItemDetailModal
               icon={form.icon}
@@ -83,6 +92,10 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
               condition={openEntry.condition}
               weirdness={openEntry.weirdness}
               count={openEntry.count}
+              breakDownLabel={materialId ? `+${yieldAmount} ${getMaterial(materialId).name}` : undefined}
+              onBreakDown={
+                onBreakDown && materialId ? () => onBreakDown(openEntry.instanceIds[0]) : undefined
+              }
               onDismiss={() => setOpenKey(null)}
             />
           );

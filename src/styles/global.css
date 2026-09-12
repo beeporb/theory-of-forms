@@ -1026,6 +1026,29 @@ button {
   margin-top: 16px;
 }
 
+.item-detail-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.item-detail-modal__actions .outcome-modal__dismiss {
+  margin-top: 0;
+}
+
+.item-detail-modal__breakdown {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 10px 20px;
+  min-height: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 /* Collector card */
 .collector-card__title {
   display: flex;
@@ -1183,6 +1206,75 @@ button {
 }
 
 .quest-list__footer button:disabled {
+  border-color: var(--border);
+  color: var(--text-dim);
+  cursor: default;
+}
+
+/* Crafting */
+.recipe-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recipe-list__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.recipe-list__icon {
+  font-size: 1.3rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.recipe-list__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.recipe-list__name {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.recipe-list__owned {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.recipe-list__costs {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.recipe-list__cost--short {
+  color: var(--danger);
+}
+
+.recipe-list__row button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 6px 10px;
+  min-height: 32px;
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+.recipe-list__row button:disabled {
   border-color: var(--border);
   color: var(--text-dim);
   cursor: default;
