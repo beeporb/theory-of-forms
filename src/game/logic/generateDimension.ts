@@ -1,5 +1,6 @@
-import type { Cell, PocketDimensionDefinition, PocketDimensionInstance } from '../types/grid';
+import type { Cell, GridPoint, PocketDimensionDefinition, PocketDimensionInstance } from '../types/grid';
 import type { Outcome } from '../types/outcome';
+import type { ActorInstance } from '../types/actor';
 import { CONDITION_ORDER } from '../types/condition';
 import { WEIRDNESS_ORDER } from '../types/weirdness';
 import { getVersionsForForm } from '../content/versions';
@@ -17,6 +18,31 @@ import {
 import { pickOne, randomInt, weightedPick } from '../utils/rng';
 import { BASE_RUN_MODIFIERS, type RunModifiers } from './characterEffects';
 import { generateLayout } from './generateLayout';
+
+function spawnActors(
+  shape: boolean[][],
+  entry: GridPoint,
+  actorPool: string[],
+  actorCountRange: [number, number],
+): ActorInstance[] {
+  if (actorPool.length === 0) return [];
+
+  const candidates: GridPoint[] = [];
+  shape.forEach((row, y) =>
+    row.forEach((exists, x) => {
+      if (exists && !(x === entry.x && y === entry.y)) candidates.push({ x, y });
+    }),
+  );
+
+  const count = Math.min(candidates.length, randomInt(...actorCountRange));
+  const actors: ActorInstance[] = [];
+  for (let i = 0; i < count; i++) {
+    const index = randomInt(0, candidates.length - 1);
+    const [position] = candidates.splice(index, 1);
+    actors.push({ instanceId: crypto.randomUUID(), definitionId: pickOne(actorPool), position });
+  }
+  return actors;
+}
 
 function biasedPick<T>(order: readonly T[], picked: T, bias: number): T {
   if (bias === 0) return picked;
@@ -76,6 +102,7 @@ export function generateDimension(
   );
 
   const minMovesToExtract = randomInt(...definition.minMovesToExtractRange);
+  const actors = spawnActors(shape, entry, definition.actorPool, definition.actorCountRange);
 
-  return { definitionId: definition.id, cells, entry, extractionPoints, minMovesToExtract };
+  return { definitionId: definition.id, cells, entry, extractionPoints, minMovesToExtract, actors };
 }

@@ -1,6 +1,8 @@
 import type { Cell } from '../../game/types/grid';
+import type { ActorInstance } from '../../game/types/actor';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { getActorDefinition } from '../../game/content/actors';
 import { itemQualityFilter } from '../../game/logic/itemStyle';
 import { Icon } from '../common/Icon';
 
@@ -9,6 +11,7 @@ interface GridCellProps {
   isCurrent: boolean;
   isReachable: boolean;
   isExtractionPoint: boolean;
+  actor?: ActorInstance;
   onMoveTo: () => void;
 }
 
@@ -31,18 +34,20 @@ function CellIcon({ cell }: { cell: Cell }) {
   }
 }
 
-export function GridCell({ cell, isCurrent, isReachable, isExtractionPoint, onMoveTo }: GridCellProps) {
+export function GridCell({ cell, isCurrent, isReachable, isExtractionPoint, actor, onMoveTo }: GridCellProps) {
   if (!cell.exists) {
     return <div className="grid-cell grid-cell--void" aria-hidden="true" />;
   }
 
   const isFog = cell.status === 'unopened' && !isReachable;
   const clickable = isReachable && !isCurrent;
+  const visibleActor = actor && !isFog ? getActorDefinition(actor.definitionId) : null;
 
   const classes = ['grid-cell', `grid-cell--${cell.status}`];
   if (isFog) classes.push('grid-cell--fog');
   if (isCurrent) classes.push('grid-cell--current');
   if (isExtractionPoint) classes.push('grid-cell--extraction');
+  if (visibleActor) classes.push(`grid-cell--actor-${visibleActor.kind}`);
 
   const label = isFog
     ? 'Unexplored'
@@ -60,7 +65,7 @@ export function GridCell({ cell, isCurrent, isReachable, isExtractionPoint, onMo
       disabled={!clickable}
       aria-label={label}
     >
-      {!isFog && <CellIcon cell={cell} />}
+      {!isFog && (visibleActor ? <Icon name={visibleActor.icon} tone={visibleActor.kind === 'adversary' ? 'bad' : undefined} /> : <CellIcon cell={cell} />)}
       {isExtractionPoint && (
         <span className="grid-cell__badge" aria-hidden="true">
           <Icon name="door" />

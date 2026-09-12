@@ -15,6 +15,8 @@ const definition: PocketDimensionDefinition = {
   fillRatioRange: [0.6, 0.8],
   extractionPointCountRange: [2, 3],
   minMovesToExtractRange: [3, 5],
+  actorPool: ['feral-scavenger', 'wandering-peddler', 'roaming-miner'],
+  actorCountRange: [1, 3],
 };
 
 describe('generateDimension', () => {
@@ -119,5 +121,32 @@ describe('generateDimension', () => {
       expect(instance.minMovesToExtract).toBeGreaterThanOrEqual(definition.minMovesToExtractRange[0]);
       expect(instance.minMovesToExtract).toBeLessThanOrEqual(definition.minMovesToExtractRange[1]);
     }
+  });
+
+  it('spawns actors within the configured count range, on existing cells other than the entry', () => {
+    for (let i = 0; i < 50; i++) {
+      const instance = generateDimension(definition);
+      expect(instance.actors.length).toBeGreaterThanOrEqual(definition.actorCountRange[0]);
+      expect(instance.actors.length).toBeLessThanOrEqual(definition.actorCountRange[1]);
+
+      for (const actor of instance.actors) {
+        expect(instance.cells[actor.position.y]?.[actor.position.x]?.exists).toBe(true);
+        expect(actor.position).not.toEqual(instance.entry);
+        expect(definition.actorPool).toContain(actor.definitionId);
+      }
+    }
+  });
+
+  it('never spawns two actors on the same cell', () => {
+    for (let i = 0; i < 50; i++) {
+      const instance = generateDimension(definition);
+      const positions = new Set(instance.actors.map((a) => `${a.position.x},${a.position.y}`));
+      expect(positions.size).toBe(instance.actors.length);
+    }
+  });
+
+  it('spawns no actors when the dimension has no actor pool', () => {
+    const instance = generateDimension({ ...definition, actorPool: [], actorCountRange: [1, 3] });
+    expect(instance.actors).toHaveLength(0);
   });
 });

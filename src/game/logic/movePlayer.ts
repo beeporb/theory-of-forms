@@ -1,11 +1,15 @@
 import type { RunState } from '../types/player';
 import type { Outcome } from '../types/outcome';
+import type { ActorEncounter } from '../types/actor';
 import { resolveCell } from './resolveCell';
+import { resolveActorEncounter } from './resolveActorEncounter';
+import { advanceActors } from './actorMovement';
 import { isAdjacent } from './adjacency';
 
 export interface MovePlayerResult {
   run: RunState;
   outcome: Outcome | null;
+  actorEncounter: ActorEncounter | null;
 }
 
 export function movePlayer(run: RunState, x: number, y: number): MovePlayerResult {
@@ -17,16 +21,35 @@ export function movePlayer(run: RunState, x: number, y: number): MovePlayerResul
     throw new Error(`Cell (${x}, ${y}) is not adjacent to the current position`);
   }
 
+  let nextRun = run;
+  let outcome: Outcome | null = null;
   if (cell.status === 'unopened') {
-    const { run: resolved, outcome } = resolveCell(run, x, y);
-    return {
-      run: { ...resolved, position: { x, y }, moveCount: resolved.moveCount + 1 },
-      outcome,
-    };
+    const resolved = resolveCell(run, x, y);
+    nextRun = resolved.run;
+    outcome = resolved.outcome;
   }
 
-  return {
-    run: { ...run, position: { x, y }, moveCount: run.moveCount + 1 },
-    outcome: null,
-  };
+  const position = { x, y };
+  nextRun = { ...nextRun, position, moveCount: nextRun.moveCount + 1 };
+
+  // Walking straight into an actor's current square is an immediate ambush.
+  let encounteredActor = nextRun.dimension.actors.find((a) => a.position.x === x && a.position.y === y) ?? null;
+
+  // The rest of the board takes its turn too, unless the move above already ended the run.
+  if (nextRun.status === 'active') {
+    const { actors, encounteredInstanceId } = advanceActors(nextRun.dimension.cells, nextRun.dimension.actors, position);
+    nextRun = { ...nextRun, dimension: { ...nextRun.dimension, actors } };
+    if (!encounteredActor && encounteredInstanceId) {
+      encounteredActor = actors.find((a) => a.instanceId === encounteredInstanceId) ?? null;
+    }
+  }
+
+  let actorEncounter: ActorEncounter | null = null;
+  if (encounteredActor && nextRun.status === 'active') {
+    const resolved = resolveActorEncounter(nextRun, encounteredActor);
+    nextRun = resolved.run;
+    actorEncounter = resolved.encounter;
+  }
+
+  return { run: nextRun, outcome, actorEncounter };
 }

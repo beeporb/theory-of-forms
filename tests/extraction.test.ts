@@ -10,6 +10,7 @@ function makeRun(overrides: Partial<RunState> = {}): RunState {
       entry: { x: 0, y: 0 },
       extractionPoints: [{ x: 3, y: 3 }],
       minMovesToExtract: 4,
+      actors: [],
     },
     health: 100,
     maxHealth: 100,

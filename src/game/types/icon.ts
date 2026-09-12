@@ -19,4 +19,6 @@ export type IconName =
   | 'search'
   | 'help'
   | 'user'
-  | 'star';
+  | 'star'
+  | 'skull'
+  | 'coins';
