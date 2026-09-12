@@ -41,6 +41,11 @@ body,
   min-height: 100%;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -809,12 +814,14 @@ button {
 /* Status bar */
 .status-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
 }
 
 .status-bar__health {
-  flex: 1;
+  flex: 1 1 100%;
+  min-width: 0;
 }
 
 .status-bar__health-track {
@@ -845,7 +852,8 @@ button {
   font-size: 0.8rem;
   cursor: pointer;
   touch-action: manipulation;
-  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .status-bar__extract:disabled {
@@ -863,6 +871,8 @@ button {
   min-height: 40px;
   cursor: pointer;
   touch-action: manipulation;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .status-bar__abandon {
@@ -874,6 +884,8 @@ button {
   min-height: 40px;
   cursor: pointer;
   touch-action: manipulation;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 /* Outcome modal */
