@@ -13,6 +13,7 @@ import {
   POSITIVE_MESSAGES,
 } from '../content/encounterTable';
 import { pickOne, randomInt, weightedPick } from '../utils/rng';
+import { generateLayout } from './generateLayout';
 
 function rollOutcome(itemPoolFormIds: string[]): Outcome {
   const kind = weightedPick(OUTCOME_KIND_WEIGHTS);
@@ -46,7 +47,9 @@ function rollOutcome(itemPoolFormIds: string[]): Outcome {
 }
 
 export function generateDimension(definition: PocketDimensionDefinition): PocketDimensionInstance {
-  const cells: Cell[][] = definition.shape.map((row, y) =>
+  const { shape, entry, extractionPoints } = generateLayout(definition);
+
+  const cells: Cell[][] = shape.map((row, y) =>
     row.map((exists, x): Cell => ({
       x,
       y,
@@ -56,5 +59,7 @@ export function generateDimension(definition: PocketDimensionDefinition): Pocket
     })),
   );
 
-  return { definitionId: definition.id, cells };
+  const minMovesToExtract = randomInt(...definition.minMovesToExtractRange);
+
+  return { definitionId: definition.id, cells, entry, extractionPoints, minMovesToExtract };
 }
