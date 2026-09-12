@@ -46,7 +46,7 @@ export function ItemDetailModal({
         <span className="item-card__name item-card__name--large">{name}</span>
         {metaLabel && <span className="item-detail-modal__set">{metaLabel}</span>}
         <span className="item-card__badges">
-          {condition && <span className="badge">{CONDITION_LABEL[condition]}</span>}
+          {condition && <span className={`badge badge--condition-${condition}`}>{CONDITION_LABEL[condition]}</span>}
           <span className="badge">{WEIRDNESS_LABEL[weirdness]}</span>
         </span>
         <p className="item-card__flavor item-card__flavor--large">{flavorText}</p>
