@@ -78,6 +78,37 @@ describe('resolveCell', () => {
     expect(next.status).toBe('died');
   });
 
+  it('opens and logs an event cell without applying any effect yet', () => {
+    const event: Outcome = {
+      kind: 'event',
+      eventId: 'locked-door',
+      icon: 'lock',
+      prompt: 'A door has been welded shut.',
+      choices: [
+        {
+          id: 'force-it',
+          label: 'Force it open',
+          description: 'Risk it.',
+          outcome: { kind: 'hazard', damage: 20, stealsItem: false, message: 'ouch' },
+        },
+        {
+          id: 'leave-it',
+          label: 'Leave it be',
+          description: 'Play it safe.',
+          outcome: { kind: 'empty', message: 'nothing' },
+        },
+      ],
+    };
+    const run = makeRun(event);
+    const { run: next, outcome } = resolveCell(run, 0, 0);
+
+    expect(outcome).toBe(event);
+    expect(next.health).toBe(100);
+    expect(next.inventory).toHaveLength(0);
+    expect(next.dimension.cells[0][0].status).toBe('opened');
+    expect(next.log).toHaveLength(1);
+  });
+
   it('appends an entry to the run log', () => {
     const outcome: Outcome = { kind: 'empty', message: 'nothing' };
     const run = makeRun(outcome);

@@ -34,6 +34,7 @@ import {
   Wallet,
   Glasses,
   Key,
+  Lock,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -74,6 +75,7 @@ const ICONS: Record<IconName, LucideIcon> = {
   wallet: Wallet,
   glasses: Glasses,
   key: Key,
+  lock: Lock,
 };
 
 interface IconProps {
