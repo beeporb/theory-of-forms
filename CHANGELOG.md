@@ -3,6 +3,21 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-09-12
+
+### Added
+
+- A second, harder "Pristine Set" milestone per collector — the base
+  Master Set only asks for one of each required version at any quality,
+  which could read as "done" from a pile of low-quality donations.
+  Pristine Set only completes once every required version is donated at
+  pristine condition, shown as its own progress bar and badge.
+
+### Changed
+
+- Condition badges in the collector detail checklist are now color-coded
+  like everywhere else they appear.
+
 ## [1.2.2] - 2026-09-12
 
 ### Fixed

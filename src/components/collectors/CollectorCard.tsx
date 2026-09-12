@@ -5,7 +5,13 @@ import { CONDITION_LABEL } from '../../game/types/condition';
 import { WEIRDNESS_LABEL } from '../../game/types/weirdness';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
-import { getRequiredVersionIds, isMasterSetComplete, masterSetPercent } from '../../game/logic/masterSet';
+import {
+  getRequiredVersionIds,
+  isMasterSetComplete,
+  isPristineSetComplete,
+  masterSetPercent,
+  pristineSetPercent,
+} from '../../game/logic/masterSet';
 import { qualityScore } from '../../game/logic/quality';
 import { itemQualityFilter } from '../../game/logic/itemStyle';
 import { Icon } from '../common/Icon';
@@ -21,6 +27,8 @@ interface CollectorCardProps {
 export function CollectorCard({ definition, progress, stash, onDonate }: CollectorCardProps) {
   const complete = isMasterSetComplete(definition, progress);
   const percent = Math.round(masterSetPercent(definition, progress) * 100);
+  const pristineComplete = isPristineSetComplete(definition, progress);
+  const pristinePercent = Math.round(pristineSetPercent(definition, progress) * 100);
   const requiredVersionIds = getRequiredVersionIds(definition);
   const [showDetail, setShowDetail] = useState(false);
 
@@ -43,13 +51,27 @@ export function CollectorCard({ definition, progress, stash, onDonate }: Collect
             <Icon name="chevronRight" />
           </span>
         </button>
-        {complete && <span className="collector-card__badge">Master Set Complete</span>}
       </h3>
+      {(complete || pristineComplete) && (
+        <p className="collector-card__badges-row">
+          {complete && <span className="collector-card__badge">Master Set Complete</span>}
+          {pristineComplete && <span className="collector-card__badge collector-card__badge--pristine">Pristine Set Complete</span>}
+        </p>
+      )}
       <p className="collector-card__flavor">{definition.flavorText}</p>
+
+      <p className="collector-card__progress-label">Master set (any quality): {percent}%</p>
       <div className="collector-card__progress-track">
         <div className="collector-card__progress-fill" style={{ width: `${percent}%` }} />
       </div>
-      <p className="collector-card__progress-label">{percent}% complete</p>
+
+      <p className="collector-card__progress-label">Pristine set (the real goal): {pristinePercent}%</p>
+      <div className="collector-card__progress-track">
+        <div
+          className="collector-card__progress-fill collector-card__progress-fill--pristine"
+          style={{ width: `${pristinePercent}%` }}
+        />
+      </div>
 
       {donatable.length > 0 && (
         <div className="collector-card__donate">

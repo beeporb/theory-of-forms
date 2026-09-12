@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.3.0',
+    date: '2026-09-12',
+    changes: [
+      'A second, harder "Pristine Set" milestone per collector — the base Master Set only asks for one of each required version at any quality, which could read as "done" from a pile of low-quality donations. Pristine Set only completes once every required version is donated at pristine condition, shown as its own progress bar and badge.',
+      'Condition badges in the collector detail checklist are now color-coded like everywhere else they appear.',
+    ],
+  },
+  {
     version: '1.2.2',
     date: '2026-09-12',
     changes: [
