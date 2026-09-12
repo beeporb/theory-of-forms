@@ -4,6 +4,7 @@ import { getDimensionDefinition } from '../../game/content/dimensions';
 import { RUN_OUTCOME_LABEL } from '../../game/logic/pastRun';
 import { useMetaStore } from '../../state/metaStore';
 import { PastRunDetailModal } from '../run/PastRunDetailModal';
+import { RunLauncher } from '../run/RunLauncher';
 
 export function RunsView() {
   const pastRuns = useMetaStore((s) => s.meta.pastRuns) ?? [];
@@ -12,6 +13,10 @@ export function RunsView() {
   return (
     <div className="runs-view">
       <h2 className="view-title">Runs</h2>
+
+      <RunLauncher />
+
+      <h3 className="panel__subtitle">History</h3>
       {pastRuns.length === 0 ? (
         <p className="panel__empty">No runs yet. Go find something.</p>
       ) : (
