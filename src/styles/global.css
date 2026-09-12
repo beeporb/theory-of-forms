@@ -77,10 +77,12 @@ button {
   font-size: 1rem;
   cursor: pointer;
   touch-action: manipulation;
+  transition: transform 0.1s ease, filter 0.1s ease;
 }
 
 .primary-button:active {
   filter: brightness(0.92);
+  transform: scale(0.98);
 }
 
 .primary-button:disabled {
@@ -130,6 +132,18 @@ button {
   gap: 16px;
 }
 
+@keyframes view-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Each tab is a fresh mount when navigated to, so this replays every switch. */
+.hub-shell__content > * {
+  animation: view-fade-in 0.2s ease;
+}
+
 .hub-nav {
   position: fixed;
   left: 0;
@@ -155,6 +169,11 @@ button {
   cursor: pointer;
   touch-action: manipulation;
   font-size: 0.7rem;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+
+.hub-nav__item:active {
+  transform: scale(0.94);
 }
 
 .hub-nav__icon {
@@ -493,6 +512,11 @@ button {
   font-size: 0.8rem;
   cursor: pointer;
   touch-action: manipulation;
+  transition: transform 0.1s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.filter-chip:not(:disabled):active {
+  transform: scale(0.95);
 }
 
 .filter-chip--active {
@@ -692,6 +716,11 @@ button {
   touch-action: manipulation;
   color: inherit;
   font: inherit;
+  transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.destination-card:active {
+  transform: scale(0.98);
 }
 
 .destination-card--selected {
@@ -844,10 +873,21 @@ button {
   font: inherit;
   cursor: pointer;
   touch-action: manipulation;
+  transition: transform 0.1s ease, border-color 0.15s ease;
 }
 
 .item-card:disabled {
   cursor: default;
+}
+
+.item-card:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) {
+  .item-card:not(:disabled):hover {
+    border-color: var(--accent);
+  }
 }
 
 .item-card--odd {
@@ -1024,6 +1064,12 @@ button {
   width: 100%;
 }
 
+@keyframes grid-cell-reveal {
+  from {
+    transform: scale(0.85);
+  }
+}
+
 .grid-cell {
   position: relative;
   aspect-ratio: 1;
@@ -1038,6 +1084,15 @@ button {
   justify-content: center;
   cursor: pointer;
   touch-action: manipulation;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.grid-cell:not(:disabled):active {
+  transform: scale(0.92);
+}
+
+.grid-cell--opened {
+  animation: grid-cell-reveal 0.2s ease;
 }
 
 .grid-cell--unopened {
@@ -1081,6 +1136,16 @@ button {
   box-shadow: inset 0 0 0 2px var(--accent);
 }
 
+@keyframes extraction-badge-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
 .grid-cell__badge {
   position: absolute;
   bottom: 2px;
@@ -1088,6 +1153,7 @@ button {
   font-size: 0.7rem;
   line-height: 1;
   color: var(--accent);
+  animation: extraction-badge-pulse 2s ease-in-out infinite;
 }
 
 /* Status bar */
@@ -1168,6 +1234,19 @@ button {
 }
 
 /* Outcome modal */
+@keyframes modal-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+}
+
 .outcome-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1177,6 +1256,12 @@ button {
   justify-content: center;
   padding: 16px;
   z-index: 10;
+  animation: modal-backdrop-fade-in 0.15s ease;
+}
+
+/* Every modal box is a direct child of the backdrop, whatever its own class. */
+.outcome-modal-backdrop > * {
+  animation: modal-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .outcome-modal {
@@ -1242,10 +1327,15 @@ button {
   font: inherit;
   cursor: pointer;
   touch-action: manipulation;
+  transition: transform 0.1s ease, border-color 0.15s ease;
 }
 
 .event-modal__choice:hover {
   border-color: var(--accent);
+}
+
+.event-modal__choice:active {
+  transform: scale(0.98);
 }
 
 .event-modal__choice-label {
@@ -1538,4 +1628,26 @@ button {
 
 .death-screen__message {
   color: var(--text-dim);
+}
+
+/* Respect reduced-motion preferences: keep the color/layout transitions
+   (still instant enough to feel responsive) but drop decorative motion. */
+@media (prefers-reduced-motion: reduce) {
+  .outcome-modal-backdrop,
+  .outcome-modal-backdrop > *,
+  .hub-shell__content > *,
+  .grid-cell--opened,
+  .grid-cell__badge {
+    animation: none;
+  }
+
+  .primary-button,
+  .item-card,
+  .destination-card,
+  .grid-cell,
+  .filter-chip,
+  .hub-nav__item,
+  .event-modal__choice {
+    transition: none;
+  }
 }
