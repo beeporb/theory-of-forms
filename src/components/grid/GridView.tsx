@@ -16,7 +16,7 @@ export function GridView({ dimension, position, extractionPoints, onMoveTo }: Gr
   return (
     <div
       className="grid-view"
-      style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
     >
       {dimension.cells.map((row) =>
         row.map((cell) => (

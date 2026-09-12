@@ -1075,8 +1075,8 @@ button {
 .grid-cell {
   position: relative;
   aspect-ratio: 1;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 0;
+  min-width: 0;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--panel-bg);
