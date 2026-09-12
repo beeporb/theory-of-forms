@@ -21,6 +21,8 @@ export interface PocketDimensionDefinition {
   id: string;
   name: string;
   itemPoolFormIds: string[];
+  /** Gear ids a 'loot' cell here can occasionally yield instead of an item — see rollLeafOutcome. */
+  gearPool: string[];
   /** Bounding box row/col counts a generated layout is randomly sized within. */
   minRows: number;
   maxRows: number;

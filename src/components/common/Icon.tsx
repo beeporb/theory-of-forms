@@ -35,6 +35,8 @@ import {
   Glasses,
   Key,
   Lock,
+  Radio,
+  Cpu,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -76,6 +78,8 @@ const ICONS: Record<IconName, LucideIcon> = {
   glasses: Glasses,
   key: Key,
   lock: Lock,
+  radio: Radio,
+  cpu: Cpu,
 };
 
 interface IconProps {

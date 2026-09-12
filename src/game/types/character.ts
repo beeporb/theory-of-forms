@@ -1,4 +1,3 @@
-import type { GearSlot } from './gear';
 import type { IconName } from './icon';
 
 /** Latent stats that shape a run without the player directly controlling them. */
@@ -11,8 +10,10 @@ export interface AttributeDefinition {
   icon: IconName;
 }
 
+// Deliberately not GearSlot: keys/keycards are situational access items, not
+// something a player builds combat/survival proficiency with by carrying.
 /** Proficiency with a category of equipment, built up by carrying it into runs. */
-export type TagSkillId = GearSlot;
+export type TagSkillId = 'weapon' | 'armor' | 'tool';
 
 export interface TagSkillDefinition {
   id: TagSkillId;

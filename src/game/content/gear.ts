@@ -1,8 +1,11 @@
 import type { GearItem } from '../types/gear';
 
-// Two options per slot so losing one to death doesn't fully lock the player
-// out of that slot. Gear acquisition beyond this starting catalog (finding
-// more, buying more) is a deliberate later step, not built yet.
+// Starting loadout: one item per equippable slot, so a fresh player has
+// something in hand without owning the whole catalog outright. Everything
+// else here is found in pocket dimensions (see PocketDimensionDefinition.gearPool
+// and the 'gear' outcome in generateDimension.ts) and kept on extraction.
+export const STARTER_GEAR_IDS: string[] = ['rusty-crowbar', 'patched-jacket', 'hand-lamp'];
+
 export const GEAR_CATALOG: GearItem[] = [
   {
     id: 'rusty-crowbar',
@@ -21,6 +24,22 @@ export const GEAR_CATALOG: GearItem[] = [
     flavorText: 'Pulled from somewhere it shouldn’t have fit. Rings faintly when it connects.',
   },
   {
+    id: 'scavenged-cleaver',
+    name: 'Scavenged Cleaver',
+    slot: 'weapon',
+    icon: 'sword',
+    rarity: 'uncanny',
+    flavorText: 'Somebody’s kitchen knife, sharpened past recognition. Still remembers what it was for.',
+  },
+  {
+    id: 'arc-welder-torch',
+    name: 'Arc Welder Torch',
+    slot: 'weapon',
+    icon: 'flame',
+    rarity: 'unstable',
+    flavorText: 'The tank hisses when you don’t expect it to. Cuts through more than metal.',
+  },
+  {
     id: 'patched-jacket',
     name: 'Patched Jacket',
     slot: 'armor',
@@ -37,6 +56,22 @@ export const GEAR_CATALOG: GearItem[] = [
     flavorText: 'The stains never wash out, and the pockets are somehow bigger inside than out.',
   },
   {
+    id: 'riot-vest',
+    name: 'Riot Vest',
+    slot: 'armor',
+    icon: 'shield',
+    rarity: 'uncanny',
+    flavorText: 'Government-issue, decades expired. The plates still stop most of what matters.',
+  },
+  {
+    id: 'lead-lined-coat',
+    name: 'Lead-Lined Coat',
+    slot: 'armor',
+    icon: 'shield',
+    rarity: 'impossible',
+    flavorText: 'Heavier than it should be, and the lining hums faintly if you stand still too long.',
+  },
+  {
     id: 'hand-lamp',
     name: 'Hand Lamp',
     slot: 'tool',
@@ -51,6 +86,38 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'wrench',
     rarity: 'odd',
     flavorText: 'Has more attachments than it should. One of them doesn’t have a name.',
+  },
+  {
+    id: 'geiger-counter',
+    name: 'Geiger Counter',
+    slot: 'tool',
+    icon: 'gauge',
+    rarity: 'uncanny',
+    flavorText: 'Clicks more than it should, even in rooms that seem perfectly normal.',
+  },
+  {
+    id: 'signal-booster',
+    name: 'Signal Booster',
+    slot: 'tool',
+    icon: 'radio',
+    rarity: 'unstable',
+    flavorText: 'Picks up broadcasts from stations that stopped transmitting years ago.',
+  },
+  {
+    id: 'warehouse-keycard',
+    name: 'Warehouse Keycard',
+    slot: 'key',
+    icon: 'key',
+    rarity: 'mundane',
+    flavorText: 'The photo’s worn to a smear, but the strip still reads. Should still open something.',
+  },
+  {
+    id: 'override-chip',
+    name: 'Override Chip',
+    slot: 'key',
+    icon: 'cpu',
+    rarity: 'odd',
+    flavorText: 'Pulled from a machine that was never supposed to be opened. Fits sockets that shouldn’t exist yet.',
   },
 ];
 

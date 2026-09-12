@@ -34,4 +34,6 @@ export type IconName =
   | 'wallet'
   | 'glasses'
   | 'key'
-  | 'lock';
+  | 'lock'
+  | 'radio'
+  | 'cpu';

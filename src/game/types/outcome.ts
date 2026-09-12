@@ -4,6 +4,7 @@ import type { IconName } from './icon';
 
 export type LeafOutcome =
   | { kind: 'loot'; versionId: string; condition: Condition; weirdness: Weirdness }
+  | { kind: 'gear'; gearId: string; condition: Condition }
   | { kind: 'hazard'; damage: number; stealsItem: boolean; message: string }
   | { kind: 'positive'; heal: number; message: string }
   | { kind: 'empty'; message: string };

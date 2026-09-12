@@ -4,6 +4,7 @@ import { CONDITION_LABEL } from '../types/condition';
 import { WEIRDNESS_LABEL } from '../types/weirdness';
 import { getItemForm } from '../content/items';
 import { getVersion } from '../content/versions';
+import { getGear } from '../content/gear';
 import { itemQualityFilter } from './itemStyle';
 
 export interface OutcomeDescription {
@@ -22,6 +23,14 @@ export function describeOutcome(outcome: Outcome): OutcomeDescription {
         icon: form.icon,
         filter: itemQualityFilter(outcome.condition, outcome.weirdness),
         text: `Found a ${CONDITION_LABEL[outcome.condition].toLowerCase()}, ${WEIRDNESS_LABEL[outcome.weirdness].toLowerCase()} ${version.name}.`,
+      };
+    }
+    case 'gear': {
+      const gear = getGear(outcome.gearId);
+      return {
+        icon: gear.icon,
+        filter: itemQualityFilter(outcome.condition, gear.rarity),
+        text: `Found a ${CONDITION_LABEL[outcome.condition].toLowerCase()} ${gear.name}.`,
       };
     }
     case 'hazard':

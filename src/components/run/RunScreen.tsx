@@ -28,6 +28,7 @@ export function RunScreen({ run }: RunScreenProps) {
   const extractRun = useRunStore((s) => s.extractRun);
   const abandonRun = useRunStore((s) => s.abandonRun);
   const collectors = useMetaStore((s) => s.meta.collectors);
+  const gearCondition = useMetaStore((s) => s.meta.gearCondition);
   const [activeOutcome, setActiveOutcome] = useState<Outcome | null>(null);
   const [activeEncounter, setActiveEncounter] = useState<ActorEncounter | null>(null);
   const [showLog, setShowLog] = useState(false);
@@ -63,7 +64,7 @@ export function RunScreen({ run }: RunScreenProps) {
         extractionPoints={run.dimension.extractionPoints}
         onMoveTo={handleMoveTo}
       />
-      <LoadoutPanel loadout={run.loadout} />
+      <LoadoutPanel loadout={run.loadout} gearCondition={gearCondition} />
       <InventoryPanel
         title={`Run Inventory (${run.inventory.length}/${run.carryCapacity})`}
         items={run.inventory}

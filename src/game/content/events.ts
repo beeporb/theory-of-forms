@@ -14,6 +14,8 @@ export const EVENTS: EventDefinition[] = [
           { weight: 55, value: 'loot' },
           { weight: 45, value: 'hazard' },
         ],
+        guaranteedByGearId: 'warehouse-keycard',
+        guaranteedKind: 'loot',
       },
       {
         id: 'leave-it',
@@ -36,6 +38,8 @@ export const EVENTS: EventDefinition[] = [
           { weight: 40, value: 'positive' },
           { weight: 60, value: 'hazard' },
         ],
+        guaranteedByGearId: 'override-chip',
+        guaranteedKind: 'positive',
       },
       {
         id: 'walk-away',

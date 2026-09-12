@@ -7,6 +7,14 @@ export interface EventChoiceDefinition {
   description: string;
   /** Weighted pool of possible resolutions for this choice, rolled at generation time. */
   outcomeWeights: { weight: number; value: LeafOutcomeKind }[];
+  /**
+   * When the player carries this gear id (checked against their equipped
+   * loadout at generation time), this choice skips outcomeWeights entirely
+   * and resolves as guaranteedKind instead — the key/keycard making the
+   * risky option a sure thing.
+   */
+  guaranteedByGearId?: string;
+  guaranteedKind?: LeafOutcomeKind;
 }
 
 export interface EventDefinition {

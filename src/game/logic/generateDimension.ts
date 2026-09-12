@@ -9,6 +9,7 @@ import { WEIRDNESS_WEIGHTS } from '../content/weirdnessTable';
 import { EVENTS } from '../content/events';
 import {
   EMPTY_MESSAGES,
+  GEAR_DROP_CHANCE,
   HAZARD_DAMAGE_RANGE,
   HAZARD_DEPTH_DAMAGE_MULTIPLIER_BONUS,
   HAZARD_DEPTH_WEIGHT_BONUS,
@@ -59,11 +60,22 @@ function biasedPick<T>(order: readonly T[], picked: T, bias: number): T {
 function rollLeafOutcome(
   kind: LeafOutcomeKind,
   itemPoolFormIds: string[],
+  gearPoolIds: string[],
   modifiers: RunModifiers,
   depthFactor: number,
 ): LeafOutcome {
   switch (kind) {
     case 'loot': {
+      // A 'loot' roll occasionally hands over a gear piece instead of an item —
+      // gear found this way still rolls its initial condition the same way an
+      // item's does, rather than always starting 'sound'.
+      if (gearPoolIds.length > 0 && Math.random() < GEAR_DROP_CHANCE) {
+        return {
+          kind: 'gear',
+          gearId: pickOne(gearPoolIds),
+          condition: biasedPick(CONDITION_ORDER, weightedPick(CONDITION_WEIGHTS), modifiers.conditionTierBias),
+        };
+      }
       const formId = pickOne(itemPoolFormIds);
       const version = pickOne(getVersionsForForm(formId));
       return {
@@ -96,37 +108,71 @@ function rollLeafOutcome(
   }
 }
 
-/** Rolls which vignette occurs, then pre-rolls each choice's own resolution. */
-function rollEvent(itemPoolFormIds: string[], modifiers: RunModifiers, depthFactor: number): Outcome {
+/**
+ * Rolls which vignette occurs, then pre-rolls each choice's own resolution.
+ * `carriedGearIds` is checked here (generation time) rather than at choice
+ * time so a choice's own key check follows the same pre-roll pattern as
+ * everything else in this file — see the comment on generateDimension for
+ * why that means "carried" means "equipped" rather than "owned".
+ */
+function rollEvent(
+  itemPoolFormIds: string[],
+  gearPoolIds: string[],
+  modifiers: RunModifiers,
+  depthFactor: number,
+  carriedGearIds: string[],
+): Outcome {
   const template = pickOne(EVENTS);
   return {
     kind: 'event',
     eventId: template.id,
     icon: template.icon,
     prompt: template.prompt,
-    choices: template.choices.map((choice) => ({
-      id: choice.id,
-      label: choice.label,
-      description: choice.description,
-      outcome: rollLeafOutcome(weightedPick(choice.outcomeWeights), itemPoolFormIds, modifiers, depthFactor),
-    })),
+    choices: template.choices.map((choice) => {
+      const guaranteed = !!choice.guaranteedByGearId && carriedGearIds.includes(choice.guaranteedByGearId);
+      const kind = guaranteed ? choice.guaranteedKind! : weightedPick(choice.outcomeWeights);
+      // A guaranteed resolution is also a *good* one — nudge condition up a
+      // tier so "the key made it a sure thing" reads as a sure good thing.
+      const effectiveModifiers = guaranteed
+        ? { ...modifiers, conditionTierBias: modifiers.conditionTierBias + 1 }
+        : modifiers;
+      return {
+        id: choice.id,
+        label: choice.label,
+        description: choice.description,
+        outcome: rollLeafOutcome(kind, itemPoolFormIds, gearPoolIds, effectiveModifiers, depthFactor),
+      };
+    }),
   };
 }
 
-function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers, depthFactor: number): Outcome {
+function rollOutcome(
+  itemPoolFormIds: string[],
+  gearPoolIds: string[],
+  modifiers: RunModifiers,
+  depthFactor: number,
+  carriedGearIds: string[],
+): Outcome {
   const outcomeWeights = OUTCOME_KIND_WEIGHTS.map((entry) => {
     if (entry.value === 'loot') return { ...entry, weight: entry.weight + modifiers.lootWeightBonus };
     if (entry.value === 'hazard') return { ...entry, weight: entry.weight + depthFactor * HAZARD_DEPTH_WEIGHT_BONUS };
     return entry;
   });
   const kind = weightedPick(outcomeWeights);
-  if (kind === 'event') return rollEvent(itemPoolFormIds, modifiers, depthFactor);
-  return rollLeafOutcome(kind, itemPoolFormIds, modifiers, depthFactor);
+  if (kind === 'event') return rollEvent(itemPoolFormIds, gearPoolIds, modifiers, depthFactor, carriedGearIds);
+  return rollLeafOutcome(kind, itemPoolFormIds, gearPoolIds, modifiers, depthFactor);
 }
 
+/**
+ * `carriedGearIds` are the gear ids actually brought into this run — i.e. the
+ * player's *equipped* loadout (buildLoadoutFromEquipped), not everything they
+ * own. Keys/keycards only unlock anything while equipped in the key slot,
+ * matching how weapon/armor/tool gear already only helps a run once equipped.
+ */
 export function generateDimension(
   definition: PocketDimensionDefinition,
   modifiers: RunModifiers = BASE_RUN_MODIFIERS,
+  carriedGearIds: string[] = [],
 ): PocketDimensionInstance {
   const { shape, entry, extractionPoints, distances } = generateLayout(definition);
   const maxDistance = Math.max(1, ...distances.values());
@@ -139,7 +185,9 @@ export function generateDimension(
         y,
         exists,
         status: 'unopened',
-        outcome: exists ? rollOutcome(definition.itemPoolFormIds, modifiers, depthFactor) : null,
+        outcome: exists
+          ? rollOutcome(definition.itemPoolFormIds, definition.gearPool, modifiers, depthFactor, carriedGearIds)
+          : null,
       };
     }),
   );

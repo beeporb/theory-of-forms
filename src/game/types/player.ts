@@ -1,7 +1,8 @@
 import type { ItemInstance } from './item';
+import type { Condition } from './condition';
 import type { CollectorProgress } from './collector';
 import type { GridPoint, PocketDimensionInstance } from './grid';
-import type { GearItem, GearSlot } from './gear';
+import type { FoundGear, GearItem, GearSlot } from './gear';
 import type { RunLogEntry } from './runLog';
 import type { PastRunRecord } from './pastRun';
 import type { CharacterProgress } from './character';
@@ -15,6 +16,8 @@ export interface PlayerMeta {
   carryCapacity: number;
   ownedGearIds: string[];
   equippedGearIds: Partial<Record<GearSlot, string>>;
+  /** Current condition of each owned gear piece, keyed by gear id — degrades after runs it's equipped for. */
+  gearCondition: Record<string, Condition>;
   pastRuns: PastRunRecord[];
   character: CharacterProgress;
 }
@@ -26,6 +29,8 @@ export interface RunState {
   maxHealth: number;
   loadout: GearItem[];
   inventory: ItemInstance[];
+  /** Gear found this run but not yet granted — merged into owned gear on extraction, lost otherwise (mirrors inventory). */
+  foundGear: FoundGear[];
   carryCapacity: number;
   status: 'active' | 'died' | 'extracted';
   log: RunLogEntry[];

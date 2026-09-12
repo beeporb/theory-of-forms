@@ -26,6 +26,7 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'reading-glasses',
       'brass-key',
     ],
+    gearPool: ['bent-pipe', 'work-overalls', 'pocket-multitool', 'warehouse-keycard'],
     // Floor plan is regenerated (size, shape, entry, extraction points) each time the warehouse is entered.
     minRows: 4,
     maxRows: 7,
@@ -50,6 +51,7 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'reading-glasses',
       'brass-key',
     ],
+    gearPool: ['pocket-multitool', 'riot-vest', 'signal-booster', 'override-chip'],
     // A denser maze of cubicles and filing rooms rather than open warehouse floor.
     minRows: 4,
     maxRows: 6,
@@ -77,6 +79,7 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'pressure-gauge',
       'blasting-fuse',
     ],
+    gearPool: ['scavenged-cleaver', 'arc-welder-torch', 'geiger-counter', 'lead-lined-coat'],
     // Bigger and sparser than the warehouse — a real mine, not a storeroom.
     minRows: 6,
     maxRows: 9,

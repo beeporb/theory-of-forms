@@ -2,15 +2,16 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PlayerMeta } from '../game/types/player';
 import type { ItemInstance } from '../game/types/item';
-import type { GearSlot } from '../game/types/gear';
+import type { FoundGear, GearSlot } from '../game/types/gear';
 import type { PastRunRecord } from '../game/types/pastRun';
 import type { AttributeId } from '../game/types/character';
 import { getCollector } from '../game/content/collectors';
-import { GEAR_CATALOG } from '../game/content/gear';
+import { STARTER_GEAR_IDS } from '../game/content/gear';
 import { DIMENSIONS } from '../game/content/dimensions';
 import { getTrait } from '../game/content/traits';
 import { canDonate, applyDonation } from '../game/logic/donation';
 import { withDimensionUnlocks } from '../game/logic/dimensionUnlocks';
+import { degradeCondition, mergeFoundGear } from '../game/logic/gearCondition';
 import {
   applyCharacterXp,
   applyTagSkillXp,
@@ -26,6 +27,8 @@ interface MetaStore {
   mergeRunInventory: (items: ItemInstance[]) => void;
   setEquipped: (slot: GearSlot, gearId: string) => void;
   loseGear: (gearIds: string[]) => void;
+  acquireGear: (found: FoundGear[]) => void;
+  degradeEquippedGear: (gearIds: string[]) => void;
   recordRun: (record: PastRunRecord) => void;
   allocateAttributePoint: (attributeId: AttributeId) => void;
   selectTrait: (traitId: string) => void;
@@ -39,8 +42,9 @@ const INITIAL_META: PlayerMeta = {
   collectors: {},
   unlockedDimensionIds: DIMENSIONS.filter((d) => !d.unlockCondition).map((d) => d.id),
   carryCapacity: 10,
-  ownedGearIds: GEAR_CATALOG.map((g) => g.id),
+  ownedGearIds: STARTER_GEAR_IDS,
   equippedGearIds: { weapon: 'rusty-crowbar', armor: 'patched-jacket', tool: 'hand-lamp' },
+  gearCondition: Object.fromEntries(STARTER_GEAR_IDS.map((id) => [id, 'sound' as const])),
   pastRuns: [],
   character: createInitialCharacter(),
 };
@@ -102,7 +106,29 @@ export const useMetaStore = create<MetaStore>()(
         const equippedGearIds = Object.fromEntries(
           Object.entries(meta.equippedGearIds).filter(([, id]) => !lost.has(id as string)),
         ) as PlayerMeta['equippedGearIds'];
-        set({ meta: { ...meta, ownedGearIds, equippedGearIds } });
+        const gearCondition = Object.fromEntries(
+          Object.entries(meta.gearCondition).filter(([id]) => !lost.has(id)),
+        );
+        set({ meta: { ...meta, ownedGearIds, equippedGearIds, gearCondition } });
+      },
+
+      acquireGear: (found) => {
+        const { meta } = get();
+        if (found.length === 0) return;
+        const { ownedGearIds, gearCondition } = mergeFoundGear(meta.ownedGearIds, meta.gearCondition, found);
+        set({ meta: { ...meta, ownedGearIds, gearCondition } });
+      },
+
+      // Only extraction calls this — see runStore.extractRun for why death and
+      // abandonment don't (they lose the gear outright instead).
+      degradeEquippedGear: (gearIds) => {
+        const { meta } = get();
+        if (gearIds.length === 0) return;
+        const gearCondition = { ...meta.gearCondition };
+        for (const id of gearIds) {
+          gearCondition[id] = degradeCondition(gearCondition[id] ?? 'sound', 1);
+        }
+        set({ meta: { ...meta, gearCondition } });
       },
 
       recordRun: (record) => {
@@ -163,11 +189,19 @@ export const useMetaStore = create<MetaStore>()(
       merge: (persistedState, currentState) => {
         const persistedMeta = (persistedState as { meta?: Partial<PlayerMeta> } | undefined)?.meta;
         if (!persistedMeta) return currentState;
+        const ownedGearIds = persistedMeta.ownedGearIds ?? currentState.meta.ownedGearIds;
+        // Older saves predate gearCondition entirely; any owned gear it's still
+        // missing a condition for (old save, or new gear added since) defaults to 'sound'.
+        const gearCondition = { ...(persistedMeta.gearCondition ?? {}) };
+        for (const id of ownedGearIds) {
+          if (!(id in gearCondition)) gearCondition[id] = 'sound';
+        }
         return {
           ...currentState,
           meta: withDimensionUnlocks({
             ...currentState.meta,
             ...persistedMeta,
+            gearCondition,
             character: persistedMeta.character ?? createInitialCharacter(),
           }),
         };

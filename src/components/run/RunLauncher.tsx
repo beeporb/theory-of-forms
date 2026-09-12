@@ -19,6 +19,7 @@ function formatRange(min: number, max: number): string {
 export function RunLauncher() {
   const unlockedDimensionIds = useMetaStore((s) => s.meta.unlockedDimensionIds);
   const equippedGearIds = useMetaStore((s) => s.meta.equippedGearIds);
+  const gearCondition = useMetaStore((s) => s.meta.gearCondition);
   const startRun = useRunStore((s) => s.startRun);
 
   const destinations = DIMENSIONS.filter((d) => unlockedDimensionIds.includes(d.id));
@@ -73,7 +74,7 @@ export function RunLauncher() {
             <h3 className="panel__title">Destination</h3>
             <p className="run-launcher__confirm-destination">{selected?.name ?? 'No destination selected'}</p>
           </section>
-          <LoadoutPanel loadout={buildLoadoutFromEquipped(equippedGearIds)} />
+          <LoadoutPanel loadout={buildLoadoutFromEquipped(equippedGearIds)} gearCondition={gearCondition} />
         </>
       )}
 

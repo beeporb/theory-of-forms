@@ -8,6 +8,7 @@ const definition: PocketDimensionDefinition = {
   id: 'test-dimension',
   name: 'Test Dimension',
   itemPoolFormIds: ['iron-ore', 'quartz-shard'],
+  gearPool: ['bent-pipe', 'work-overalls'],
   minRows: 4,
   maxRows: 6,
   minCols: 4,
@@ -208,5 +209,81 @@ describe('generateDimension', () => {
 
     expect(farHazards / farTotal).toBeGreaterThan(nearHazards / nearTotal);
     expect(farDamageSum / farHazards).toBeGreaterThan(nearDamageSum / nearHazards);
+  });
+
+  it('only rolls gear from the dimension gear pool, and never when the pool is empty', () => {
+    let gearCount = 0;
+    for (let i = 0; i < 200; i++) {
+      const instance = generateDimension(definition);
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          if (cell.outcome?.kind === 'gear') {
+            gearCount++;
+            expect(definition.gearPool).toContain(cell.outcome.gearId);
+          }
+        }
+      }
+    }
+    expect(gearCount).toBeGreaterThan(0);
+
+    for (let i = 0; i < 50; i++) {
+      const instance = generateDimension({ ...definition, gearPool: [] });
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          expect(cell.outcome?.kind).not.toBe('gear');
+        }
+      }
+    }
+  });
+
+  it('rolls gear as a small fraction of loot-or-gear cells, not the majority', () => {
+    let gearCount = 0;
+    let lootOrGearCount = 0;
+    for (let i = 0; i < 300; i++) {
+      const instance = generateDimension(definition);
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          if (cell.outcome?.kind === 'gear' || cell.outcome?.kind === 'loot') {
+            lootOrGearCount++;
+            if (cell.outcome.kind === 'gear') gearCount++;
+          }
+        }
+      }
+    }
+    expect(gearCount / lootOrGearCount).toBeLessThan(0.3);
+  });
+
+  it('guarantees a locked-door force-it choice succeeds when carrying the matching key', () => {
+    let sawForceIt = false;
+    for (let i = 0; i < 400 && !sawForceIt; i++) {
+      const instance = generateDimension(definition, undefined, ['warehouse-keycard']);
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          if (cell.outcome?.kind !== 'event' || cell.outcome.eventId !== 'locked-door') continue;
+          const forceIt = cell.outcome.choices.find((c) => c.id === 'force-it');
+          if (!forceIt) continue;
+          sawForceIt = true;
+          // Guaranteed still rolls through the normal 'loot' leaf, which can
+          // itself turn into gear (see rollLeafOutcome) — either is a win.
+          expect(['loot', 'gear']).toContain(forceIt.outcome.kind);
+        }
+      }
+    }
+    expect(sawForceIt).toBe(true);
+  });
+
+  it('rolls the locked-door force-it choice normally (loot or hazard) without the key', () => {
+    let sawHazard = false;
+    for (let i = 0; i < 400 && !sawHazard; i++) {
+      const instance = generateDimension(definition);
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          if (cell.outcome?.kind !== 'event' || cell.outcome.eventId !== 'locked-door') continue;
+          const forceIt = cell.outcome.choices.find((c) => c.id === 'force-it');
+          if (forceIt?.outcome.kind === 'hazard') sawHazard = true;
+        }
+      }
+    }
+    expect(sawHazard).toBe(true);
   });
 });

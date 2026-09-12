@@ -58,13 +58,18 @@ export const useRunStore = create<RunStore>()(
         const definition = getDimensionDefinition(dimensionId);
         const modifiers = computeRunModifiers(useMetaStore.getState().meta.character);
         const maxHealth = STARTING_HEALTH + modifiers.maxHealthBonus;
-        const dimension = generateDimension(definition, modifiers);
+        const equippedGearIds = useMetaStore.getState().meta.equippedGearIds;
+        const loadout = buildLoadoutFromEquipped(equippedGearIds);
+        // Keys only unlock anything while equipped (brought into the run), so
+        // event key checks use this same equipped set, not everything owned.
+        const dimension = generateDimension(definition, modifiers, loadout.map((g) => g.id));
         const baseRun: RunState = {
           dimension,
           health: maxHealth,
           maxHealth,
-          loadout: buildLoadoutFromEquipped(useMetaStore.getState().meta.equippedGearIds),
+          loadout,
           inventory: [],
+          foundGear: [],
           carryCapacity: useMetaStore.getState().meta.carryCapacity,
           status: 'active',
           log: [],
@@ -86,8 +91,8 @@ export const useRunStore = create<RunStore>()(
       resolveEventChoice: (outcome) => {
         const { run } = get();
         if (!run) return;
-        const { health, inventory, status } = applyLeafOutcome(run, outcome);
-        set({ run: { ...run, health, inventory, status } });
+        const { health, inventory, foundGear, status } = applyLeafOutcome(run, outcome);
+        set({ run: { ...run, health, inventory, foundGear, status } });
       },
 
       donateToCollector: (collectorId, instanceId) => {
@@ -114,6 +119,11 @@ export const useRunStore = create<RunStore>()(
         const { run } = get();
         if (!run || !canExtract(run)) return;
         useMetaStore.getState().mergeRunInventory(run.inventory);
+        useMetaStore.getState().acquireGear(run.foundGear);
+        // Death/abandonment already lose all equipped gear outright (see
+        // abandonRun/abandonDeadRun) — the maximum possible degradation — so
+        // only a clean extraction wears equipped gear down by a tier instead.
+        useMetaStore.getState().degradeEquippedGear(run.loadout.map((g) => g.id));
         useMetaStore.getState().recordRun(toPastRunRecord(run, 'extracted'));
         set({ run: null });
       },

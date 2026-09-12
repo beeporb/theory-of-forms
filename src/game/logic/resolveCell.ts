@@ -22,9 +22,9 @@ export function resolveCell(run: RunState, x: number, y: number): ResolveCellRes
 
   // Events don't apply any effect on their own — that happens once the
   // player picks a choice, via resolveEventChoice.
-  const { health, inventory, status } =
+  const { health, inventory, foundGear, status } =
     outcome.kind === 'event'
-      ? { health: run.health, inventory: run.inventory, status: run.status }
+      ? { health: run.health, inventory: run.inventory, foundGear: run.foundGear, status: run.status }
       : applyLeafOutcome(run, outcome);
 
   const nextRun: RunState = {
@@ -32,6 +32,7 @@ export function resolveCell(run: RunState, x: number, y: number): ResolveCellRes
     dimension: { ...run.dimension, cells },
     health,
     inventory,
+    foundGear,
     status,
     log: [...run.log, { x, y, outcome }],
   };

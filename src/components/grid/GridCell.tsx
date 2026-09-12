@@ -2,6 +2,7 @@ import type { Cell } from '../../game/types/grid';
 import type { ActorInstance } from '../../game/types/actor';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { getGear } from '../../game/content/gear';
 import { getActorDefinition } from '../../game/content/actors';
 import { itemQualityFilter } from '../../game/logic/itemStyle';
 import { Icon } from '../common/Icon';
@@ -24,6 +25,10 @@ function CellIcon({ cell }: { cell: Cell }) {
       const version = getVersion(outcome.versionId);
       const form = getItemForm(version.formId);
       return <Icon name={form.icon} filter={itemQualityFilter(outcome.condition, outcome.weirdness)} />;
+    }
+    case 'gear': {
+      const gear = getGear(outcome.gearId);
+      return <Icon name={gear.icon} filter={itemQualityFilter(outcome.condition, gear.rarity)} />;
     }
     case 'hazard':
       return <Icon name="bomb" tone="bad" />;

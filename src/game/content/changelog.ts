@@ -8,6 +8,16 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.1.0',
+    date: '2026-09-12',
+    changes: [
+      'Six more gear pieces (two per weapon/armor/tool slot) found in pocket dimensions instead of owned from the start.',
+      'Gear condition that degrades a tier after a run it was equipped for, shown on loadout cards like item condition.',
+      'A key slot and two keycards/keys that guarantee the risky choice on a matching event succeeds, when equipped.',
+      'A small chance for a ‘loot’ cell to yield gear instead of an item, rolling its initial condition like items do.',
+    ],
+  },
+  {
     version: '1.0.0',
     date: '2026-09-12',
     changes: [
