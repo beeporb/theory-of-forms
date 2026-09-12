@@ -78,6 +78,23 @@ button {
   filter: brightness(0.92);
 }
 
+/* Login gate */
+.login-gate {
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.login-gate__message {
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.login-gate .discord-login-button {
+  align-self: center;
+}
+
 /* Hub shell + navigation */
 .hub-shell {
   display: flex;
@@ -167,7 +184,7 @@ button {
   }
 
   .hub-shell__content {
-    max-width: 1100px;
+    max-width: 960px;
     padding: 32px;
     padding-bottom: 32px;
   }
@@ -193,6 +210,12 @@ button {
 .home-view__tagline {
   color: var(--text-dim);
   margin: 0;
+}
+
+@media (min-width: 768px) {
+  .home-view {
+    max-width: 640px;
+  }
 }
 
 .discord-login-button {
@@ -366,6 +389,27 @@ button {
   cursor: default;
 }
 
+@media (min-width: 768px) {
+  .inventory-view {
+    max-width: 900px;
+  }
+
+  .inventory-filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .filter-chip-group {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .loadout-slot__options {
+    max-width: 640px;
+  }
+}
+
 /* Runs view */
 .runs-view {
   display: flex;
@@ -421,6 +465,14 @@ button {
   flex-basis: 100%;
   color: var(--text-dim);
   font-size: 0.8rem;
+}
+
+@media (min-width: 768px) {
+  .run-history-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+  }
 }
 
 /* Shared panel */
