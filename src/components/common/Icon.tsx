@@ -37,6 +37,7 @@ import {
   Lock,
   Radio,
   Cpu,
+  ChevronRight,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -80,6 +81,7 @@ const ICONS: Record<IconName, LucideIcon> = {
   lock: Lock,
   radio: Radio,
   cpu: Cpu,
+  chevronRight: ChevronRight,
 };
 
 interface IconProps {

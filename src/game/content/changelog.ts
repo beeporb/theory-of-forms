@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2.1',
+    date: '2026-09-12',
+    changes: [
+      "A collector's name is now clearly clickable (a chevron affordance) — it previously only changed color on hover, which touch devices never show.",
+    ],
+  },
+  {
     version: '1.2.0',
     date: '2026-09-12',
     changes: [

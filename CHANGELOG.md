@@ -3,6 +3,13 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-09-12
+
+### Fixed
+
+- A collector's name is now clearly clickable (a chevron affordance) — it
+  previously only changed color on hover, which touch devices never show.
+
 ## [1.2.0] - 2026-09-12
 
 ### Added

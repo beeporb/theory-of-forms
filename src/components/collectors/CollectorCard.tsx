@@ -38,7 +38,10 @@ export function CollectorCard({ definition, progress, stash, onDonate }: Collect
           <span className="collector-card__icon">
             <Icon name={definition.icon} />
           </span>
-          {definition.name}
+          <span className="collector-card__title-text">{definition.name}</span>
+          <span className="collector-card__chevron">
+            <Icon name="chevronRight" />
+          </span>
         </button>
         {complete && <span className="collector-card__badge">Master Set Complete</span>}
       </h3>
