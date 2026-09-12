@@ -1,4 +1,5 @@
 import { useRunStore } from '../../state/runStore';
+import { DiscordLoginButton } from '../account/DiscordLoginButton';
 
 export function HomeView() {
   const startRun = useRunStore((s) => s.startRun);
@@ -11,6 +12,7 @@ export function HomeView() {
           The world ended. Here, people are doing alright. Out there, the old world is still
           waiting to be found.
         </p>
+        <DiscordLoginButton />
       </header>
 
       <button type="button" className="primary-button" onClick={() => startRun('warehouse')}>

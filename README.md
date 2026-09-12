@@ -28,7 +28,8 @@ extract or lose it all.
   persisted meta store (stash, collector progress) and an ephemeral
   per-run store
 - [idb-keyval](https://github.com/jakearchibald/idb-keyval) backing that
-  persistence via IndexedDB — no backend, no accounts, for now
+  persistence via IndexedDB — no backend, so login only establishes a local
+  identity (see below), it doesn't sync anything across devices
 - [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) for installability
   (manifest + service worker, works offline after first visit)
 - [vitest](https://vitest.dev/) for the pure game-logic tests
@@ -42,3 +43,17 @@ npm run test      # run the unit tests
 npm run build     # typecheck + production build
 npm run preview   # serve the production build locally
 ```
+
+### Discord login
+
+There's no backend, so "Log in with Discord" uses OAuth2's implicit grant:
+Discord redirects back with an access token in the URL fragment, which the
+app uses client-side to fetch the user's Discord identity (id, username,
+avatar) and store it locally alongside the rest of the meta progression.
+
+To enable it locally, create a Discord application at the
+[Discord Developer Portal](https://discord.com/developers/applications),
+add an OAuth2 redirect matching the URL you run the app at (e.g.
+`http://localhost:5173/`), then copy `.env.example` to `.env` and set
+`VITE_DISCORD_CLIENT_ID` to the application's client ID. Without that
+variable set, the login button logs an error instead of redirecting.
