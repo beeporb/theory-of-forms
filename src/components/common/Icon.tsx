@@ -20,6 +20,8 @@ import {
   CircleHelp,
   User,
   Star,
+  Skull,
+  Coins,
   type LucideIcon,
 } from 'lucide-react';
 import type { IconName } from '../../game/types/icon';
@@ -46,6 +48,8 @@ const ICONS: Record<IconName, LucideIcon> = {
   help: CircleHelp,
   user: User,
   star: Star,
+  skull: Skull,
+  coins: Coins,
 };
 
 interface IconProps {

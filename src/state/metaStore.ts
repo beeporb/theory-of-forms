@@ -6,11 +6,9 @@ import type { GearSlot } from '../game/types/gear';
 import type { PastRunRecord } from '../game/types/pastRun';
 import type { AttributeId } from '../game/types/character';
 import { getCollector } from '../game/content/collectors';
-import { getVersion } from '../game/content/versions';
 import { GEAR_CATALOG } from '../game/content/gear';
 import { getTrait } from '../game/content/traits';
-import { getRequiredVersionIds } from '../game/logic/masterSet';
-import { qualityScore } from '../game/logic/quality';
+import { canDonate, applyDonation } from '../game/logic/donation';
 import {
   applyCharacterXp,
   applyTagSkillXp,
@@ -22,6 +20,7 @@ import { createIdbStorage } from '../persistence/storage';
 interface MetaStore {
   meta: PlayerMeta;
   donateItem: (collectorId: string, instanceId: string) => void;
+  recordDonation: (collectorId: string, item: ItemInstance) => void;
   mergeRunInventory: (items: ItemInstance[]) => void;
   setEquipped: (slot: GearSlot, gearId: string) => void;
   loseGear: (gearIds: string[]) => void;
@@ -54,29 +53,32 @@ export const useMetaStore = create<MetaStore>()(
         const item = meta.stash.find((i) => i.instanceId === instanceId);
         if (!item) return;
 
-        const version = getVersion(item.versionId);
         const collector = getCollector(collectorId);
-        if (!getRequiredVersionIds(collector).includes(version.id)) return;
-
         const progress = meta.collectors[collectorId] ?? { collectorId, donated: {} };
-        const held = progress.donated[version.id];
-        const newScore = qualityScore(item.condition, item.weirdness);
-        if (held && qualityScore(held.condition, held.weirdness) >= newScore) return;
+        if (!canDonate(item, collector, progress)) return;
 
         set({
           meta: {
             ...meta,
             stash: meta.stash.filter((i) => i.instanceId !== instanceId),
-            collectors: {
-              ...meta.collectors,
-              [collectorId]: {
-                collectorId,
-                donated: {
-                  ...progress.donated,
-                  [version.id]: { condition: item.condition, weirdness: item.weirdness },
-                },
-              },
-            },
+            collectors: { ...meta.collectors, [collectorId]: applyDonation(progress, item) },
+          },
+        });
+      },
+
+      // Same as donateItem, but for an item that's still in the current run's
+      // inventory (donating to a roaming collector encountered on the grid)
+      // instead of the persisted stash.
+      recordDonation: (collectorId, item) => {
+        const { meta } = get();
+        const collector = getCollector(collectorId);
+        const progress = meta.collectors[collectorId] ?? { collectorId, donated: {} };
+        if (!canDonate(item, collector, progress)) return;
+
+        set({
+          meta: {
+            ...meta,
+            collectors: { ...meta.collectors, [collectorId]: applyDonation(progress, item) },
           },
         });
       },

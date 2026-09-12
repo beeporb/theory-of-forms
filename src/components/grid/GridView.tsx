@@ -11,6 +11,7 @@ interface GridViewProps {
 
 export function GridView({ dimension, position, extractionPoints, onMoveTo }: GridViewProps) {
   const cols = dimension.cells[0]?.length ?? 0;
+  const actorsByCell = new Map(dimension.actors.map((a) => [`${a.position.x},${a.position.y}`, a]));
 
   return (
     <div
@@ -25,6 +26,7 @@ export function GridView({ dimension, position, extractionPoints, onMoveTo }: Gr
             isCurrent={cell.x === position.x && cell.y === position.y}
             isReachable={cell.exists && isAdjacent(position, cell)}
             isExtractionPoint={extractionPoints.some((p) => p.x === cell.x && p.y === cell.y)}
+            actor={actorsByCell.get(`${cell.x},${cell.y}`)}
             onMoveTo={() => onMoveTo(cell.x, cell.y)}
           />
         )),

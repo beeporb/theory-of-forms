@@ -3,14 +3,15 @@ import { movePlayer } from '../src/game/logic/movePlayer';
 import type { RunState } from '../src/game/types/player';
 import type { Cell } from '../src/game/types/grid';
 import type { Outcome } from '../src/game/types/outcome';
+import type { ActorInstance } from '../src/game/types/actor';
 
 function makeCell(x: number, y: number, outcome: Outcome | null = { kind: 'empty', message: 'nothing' }): Cell {
   return { x, y, exists: true, status: 'unopened', outcome };
 }
 
-function makeRun(cells: Cell[][], overrides: Partial<RunState> = {}): RunState {
+function makeRun(cells: Cell[][], overrides: Partial<RunState> = {}, actors: ActorInstance[] = []): RunState {
   return {
-    dimension: { definitionId: 'test', cells, entry: { x: 0, y: 0 }, extractionPoints: [], minMovesToExtract: 0 },
+    dimension: { definitionId: 'test', cells, entry: { x: 0, y: 0 }, extractionPoints: [], minMovesToExtract: 0, actors },
     health: 100,
     maxHealth: 100,
     loadout: [],
@@ -59,5 +60,38 @@ describe('movePlayer', () => {
     const run = makeRun(cells);
 
     expect(() => movePlayer(run, 1, 0)).toThrow();
+  });
+
+  it('reports no actor encounter when there are no actors', () => {
+    const cells = [[makeCell(0, 0), makeCell(1, 0)]];
+    const run = makeRun(cells);
+
+    const { actorEncounter } = movePlayer(run, 1, 0);
+
+    expect(actorEncounter).toBeNull();
+  });
+
+  it('triggers an immediate encounter when walking onto an actor', () => {
+    const cells = [[makeCell(0, 0), makeCell(1, 0), makeCell(2, 0)]];
+    const actor: ActorInstance = { instanceId: 'a1', definitionId: 'roaming-miner', position: { x: 1, y: 0 } };
+    const run = makeRun(cells, {}, [actor]);
+
+    const { run: next, actorEncounter } = movePlayer(run, 1, 0);
+
+    expect(actorEncounter?.kind).toBe('collector');
+    // The miner stays put after a grid encounter, whichever cell it ends up on.
+    expect(next.dimension.actors).toHaveLength(1);
+  });
+
+  it('triggers an encounter when an actor wanders onto the player after they move', () => {
+    // A 1-row corridor: after the player steps to (1,0), the actor starting at
+    // (2,0) has nowhere else to wander but onto the player.
+    const cells = [[makeCell(0, 0), makeCell(1, 0), makeCell(2, 0)]];
+    const actor: ActorInstance = { instanceId: 'a1', definitionId: 'feral-scavenger', position: { x: 2, y: 0 } };
+    const run = makeRun(cells, {}, [actor]);
+
+    const { actorEncounter } = movePlayer(run, 1, 0);
+
+    expect(actorEncounter?.kind).toBe('adversary');
   });
 });

@@ -1,4 +1,5 @@
 import type { Outcome } from './outcome';
+import type { ActorInstance } from './actor';
 
 export type CellStatus = 'unopened' | 'opened';
 
@@ -30,6 +31,10 @@ export interface PocketDimensionDefinition {
   extractionPointCountRange: [number, number];
   /** Moves the player must make through the grid before extraction is allowed. */
   minMovesToExtractRange: [number, number];
+  /** Actor definition ids that can be spawned into a generated layout. */
+  actorPool: string[];
+  /** How many roaming actors a generated layout gets. */
+  actorCountRange: [number, number];
 }
 
 export interface PocketDimensionInstance {
@@ -41,4 +46,6 @@ export interface PocketDimensionInstance {
   extractionPoints: GridPoint[];
   /** Moves the player must make through the grid before extraction is allowed this run. */
   minMovesToExtract: number;
+  /** Roaming actors currently on the board; they move each time the player does. */
+  actors: ActorInstance[];
 }

@@ -20,6 +20,8 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
     fillRatioRange: [0.55, 0.85],
     extractionPointCountRange: [2, 3],
     minMovesToExtractRange: [3, 6],
+    actorPool: ['feral-scavenger', 'wandering-peddler', 'roaming-miner'],
+    actorCountRange: [1, 3],
   },
 ];
 
