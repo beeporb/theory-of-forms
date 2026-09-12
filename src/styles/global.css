@@ -252,6 +252,52 @@ button {
   margin: 0;
 }
 
+.home-view__version {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: center;
+}
+
+.home-view__changelog-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Changelog modal */
+.changelog-modal__list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.changelog-entry__version {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.changelog-entry__date {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.changelog-entry__changes {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 @media (min-width: 768px) {
   .home-view {
     max-width: 640px;
