@@ -195,6 +195,62 @@ button {
   margin: 0;
 }
 
+.discord-login-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: #5865f2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.discord-login-button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.discord-account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.discord-account__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.discord-account__avatar--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #5865f2;
+  color: #fff;
+}
+
+.discord-account__name {
+  font-weight: 600;
+}
+
+.discord-account__logout {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
 /* Collectors view */
 .collectors-view {
   display: flex;
