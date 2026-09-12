@@ -15,8 +15,8 @@ function conditionFilter(condition: Condition): string {
   }
 }
 
-// Weirdness shifts hue and adds a glow, escalating from unremarkable to impossible.
-function weirdnessFilter(weirdness: Weirdness): string {
+// Weirdness/rarity shifts hue and adds a glow, escalating from unremarkable to impossible.
+export function weirdnessFilter(weirdness: Weirdness): string {
   switch (weirdness) {
     case 'mundane':
       return '';
@@ -32,4 +32,8 @@ function weirdnessFilter(weirdness: Weirdness): string {
 export function itemQualityFilter(condition: Condition, weirdness: Weirdness): string | undefined {
   const filter = [conditionFilter(condition), weirdnessFilter(weirdness)].filter(Boolean).join(' ');
   return filter || undefined;
+}
+
+export function rarityFilter(weirdness: Weirdness): string | undefined {
+  return weirdnessFilter(weirdness) || undefined;
 }

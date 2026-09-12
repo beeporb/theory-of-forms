@@ -17,7 +17,13 @@ function OutcomeBody({ outcome }: { outcome: Outcome }) {
       return (
         <>
           <p className="outcome-modal__lead">You found something!</p>
-          <ItemCard version={version} form={form} condition={outcome.condition} weirdness={outcome.weirdness} />
+          <ItemCard
+            icon={form.icon}
+            name={version.name}
+            flavorText={form.flavorText}
+            condition={outcome.condition}
+            weirdness={outcome.weirdness}
+          />
         </>
       );
     }

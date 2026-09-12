@@ -1,11 +1,15 @@
 import type { GearSlot } from '../../game/types/gear';
-import type { IconName } from '../../game/types/icon';
 import { getGear, getGearForSlot } from '../../game/content/gear';
 import { useMetaStore } from '../../state/metaStore';
 import { Icon } from '../common/Icon';
+import { ItemCard } from './ItemCard';
 
 const SLOT_LABEL: Record<GearSlot, string> = { weapon: 'Weapon', armor: 'Armor', tool: 'Tool' };
-const SLOT_ICON: Record<GearSlot, IconName> = { weapon: 'sword', armor: 'shield', tool: 'wrench' };
+const SLOT_ICON: Record<GearSlot, 'sword' | 'shield' | 'wrench'> = {
+  weapon: 'sword',
+  armor: 'shield',
+  tool: 'wrench',
+};
 const SLOTS: GearSlot[] = ['weapon', 'armor', 'tool'];
 
 export function LoadoutManager() {
@@ -31,17 +35,17 @@ export function LoadoutManager() {
                 <span className="loadout-slot__current">{equipped ? equipped.name : '— empty —'}</span>
               </div>
               {owned.length > 0 ? (
-                <div className="loadout-slot__options">
+                <div className="item-card-grid loadout-slot__options">
                   {owned.map((gear) => (
-                    <button
+                    <ItemCard
                       key={gear.id}
-                      type="button"
-                      className={`filter-chip${gear.id === equippedId ? ' filter-chip--active' : ''}`}
-                      onClick={() => setEquipped(slot, gear.id)}
-                      disabled={gear.id === equippedId}
-                    >
-                      {gear.name}
-                    </button>
+                      icon={gear.icon}
+                      name={gear.name}
+                      flavorText={gear.flavorText}
+                      weirdness={gear.rarity}
+                      selected={gear.id === equippedId}
+                      onClick={gear.id === equippedId ? undefined : () => setEquipped(slot, gear.id)}
+                    />
                   ))}
                 </div>
               ) : (

@@ -377,10 +377,8 @@ button {
   font-size: 0.85rem;
 }
 
-.loadout-slot__options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.item-card-grid.loadout-slot__options {
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
 }
 
 .inventory-search {
@@ -746,6 +744,11 @@ button {
   box-shadow: 0 0 14px rgba(120, 200, 255, 0.3);
 }
 
+.item-card--selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
 .item-card__count {
   position: absolute;
   top: 8px;
@@ -754,6 +757,19 @@ button {
   color: var(--text-dim);
   background: var(--panel-bg);
   border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.item-card__tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--panel-bg);
+  border: 1px solid var(--accent);
   border-radius: 999px;
   padding: 1px 7px;
 }
