@@ -63,7 +63,7 @@ export function CollectorDetailModal({ definition, progress, stash, onDismiss }:
                 <span className="item-list__name">{version.name}</span>
                 {held ? (
                   <span className="item-list__badges">
-                    <span className="badge">{CONDITION_LABEL[held.condition]}</span>
+                    <span className={`badge badge--condition-${held.condition}`}>{CONDITION_LABEL[held.condition]}</span>
                     <span className="badge">{WEIRDNESS_LABEL[held.weirdness]}</span>
                   </span>
                 ) : (

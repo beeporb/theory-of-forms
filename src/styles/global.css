@@ -1113,10 +1113,21 @@ button {
   color: var(--text-dim);
 }
 
+.collector-card__badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+
 .collector-card__badge {
   color: var(--good);
   font-size: 0.75rem;
   font-weight: 500;
+}
+
+.collector-card__badge--pristine {
+  color: var(--accent);
 }
 
 .collector-card__flavor {
@@ -1172,6 +1183,10 @@ button {
 .collector-card__progress-fill {
   background: var(--accent);
   height: 100%;
+}
+
+.collector-card__progress-fill--pristine {
+  background: var(--good);
 }
 
 .collector-card__progress-label {
