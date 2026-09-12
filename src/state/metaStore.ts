@@ -7,8 +7,10 @@ import type { PastRunRecord } from '../game/types/pastRun';
 import type { AttributeId } from '../game/types/character';
 import { getCollector } from '../game/content/collectors';
 import { GEAR_CATALOG } from '../game/content/gear';
+import { DIMENSIONS } from '../game/content/dimensions';
 import { getTrait } from '../game/content/traits';
 import { canDonate, applyDonation } from '../game/logic/donation';
+import { withDimensionUnlocks } from '../game/logic/dimensionUnlocks';
 import {
   applyCharacterXp,
   applyTagSkillXp,
@@ -35,7 +37,7 @@ const INITIAL_META: PlayerMeta = {
   version: 1,
   stash: [],
   collectors: {},
-  unlockedDimensionIds: ['warehouse'],
+  unlockedDimensionIds: DIMENSIONS.filter((d) => !d.unlockCondition).map((d) => d.id),
   carryCapacity: 10,
   ownedGearIds: GEAR_CATALOG.map((g) => g.id),
   equippedGearIds: { weapon: 'rusty-crowbar', armor: 'patched-jacket', tool: 'hand-lamp' },
@@ -58,11 +60,11 @@ export const useMetaStore = create<MetaStore>()(
         if (!canDonate(item, collector, progress)) return;
 
         set({
-          meta: {
+          meta: withDimensionUnlocks({
             ...meta,
             stash: meta.stash.filter((i) => i.instanceId !== instanceId),
             collectors: { ...meta.collectors, [collectorId]: applyDonation(progress, item) },
-          },
+          }),
         });
       },
 
@@ -76,10 +78,10 @@ export const useMetaStore = create<MetaStore>()(
         if (!canDonate(item, collector, progress)) return;
 
         set({
-          meta: {
+          meta: withDimensionUnlocks({
             ...meta,
             collectors: { ...meta.collectors, [collectorId]: applyDonation(progress, item) },
-          },
+          }),
         });
       },
 
@@ -112,7 +114,7 @@ export const useMetaStore = create<MetaStore>()(
           character = applyCharacterXp(character, xpGainForExtraction(record));
         }
 
-        set({ meta: { ...meta, pastRuns, character } });
+        set({ meta: withDimensionUnlocks({ ...meta, pastRuns, character }) });
       },
 
       allocateAttributePoint: (attributeId) => {
@@ -163,11 +165,11 @@ export const useMetaStore = create<MetaStore>()(
         if (!persistedMeta) return currentState;
         return {
           ...currentState,
-          meta: {
+          meta: withDimensionUnlocks({
             ...currentState.meta,
             ...persistedMeta,
             character: persistedMeta.character ?? createInitialCharacter(),
-          },
+          }),
         };
       },
     },
