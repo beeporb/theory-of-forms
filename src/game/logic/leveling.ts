@@ -47,6 +47,7 @@ export function tagSkillXpGainForRun(record: PastRunRecord): Partial<Record<TagS
 
   const gains: Partial<Record<TagSkillId, number>> = {};
   for (const gear of record.loadout) {
+    if (gear.slot === 'key') continue;
     gains[gear.slot] = (gains[gear.slot] ?? 0) + amount;
   }
   return gains;

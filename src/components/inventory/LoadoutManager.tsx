@@ -4,13 +4,14 @@ import { useMetaStore } from '../../state/metaStore';
 import { Icon } from '../common/Icon';
 import { ItemCard } from './ItemCard';
 
-const SLOT_LABEL: Record<GearSlot, string> = { weapon: 'Weapon', armor: 'Armor', tool: 'Tool' };
-const SLOT_ICON: Record<GearSlot, 'sword' | 'shield' | 'wrench'> = {
+const SLOT_LABEL: Record<GearSlot, string> = { weapon: 'Weapon', armor: 'Armor', tool: 'Tool', key: 'Key' };
+const SLOT_ICON: Record<GearSlot, 'sword' | 'shield' | 'wrench' | 'key'> = {
   weapon: 'sword',
   armor: 'shield',
   tool: 'wrench',
+  key: 'key',
 };
-const SLOTS: GearSlot[] = ['weapon', 'armor', 'tool'];
+const SLOTS: GearSlot[] = ['weapon', 'armor', 'tool', 'key'];
 
 export function LoadoutManager() {
   const meta = useMetaStore((s) => s.meta);
@@ -43,6 +44,7 @@ export function LoadoutManager() {
                       name={gear.name}
                       flavorText={gear.flavorText}
                       weirdness={gear.rarity}
+                      condition={meta.gearCondition[gear.id] ?? 'sound'}
                       selected={gear.id === equippedId}
                       onClick={gear.id === equippedId ? undefined : () => setEquipped(slot, gear.id)}
                     />

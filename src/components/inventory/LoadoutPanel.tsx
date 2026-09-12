@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import type { GearItem } from '../../game/types/gear';
+import type { Condition } from '../../game/types/condition';
 import { ItemCard } from './ItemCard';
 import { ItemDetailModal } from './ItemDetailModal';
 
 interface LoadoutPanelProps {
   loadout: GearItem[];
+  gearCondition?: Record<string, Condition>;
 }
 
-const SLOT_LABEL: Record<GearItem['slot'], string> = { weapon: 'Weapon', armor: 'Armor', tool: 'Tool' };
+const SLOT_LABEL: Record<GearItem['slot'], string> = { weapon: 'Weapon', armor: 'Armor', tool: 'Tool', key: 'Key' };
 
-export function LoadoutPanel({ loadout }: LoadoutPanelProps) {
+export function LoadoutPanel({ loadout, gearCondition }: LoadoutPanelProps) {
   const [openId, setOpenId] = useState<string | null>(null);
   const openGear = loadout.find((item) => item.id === openId) ?? null;
 
@@ -24,6 +26,7 @@ export function LoadoutPanel({ loadout }: LoadoutPanelProps) {
             name={item.name}
             flavorText={item.flavorText}
             weirdness={item.rarity}
+            condition={gearCondition?.[item.id]}
             onClick={() => setOpenId(item.id)}
           />
         ))}
@@ -34,6 +37,7 @@ export function LoadoutPanel({ loadout }: LoadoutPanelProps) {
           name={openGear.name}
           flavorText={openGear.flavorText}
           weirdness={openGear.rarity}
+          condition={gearCondition?.[openGear.id]}
           metaLabel={SLOT_LABEL[openGear.slot]}
           onDismiss={() => setOpenId(null)}
         />

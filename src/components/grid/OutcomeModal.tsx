@@ -1,6 +1,7 @@
 import type { LeafOutcome } from '../../game/types/outcome';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { getGear } from '../../game/content/gear';
 import { ItemCard } from '../inventory/ItemCard';
 import { Icon } from '../common/Icon';
 
@@ -23,6 +24,21 @@ export function OutcomeBody({ outcome }: { outcome: LeafOutcome }) {
             flavorText={form.flavorText}
             condition={outcome.condition}
             weirdness={outcome.weirdness}
+          />
+        </>
+      );
+    }
+    case 'gear': {
+      const gear = getGear(outcome.gearId);
+      return (
+        <>
+          <p className="outcome-modal__lead">You found some gear!</p>
+          <ItemCard
+            icon={gear.icon}
+            name={gear.name}
+            flavorText={gear.flavorText}
+            condition={outcome.condition}
+            weirdness={gear.rarity}
           />
         </>
       );

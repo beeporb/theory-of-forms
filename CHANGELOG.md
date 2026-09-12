@@ -3,6 +3,19 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-09-12
+
+### Added
+
+- Six more gear pieces (two per weapon/armor/tool slot) found in pocket
+  dimensions instead of owned from the start.
+- Gear condition that degrades a tier after a run it was equipped for, shown
+  on loadout cards the same way item condition already is.
+- A key slot and two keycards/keys that guarantee the risky choice on a
+  matching event succeeds, when equipped.
+- A small chance for a 'loot' cell to yield gear instead of an item, rolling
+  its initial condition the same way items do.
+
 ## [1.0.0] - 2026-09-12
 
 Baseline release — everything shipped up to this point, treated as the v1

@@ -9,6 +9,10 @@ export const OUTCOME_KIND_WEIGHTS: { weight: number; value: OutcomeKind }[] = [
   { weight: 10, value: 'event' },
 ];
 
+// A 'loot' cell rolls a gear piece instead of an item this often, when the
+// dimension has a gearPool at all — kept low so loot is still mostly items.
+export const GEAR_DROP_CHANCE = 0.12;
+
 export const HAZARD_DAMAGE_RANGE: [min: number, max: number] = [10, 30];
 export const HAZARD_STEAL_CHANCE = 0.35;
 export const POSITIVE_HEAL_RANGE: [min: number, max: number] = [10, 25];

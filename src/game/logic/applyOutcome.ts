@@ -1,10 +1,12 @@
 import type { RunState } from '../types/player';
 import type { ItemInstance } from '../types/item';
+import type { FoundGear } from '../types/gear';
 import type { LeafOutcome } from '../types/outcome';
 
 export interface ApplyOutcomeResult {
   health: number;
   inventory: ItemInstance[];
+  foundGear: FoundGear[];
   status: RunState['status'];
 }
 
@@ -12,6 +14,7 @@ export interface ApplyOutcomeResult {
 export function applyLeafOutcome(run: RunState, outcome: LeafOutcome): ApplyOutcomeResult {
   let health = run.health;
   let inventory = run.inventory;
+  let foundGear = run.foundGear;
 
   switch (outcome.kind) {
     case 'loot': {
@@ -22,6 +25,10 @@ export function applyLeafOutcome(run: RunState, outcome: LeafOutcome): ApplyOutc
         weirdness: outcome.weirdness,
       };
       inventory = [...inventory, instance];
+      break;
+    }
+    case 'gear': {
+      foundGear = [...foundGear, { gearId: outcome.gearId, condition: outcome.condition }];
       break;
     }
     case 'hazard': {
@@ -41,5 +48,5 @@ export function applyLeafOutcome(run: RunState, outcome: LeafOutcome): ApplyOutc
   }
 
   const status = health <= 0 ? 'died' : run.status;
-  return { health, inventory, status };
+  return { health, inventory, foundGear, status };
 }

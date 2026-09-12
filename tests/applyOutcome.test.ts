@@ -16,6 +16,7 @@ function makeRun(overrides: Partial<RunState> = {}): RunState {
     maxHealth: 100,
     loadout: [],
     inventory: [],
+    foundGear: [],
     carryCapacity: 10,
     status: 'active',
     log: [],
@@ -36,6 +37,13 @@ describe('applyLeafOutcome', () => {
     });
     expect(inventory).toHaveLength(1);
     expect(inventory[0].versionId).toBe('iron-ore-standard');
+  });
+
+  it('adds found gear to foundGear, leaving inventory untouched', () => {
+    const run = makeRun();
+    const { inventory, foundGear } = applyLeafOutcome(run, { kind: 'gear', gearId: 'bent-pipe', condition: 'worn' });
+    expect(inventory).toHaveLength(0);
+    expect(foundGear).toEqual([{ gearId: 'bent-pipe', condition: 'worn' }]);
   });
 
   it('applies hazard damage and can steal an item', () => {

@@ -4,6 +4,8 @@ import { SET_LABEL } from '../src/game/content/sets';
 import { DIMENSIONS } from '../src/game/content/dimensions';
 import { ACTORS, getActorDefinition } from '../src/game/content/actors';
 import { COLLECTORS } from '../src/game/content/collectors';
+import { GEAR_CATALOG, getGear } from '../src/game/content/gear';
+import { EVENTS } from '../src/game/content/events';
 import { CONDITION_ORDER } from '../src/game/types/condition';
 import { CONDITION_WEIGHTS } from '../src/game/content/conditionTable';
 import { WEIRDNESS_ORDER } from '../src/game/types/weirdness';
@@ -41,6 +43,35 @@ describe('content integrity', () => {
   it('gives every actor definition non-empty flavor text', () => {
     for (const actor of ACTORS) {
       expect(actor.flavorText.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('resolves every dimension gear pool entry to a real gear item', () => {
+    for (const dimension of DIMENSIONS) {
+      for (const gearId of dimension.gearPool) {
+        expect(() => getGear(gearId)).not.toThrow();
+      }
+    }
+  });
+
+  it('gives every gear item non-empty flavor text', () => {
+    for (const gear of GEAR_CATALOG) {
+      expect(gear.flavorText.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('has at least one gear item per slot', () => {
+    const slots = new Set(GEAR_CATALOG.map((g) => g.slot));
+    expect(slots).toEqual(new Set(['weapon', 'armor', 'tool', 'key']));
+  });
+
+  it('resolves every event choice’s guaranteedByGearId to a real gear item', () => {
+    for (const event of EVENTS) {
+      for (const choice of event.choices) {
+        if (!choice.guaranteedByGearId) continue;
+        expect(() => getGear(choice.guaranteedByGearId!)).not.toThrow();
+        expect(choice.guaranteedKind).toBeDefined();
+      }
     }
   });
 

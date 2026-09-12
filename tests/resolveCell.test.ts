@@ -19,6 +19,7 @@ function makeRun(outcome: Outcome, overrides: Partial<RunState> = {}): RunState 
     maxHealth: 100,
     loadout: [],
     inventory: [],
+    foundGear: [],
     carryCapacity: 10,
     status: 'active',
     log: [],
@@ -39,6 +40,15 @@ describe('resolveCell', () => {
     expect(next.inventory[0].condition).toBe('worn');
     expect(next.inventory[0].weirdness).toBe('mundane');
     expect(next.dimension.cells[0][0].status).toBe('opened');
+  });
+
+  it('adds found gear to foundGear, not the item inventory', () => {
+    const run = makeRun({ kind: 'gear', gearId: 'bent-pipe', condition: 'worn' });
+    const { run: next, outcome } = resolveCell(run, 0, 0);
+
+    expect(outcome.kind).toBe('gear');
+    expect(next.inventory).toHaveLength(0);
+    expect(next.foundGear).toEqual([{ gearId: 'bent-pipe', condition: 'worn' }]);
   });
 
   it('applies hazard damage and can steal an item', () => {
