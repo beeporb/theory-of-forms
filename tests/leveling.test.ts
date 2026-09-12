@@ -103,8 +103,22 @@ describe('applyTagSkillXp', () => {
     const record = makeRecord({
       moveCount: 10,
       loadout: [
-        { id: 'rusty-crowbar', name: 'Rusty Crowbar', slot: 'weapon' },
-        { id: 'patched-jacket', name: 'Patched Jacket', slot: 'armor' },
+        {
+          id: 'rusty-crowbar',
+          name: 'Rusty Crowbar',
+          slot: 'weapon',
+          icon: 'sword',
+          rarity: 'mundane',
+          flavorText: 'Dented, dull, and somehow still swinging. Better than fists.',
+        },
+        {
+          id: 'patched-jacket',
+          name: 'Patched Jacket',
+          slot: 'armor',
+          icon: 'shield',
+          rarity: 'mundane',
+          flavorText: 'Held together by tape and stubbornness. Keeps most of the cold out.',
+        },
       ],
     });
     const character = applyTagSkillXp(createInitialCharacter(), record);
@@ -114,7 +128,16 @@ describe('applyTagSkillXp', () => {
   });
 
   it('grants less xp on a run that was not extracted', () => {
-    const gear = [{ id: 'rusty-crowbar', name: 'Rusty Crowbar', slot: 'weapon' as const }];
+    const gear = [
+      {
+        id: 'rusty-crowbar',
+        name: 'Rusty Crowbar',
+        slot: 'weapon' as const,
+        icon: 'sword' as const,
+        rarity: 'mundane' as const,
+        flavorText: 'Dented, dull, and somehow still swinging. Better than fists.',
+      },
+    ];
     const extracted = applyTagSkillXp(
       createInitialCharacter(),
       makeRecord({ outcome: 'extracted', moveCount: 20, loadout: gear }),

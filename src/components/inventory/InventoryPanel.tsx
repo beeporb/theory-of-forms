@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ItemInstance } from '../../game/types/item';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
+import { SET_LABEL } from '../../game/content/sets';
 import { ItemCard } from './ItemCard';
 import { ItemDetailModal } from './ItemDetailModal';
 
@@ -57,8 +58,9 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
             return (
               <ItemCard
                 key={entry.key}
-                version={version}
-                form={form}
+                icon={form.icon}
+                name={version.name}
+                flavorText={form.flavorText}
                 condition={entry.condition}
                 weirdness={entry.weirdness}
                 count={entry.count}
@@ -74,8 +76,10 @@ export function InventoryPanel({ title, items, emptyMessage = 'Nothing here yet.
           const form = getItemForm(version.formId);
           return (
             <ItemDetailModal
-              version={version}
-              form={form}
+              icon={form.icon}
+              name={version.name}
+              flavorText={form.flavorText}
+              metaLabel={SET_LABEL[form.setId] ?? form.setId}
               condition={openEntry.condition}
               weirdness={openEntry.weirdness}
               count={openEntry.count}
