@@ -8,6 +8,7 @@ import { useMetaStore } from '../../state/metaStore';
 import { LoadoutManager } from '../inventory/LoadoutManager';
 import { InventoryPanel } from '../inventory/InventoryPanel';
 import { FilterChipGroup } from '../inventory/FilterChipGroup';
+import { CraftingPanel } from '../inventory/CraftingPanel';
 import { Icon } from '../common/Icon';
 
 const SET_OPTIONS = [...new Set(ITEM_FORMS.map((f) => f.setId))].map((setId) => ({
@@ -24,6 +25,7 @@ function toggle(list: string[], value: string): string[] {
 
 export function InventoryView() {
   const stash = useMetaStore((s) => s.meta.stash);
+  const breakDownItem = useMetaStore((s) => s.breakDownItem);
   const [query, setQuery] = useState('');
   const [sets, setSets] = useState<string[]>([]);
   const [conditions, setConditions] = useState<string[]>([]);
@@ -80,7 +82,10 @@ export function InventoryView() {
         title="Equipment"
         items={filtered}
         emptyMessage={stash.length === 0 ? 'Your stash is empty. Go find something.' : 'Nothing matches these filters.'}
+        onBreakDown={breakDownItem}
       />
+
+      <CraftingPanel />
     </div>
   );
 }

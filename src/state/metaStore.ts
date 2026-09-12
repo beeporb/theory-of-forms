@@ -10,8 +10,11 @@ import { STARTER_GEAR_IDS } from '../game/content/gear';
 import { DIMENSIONS } from '../game/content/dimensions';
 import { getTrait } from '../game/content/traits';
 import { getQuest } from '../game/content/quests';
+import { getRecipe } from '../game/content/recipes';
 import { canDonate, applyDonation } from '../game/logic/donation';
 import { applyQuestReward, canCompleteQuest, removeQuestItems } from '../game/logic/quest';
+import { canCraft, applyCraft } from '../game/logic/crafting';
+import { applyBreakdown } from '../game/logic/breakdown';
 import { withDimensionUnlocks } from '../game/logic/dimensionUnlocks';
 import { degradeCondition, mergeFoundGear } from '../game/logic/gearCondition';
 import {
@@ -35,6 +38,8 @@ interface MetaStore {
   allocateAttributePoint: (attributeId: AttributeId) => void;
   selectTrait: (traitId: string) => void;
   completeQuest: (questId: string) => void;
+  craftGear: (recipeId: string) => void;
+  breakDownItem: (instanceId: string) => void;
 }
 
 const MAX_PAST_RUNS = 50;
@@ -208,6 +213,24 @@ export const useMetaStore = create<MetaStore>()(
             completedQuestIds: [...meta.completedQuestIds, questId],
           },
         });
+      },
+
+      craftGear: (recipeId) => {
+        const { meta } = get();
+        const recipe = getRecipe(recipeId);
+        if (!canCraft(recipe, meta.materials, meta.widgets)) return;
+
+        const { materials, widgets, ownedGearIds, gearCondition } = applyCraft(recipe, meta);
+        set({ meta: { ...meta, materials, widgets, ownedGearIds, gearCondition } });
+      },
+
+      breakDownItem: (instanceId) => {
+        const { meta } = get();
+        const item = meta.stash.find((i) => i.instanceId === instanceId);
+        if (!item) return;
+
+        const materials = applyBreakdown(item, meta.materials);
+        set({ meta: { ...meta, stash: meta.stash.filter((i) => i.instanceId !== instanceId), materials } });
       },
     }),
     {

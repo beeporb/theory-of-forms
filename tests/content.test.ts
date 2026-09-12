@@ -7,7 +7,9 @@ import { COLLECTORS, getCollector } from '../src/game/content/collectors';
 import { GEAR_CATALOG, getGear } from '../src/game/content/gear';
 import { MATERIALS, getMaterial } from '../src/game/content/materials';
 import { QUESTS } from '../src/game/content/quests';
+import { RECIPES } from '../src/game/content/recipes';
 import { EVENTS } from '../src/game/content/events';
+import { BREAKDOWN_MATERIAL_BY_SET } from '../src/game/logic/breakdown';
 import { CONDITION_ORDER } from '../src/game/types/condition';
 import { CONDITION_WEIGHTS } from '../src/game/content/conditionTable';
 import { WEIRDNESS_ORDER } from '../src/game/types/weirdness';
@@ -156,5 +158,37 @@ describe('content integrity', () => {
   it('has a unique id per quest', () => {
     const ids = QUESTS.map((q) => q.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('resolves every recipe resultGearId to a real gear item', () => {
+    for (const recipe of RECIPES) {
+      expect(() => getGear(recipe.resultGearId)).not.toThrow();
+    }
+  });
+
+  it('resolves every recipe materialCosts materialId to a real material', () => {
+    for (const recipe of RECIPES) {
+      for (const cost of recipe.materialCosts) {
+        expect(() => getMaterial(cost.materialId)).not.toThrow();
+        expect(cost.count).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('gives every recipe at least one material cost', () => {
+    for (const recipe of RECIPES) {
+      expect(recipe.materialCosts.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('has a unique id per recipe', () => {
+    const ids = RECIPES.map((r) => r.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('maps every item set to a breakdown material', () => {
+    for (const setId of Object.keys(SET_LABEL)) {
+      expect(() => getMaterial(BREAKDOWN_MATERIAL_BY_SET[setId])).not.toThrow();
+    }
   });
 });
