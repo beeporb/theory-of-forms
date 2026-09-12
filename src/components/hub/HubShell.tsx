@@ -13,7 +13,7 @@ export function HubShell() {
     <div className="hub-shell">
       <HubNav active={view} onNavigate={setView} />
       <div className="hub-shell__content">
-        {view === 'home' && <HomeView />}
+        {view === 'home' && <HomeView onStartRun={() => setView('runs')} />}
         {view === 'character' && <CharacterView />}
         {view === 'collectors' && <CollectorsView />}
         {view === 'inventory' && <InventoryView />}

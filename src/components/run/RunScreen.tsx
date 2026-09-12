@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { RunState } from '../../game/types/player';
 import type { Outcome } from '../../game/types/outcome';
-import { getDimensionDefinition } from '../../game/content/dimensions';
 import { canExtract } from '../../game/logic/extraction';
 import { useRunStore } from '../../state/runStore';
 import { GridView } from '../grid/GridView';
@@ -24,8 +23,6 @@ export function RunScreen({ run }: RunScreenProps) {
   const [showLog, setShowLog] = useState(false);
   const [showAbandonConfirm, setShowAbandonConfirm] = useState(false);
 
-  const definition = getDimensionDefinition(run.dimension.definitionId);
-
   const handleMoveTo = (x: number, y: number) => {
     setActiveOutcome(moveTo(x, y));
   };
@@ -36,7 +33,7 @@ export function RunScreen({ run }: RunScreenProps) {
         health={run.health}
         maxHealth={run.maxHealth}
         canExtract={canExtract(run)}
-        minMovesToExtract={definition.minMovesToExtract}
+        minMovesToExtract={run.dimension.minMovesToExtract}
         movesMade={run.moveCount}
         onExtract={extractRun}
         onOpenLog={() => setShowLog(true)}
@@ -45,7 +42,7 @@ export function RunScreen({ run }: RunScreenProps) {
       <GridView
         dimension={run.dimension}
         position={run.position}
-        extractionPoints={definition.extractionPoints}
+        extractionPoints={run.dimension.extractionPoints}
         onMoveTo={handleMoveTo}
       />
       <LoadoutPanel loadout={run.loadout} />

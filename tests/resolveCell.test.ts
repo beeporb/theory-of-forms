@@ -7,7 +7,7 @@ import type { Cell } from '../src/game/types/grid';
 function makeRun(outcome: Outcome, overrides: Partial<RunState> = {}): RunState {
   const cell: Cell = { x: 0, y: 0, exists: true, status: 'unopened', outcome };
   return {
-    dimension: { definitionId: 'test', cells: [[cell]] },
+    dimension: { definitionId: 'test', cells: [[cell]], entry: { x: 0, y: 0 }, extractionPoints: [], minMovesToExtract: 0 },
     health: 100,
     maxHealth: 100,
     loadout: [],

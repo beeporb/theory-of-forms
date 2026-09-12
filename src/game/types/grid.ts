@@ -18,18 +18,27 @@ export interface Cell {
 export interface PocketDimensionDefinition {
   id: string;
   name: string;
-  /** Rows x cols mask; true = playable cell. Allows irregular (non-rectangular) shapes. */
-  shape: boolean[][];
   itemPoolFormIds: string[];
-  /** Where the player starts, and can first move from. */
-  entry: GridPoint;
-  /** Squares the player must reach to extract. */
-  extractionPoints: GridPoint[];
+  /** Bounding box row/col counts a generated layout is randomly sized within. */
+  minRows: number;
+  maxRows: number;
+  minCols: number;
+  maxCols: number;
+  /** Fraction of the bounding box that ends up playable, randomised per run to vary shape irregularity. */
+  fillRatioRange: [number, number];
+  /** How many extraction points a generated layout gets. */
+  extractionPointCountRange: [number, number];
   /** Moves the player must make through the grid before extraction is allowed. */
-  minMovesToExtract: number;
+  minMovesToExtractRange: [number, number];
 }
 
 export interface PocketDimensionInstance {
   definitionId: string;
   cells: Cell[][];
+  /** Where the player started this run, and can first move from. */
+  entry: GridPoint;
+  /** Squares the player must reach to extract this run. */
+  extractionPoints: GridPoint[];
+  /** Moves the player must make through the grid before extraction is allowed this run. */
+  minMovesToExtract: number;
 }

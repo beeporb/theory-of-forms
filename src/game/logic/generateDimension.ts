@@ -16,6 +16,7 @@ import {
 } from '../content/encounterTable';
 import { pickOne, randomInt, weightedPick } from '../utils/rng';
 import { BASE_RUN_MODIFIERS, type RunModifiers } from './characterEffects';
+import { generateLayout } from './generateLayout';
 
 function biasedPick<T>(order: readonly T[], picked: T, bias: number): T {
   if (bias === 0) return picked;
@@ -62,7 +63,9 @@ export function generateDimension(
   definition: PocketDimensionDefinition,
   modifiers: RunModifiers = BASE_RUN_MODIFIERS,
 ): PocketDimensionInstance {
-  const cells: Cell[][] = definition.shape.map((row, y) =>
+  const { shape, entry, extractionPoints } = generateLayout(definition);
+
+  const cells: Cell[][] = shape.map((row, y) =>
     row.map((exists, x): Cell => ({
       x,
       y,
@@ -72,5 +75,7 @@ export function generateDimension(
     })),
   );
 
-  return { definitionId: definition.id, cells };
+  const minMovesToExtract = randomInt(...definition.minMovesToExtractRange);
+
+  return { definitionId: definition.id, cells, entry, extractionPoints, minMovesToExtract };
 }
