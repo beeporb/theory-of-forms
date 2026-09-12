@@ -1,9 +1,10 @@
-import { useRunStore } from '../../state/runStore';
 import { DiscordLoginButton } from '../account/DiscordLoginButton';
 
-export function HomeView() {
-  const startRun = useRunStore((s) => s.startRun);
+interface HomeViewProps {
+  onStartRun: () => void;
+}
 
+export function HomeView({ onStartRun }: HomeViewProps) {
   return (
     <div className="home-view">
       <header className="home-view__header">
@@ -15,8 +16,8 @@ export function HomeView() {
         <DiscordLoginButton />
       </header>
 
-      <button type="button" className="primary-button" onClick={() => startRun('warehouse')}>
-        Start Run: The Old Warehouse
+      <button type="button" className="primary-button" onClick={onStartRun}>
+        Start a Run
       </button>
     </div>
   );
