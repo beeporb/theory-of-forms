@@ -7,6 +7,7 @@ import { useRunStore } from '../../state/runStore';
 import { useMetaStore } from '../../state/metaStore';
 import { GridView } from '../grid/GridView';
 import { OutcomeModal } from '../grid/OutcomeModal';
+import { EventModal } from '../grid/EventModal';
 import { ActorEncounterModal } from '../grid/ActorEncounterModal';
 import { InventoryPanel } from '../inventory/InventoryPanel';
 import { LoadoutPanel } from '../inventory/LoadoutPanel';
@@ -21,6 +22,7 @@ interface RunScreenProps {
 
 export function RunScreen({ run }: RunScreenProps) {
   const moveTo = useRunStore((s) => s.moveTo);
+  const resolveEventChoice = useRunStore((s) => s.resolveEventChoice);
   const donateToCollector = useRunStore((s) => s.donateToCollector);
   const dropItem = useRunStore((s) => s.dropItem);
   const extractRun = useRunStore((s) => s.extractRun);
@@ -76,9 +78,18 @@ export function RunScreen({ run }: RunScreenProps) {
           onDismiss={() => setActiveEncounter(null)}
         />
       )}
-      {run.status === 'active' && !activeEncounter && activeOutcome && (
-        <OutcomeModal outcome={activeOutcome} onDismiss={() => setActiveOutcome(null)} />
-      )}
+      {run.status === 'active' &&
+        !activeEncounter &&
+        activeOutcome &&
+        (activeOutcome.kind === 'event' ? (
+          <EventModal
+            outcome={activeOutcome}
+            onChoose={(index) => resolveEventChoice(activeOutcome.choices[index].outcome)}
+            onDismiss={() => setActiveOutcome(null)}
+          />
+        ) : (
+          <OutcomeModal outcome={activeOutcome} onDismiss={() => setActiveOutcome(null)} />
+        ))}
       {run.status === 'active' &&
         !activeEncounter &&
         !activeOutcome &&

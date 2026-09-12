@@ -1102,6 +1102,41 @@ button {
   color: var(--good);
 }
 
+.event-modal__choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.event-modal__choice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.event-modal__choice:hover {
+  border-color: var(--accent);
+}
+
+.event-modal__choice-label {
+  font-weight: 600;
+}
+
+.event-modal__choice-description {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
 .outcome-modal__dismiss {
   margin-top: 12px;
   background: var(--accent);

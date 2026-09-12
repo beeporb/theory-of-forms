@@ -1,11 +1,12 @@
 import type { Cell, GridPoint, PocketDimensionDefinition, PocketDimensionInstance } from '../types/grid';
-import type { Outcome } from '../types/outcome';
+import type { LeafOutcome, Outcome } from '../types/outcome';
 import type { ActorInstance } from '../types/actor';
 import { CONDITION_ORDER } from '../types/condition';
 import { WEIRDNESS_ORDER } from '../types/weirdness';
 import { getVersionsForForm } from '../content/versions';
 import { CONDITION_WEIGHTS } from '../content/conditionTable';
 import { WEIRDNESS_WEIGHTS } from '../content/weirdnessTable';
+import { EVENTS } from '../content/events';
 import {
   EMPTY_MESSAGES,
   HAZARD_DAMAGE_RANGE,
@@ -13,6 +14,7 @@ import {
   HAZARD_DEPTH_WEIGHT_BONUS,
   HAZARD_MESSAGES,
   HAZARD_STEAL_CHANCE,
+  type LeafOutcomeKind,
   OUTCOME_KIND_WEIGHTS,
   POSITIVE_HEAL_RANGE,
   POSITIVE_MESSAGES,
@@ -54,13 +56,12 @@ function biasedPick<T>(order: readonly T[], picked: T, bias: number): T {
 }
 
 /** `depthFactor` is 0 at the entry and 1 at the farthest reachable cell in this layout. */
-function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers, depthFactor: number): Outcome {
-  const outcomeWeights = OUTCOME_KIND_WEIGHTS.map((entry) => {
-    if (entry.value === 'loot') return { ...entry, weight: entry.weight + modifiers.lootWeightBonus };
-    if (entry.value === 'hazard') return { ...entry, weight: entry.weight + depthFactor * HAZARD_DEPTH_WEIGHT_BONUS };
-    return entry;
-  });
-  const kind = weightedPick(outcomeWeights);
+function rollLeafOutcome(
+  kind: LeafOutcomeKind,
+  itemPoolFormIds: string[],
+  modifiers: RunModifiers,
+  depthFactor: number,
+): LeafOutcome {
   switch (kind) {
     case 'loot': {
       const formId = pickOne(itemPoolFormIds);
@@ -93,6 +94,34 @@ function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers, depthFa
     case 'empty':
       return { kind: 'empty', message: pickOne(EMPTY_MESSAGES) };
   }
+}
+
+/** Rolls which vignette occurs, then pre-rolls each choice's own resolution. */
+function rollEvent(itemPoolFormIds: string[], modifiers: RunModifiers, depthFactor: number): Outcome {
+  const template = pickOne(EVENTS);
+  return {
+    kind: 'event',
+    eventId: template.id,
+    icon: template.icon,
+    prompt: template.prompt,
+    choices: template.choices.map((choice) => ({
+      id: choice.id,
+      label: choice.label,
+      description: choice.description,
+      outcome: rollLeafOutcome(weightedPick(choice.outcomeWeights), itemPoolFormIds, modifiers, depthFactor),
+    })),
+  };
+}
+
+function rollOutcome(itemPoolFormIds: string[], modifiers: RunModifiers, depthFactor: number): Outcome {
+  const outcomeWeights = OUTCOME_KIND_WEIGHTS.map((entry) => {
+    if (entry.value === 'loot') return { ...entry, weight: entry.weight + modifiers.lootWeightBonus };
+    if (entry.value === 'hazard') return { ...entry, weight: entry.weight + depthFactor * HAZARD_DEPTH_WEIGHT_BONUS };
+    return entry;
+  });
+  const kind = weightedPick(outcomeWeights);
+  if (kind === 'event') return rollEvent(itemPoolFormIds, modifiers, depthFactor);
+  return rollLeafOutcome(kind, itemPoolFormIds, modifiers, depthFactor);
 }
 
 export function generateDimension(

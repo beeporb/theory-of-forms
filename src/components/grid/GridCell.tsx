@@ -31,6 +31,8 @@ function CellIcon({ cell }: { cell: Cell }) {
       return <Icon name="sparkles" tone="good" />;
     case 'empty':
       return <>·</>;
+    case 'event':
+      return <Icon name={outcome.icon} />;
   }
 }
 

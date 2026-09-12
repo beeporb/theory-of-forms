@@ -46,9 +46,34 @@ describe('generateDimension', () => {
             const version = getVersion(cell.outcome.versionId);
             expect(definition.itemPoolFormIds).toContain(version.formId);
           }
+
+          // An event's own pre-rolled choice outcomes follow the same rule,
+          // and every event must offer at least two ways to respond.
+          if (cell.outcome?.kind === 'event') {
+            expect(cell.outcome.choices.length).toBeGreaterThanOrEqual(2);
+            for (const choice of cell.outcome.choices) {
+              if (choice.outcome.kind === 'loot') {
+                const version = getVersion(choice.outcome.versionId);
+                expect(definition.itemPoolFormIds).toContain(version.formId);
+              }
+            }
+          }
         }
       }
     }
+  });
+
+  it('rolls some event outcomes over many cells', () => {
+    let eventCount = 0;
+    for (let i = 0; i < 50; i++) {
+      const instance = generateDimension(definition);
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          if (cell.outcome?.kind === 'event') eventCount++;
+        }
+      }
+    }
+    expect(eventCount).toBeGreaterThan(0);
   });
 
   it('produces a random, varied layout across runs', () => {

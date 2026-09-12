@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { RunState } from '../game/types/player';
-import type { Outcome } from '../game/types/outcome';
+import type { LeafOutcome, Outcome } from '../game/types/outcome';
 import type { ActorEncounter } from '../game/types/actor';
 import type { PastRunRecord, RunOutcome } from '../game/types/pastRun';
 import { getDimensionDefinition } from '../game/content/dimensions';
@@ -10,6 +10,7 @@ import { generateDimension } from '../game/logic/generateDimension';
 import { buildLoadoutFromEquipped } from '../game/logic/loadout';
 import { resolveCell } from '../game/logic/resolveCell';
 import { movePlayer } from '../game/logic/movePlayer';
+import { applyLeafOutcome } from '../game/logic/applyOutcome';
 import { canExtract } from '../game/logic/extraction';
 import { canDonate } from '../game/logic/donation';
 import { computeRunModifiers } from '../game/logic/characterEffects';
@@ -27,6 +28,7 @@ interface RunStore {
   run: RunState | null;
   startRun: (dimensionId: string) => void;
   moveTo: (x: number, y: number) => MoveResult;
+  resolveEventChoice: (outcome: LeafOutcome) => void;
   donateToCollector: (collectorId: string, instanceId: string) => void;
   dropItem: (instanceId: string) => void;
   extractRun: () => void;
@@ -79,6 +81,13 @@ export const useRunStore = create<RunStore>()(
         const { run: nextRun, outcome, actorEncounter } = movePlayer(run, x, y);
         set({ run: nextRun });
         return { outcome, actorEncounter };
+      },
+
+      resolveEventChoice: (outcome) => {
+        const { run } = get();
+        if (!run) return;
+        const { health, inventory, status } = applyLeafOutcome(run, outcome);
+        set({ run: { ...run, health, inventory, status } });
       },
 
       donateToCollector: (collectorId, instanceId) => {

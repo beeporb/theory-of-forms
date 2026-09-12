@@ -33,4 +33,5 @@ export type IconName =
   | 'watch'
   | 'wallet'
   | 'glasses'
-  | 'key';
+  | 'key'
+  | 'lock';

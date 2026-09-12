@@ -1,15 +1,15 @@
-import type { Outcome } from '../../game/types/outcome';
+import type { LeafOutcome } from '../../game/types/outcome';
 import { getItemForm } from '../../game/content/items';
 import { getVersion } from '../../game/content/versions';
 import { ItemCard } from '../inventory/ItemCard';
 import { Icon } from '../common/Icon';
 
 interface OutcomeModalProps {
-  outcome: Outcome;
+  outcome: LeafOutcome;
   onDismiss: () => void;
 }
 
-function OutcomeBody({ outcome }: { outcome: Outcome }) {
+export function OutcomeBody({ outcome }: { outcome: LeafOutcome }) {
   switch (outcome.kind) {
     case 'loot': {
       const version = getVersion(outcome.versionId);

@@ -1,6 +1,6 @@
 import type { RunState } from '../types/player';
-import type { ItemInstance } from '../types/item';
 import type { Outcome } from '../types/outcome';
+import { applyLeafOutcome } from './applyOutcome';
 
 export interface ResolveCellResult {
   run: RunState;
@@ -20,37 +20,12 @@ export function resolveCell(run: RunState, x: number, y: number): ResolveCellRes
   const cells = run.dimension.cells.map((row) => row.map((c) => ({ ...c })));
   cells[y][x].status = 'opened';
 
-  let health = run.health;
-  let inventory = run.inventory;
-
-  switch (outcome.kind) {
-    case 'loot': {
-      const instance: ItemInstance = {
-        instanceId: crypto.randomUUID(),
-        versionId: outcome.versionId,
-        condition: outcome.condition,
-        weirdness: outcome.weirdness,
-      };
-      inventory = [...inventory, instance];
-      break;
-    }
-    case 'hazard': {
-      health = Math.max(0, health - outcome.damage);
-      if (outcome.stealsItem && inventory.length > 0) {
-        const stolenIndex = Math.floor(Math.random() * inventory.length);
-        inventory = inventory.filter((_, i) => i !== stolenIndex);
-      }
-      break;
-    }
-    case 'positive': {
-      health = Math.min(run.maxHealth, health + outcome.heal);
-      break;
-    }
-    case 'empty':
-      break;
-  }
-
-  const status = health <= 0 ? 'died' : run.status;
+  // Events don't apply any effect on their own — that happens once the
+  // player picks a choice, via resolveEventChoice.
+  const { health, inventory, status } =
+    outcome.kind === 'event'
+      ? { health: run.health, inventory: run.inventory, status: run.status }
+      : applyLeafOutcome(run, outcome);
 
   const nextRun: RunState = {
     ...run,

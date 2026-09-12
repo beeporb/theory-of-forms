@@ -1,10 +1,12 @@
-export type OutcomeKind = 'loot' | 'hazard' | 'positive' | 'empty';
+export type LeafOutcomeKind = 'loot' | 'hazard' | 'positive' | 'empty';
+export type OutcomeKind = LeafOutcomeKind | 'event';
 
 export const OUTCOME_KIND_WEIGHTS: { weight: number; value: OutcomeKind }[] = [
-  { weight: 45, value: 'loot' },
-  { weight: 25, value: 'hazard' },
-  { weight: 15, value: 'positive' },
+  { weight: 40, value: 'loot' },
+  { weight: 22, value: 'hazard' },
+  { weight: 13, value: 'positive' },
   { weight: 15, value: 'empty' },
+  { weight: 10, value: 'event' },
 ];
 
 export const HAZARD_DAMAGE_RANGE: [min: number, max: number] = [10, 30];

@@ -36,5 +36,7 @@ export function describeOutcome(outcome: Outcome): OutcomeDescription {
       return { icon: 'sparkles', tone: 'good', text: `${outcome.message} (+${outcome.heal} HP)` };
     case 'empty':
       return { icon: null, text: outcome.message };
+    case 'event':
+      return { icon: outcome.icon, text: outcome.prompt };
   }
 }
