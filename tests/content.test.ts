@@ -3,6 +3,7 @@ import { ITEM_FORMS, getItemForm } from '../src/game/content/items';
 import { SET_LABEL } from '../src/game/content/sets';
 import { DIMENSIONS } from '../src/game/content/dimensions';
 import { ACTORS, getActorDefinition } from '../src/game/content/actors';
+import { COLLECTORS } from '../src/game/content/collectors';
 import { CONDITION_ORDER } from '../src/game/types/condition';
 import { CONDITION_WEIGHTS } from '../src/game/content/conditionTable';
 import { WEIRDNESS_ORDER } from '../src/game/types/weirdness';
@@ -51,5 +52,25 @@ describe('content integrity', () => {
   it('has exactly one weirdness weight per weirdness tier', () => {
     const weighted = WEIRDNESS_WEIGHTS.map((w) => w.value).sort();
     expect(weighted).toEqual([...WEIRDNESS_ORDER].sort());
+  });
+
+  it('resolves every collector required form id to a real item form', () => {
+    for (const collector of COLLECTORS) {
+      expect(collector.requiredFormIds.length).toBeGreaterThan(0);
+      for (const formId of collector.requiredFormIds) {
+        expect(() => getItemForm(formId)).not.toThrow();
+      }
+    }
+  });
+
+  it('gives every collector non-empty flavor text', () => {
+    for (const collector of COLLECTORS) {
+      expect(collector.flavorText.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('has a unique id per collector', () => {
+    const ids = COLLECTORS.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });

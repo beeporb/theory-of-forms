@@ -1,4 +1,5 @@
 import type { CollectorDefinition } from '../types/collector';
+import { ITEM_FORMS } from './items';
 import { isMasterSetComplete } from '../logic/masterSet';
 
 export const COLLECTORS: CollectorDefinition[] = [
@@ -26,19 +27,28 @@ export const COLLECTORS: CollectorDefinition[] = [
     requiredFormIds: ['iron-ore', 'quartz-shard', 'sulfur-lump'],
   },
   {
+    id: 'the-clerk',
+    name: 'The Clerk',
+    flavorText:
+      "Still keeps office hours, somehow. Says the paperwork never really stopped — it just stopped mattering to anyone but him.",
+    icon: 'stamp',
+    requiredFormIds: ['rubber-stamp', 'manila-folder', 'paperclip-chain', 'desk-fan'],
+  },
+  {
+    id: 'the-widow',
+    name: 'The Widow',
+    flavorText: "Never says whose things she's collecting. Just says she'll know them when she sees them.",
+    icon: 'watch',
+    requiredFormIds: ['pocket-watch', 'leather-wallet', 'reading-glasses', 'brass-key'],
+  },
+  {
     id: 'the-archivist',
     name: 'The Archivist',
     flavorText:
       "Wants one of everything, no exceptions. Nobody's sure what they're actually archiving, or for who.",
     icon: 'book',
-    requiredFormIds: [
-      'iron-ore',
-      'quartz-shard',
-      'sulfur-lump',
-      'pickaxe-head',
-      'mining-lantern',
-      'ore-cart-wheel',
-    ],
+    // Wants one of everything, literally — every item form that exists, not a fixed snapshot.
+    requiredFormIds: ITEM_FORMS.map((f) => f.id),
     secret: true,
     revealCondition: (meta) =>
       COLLECTORS.some(
