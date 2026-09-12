@@ -1,7 +1,7 @@
 import type { IconName } from '../../game/types/icon';
 import { Icon } from '../common/Icon';
 
-export type HubView = 'home' | 'collectors' | 'inventory' | 'runs';
+export type HubView = 'home' | 'character' | 'collectors' | 'inventory' | 'runs';
 
 interface HubNavProps {
   active: HubView;
@@ -10,6 +10,7 @@ interface HubNavProps {
 
 const NAV_ITEMS: { id: HubView; label: string; icon: IconName }[] = [
   { id: 'home', label: 'Home', icon: 'home' },
+  { id: 'character', label: 'Character', icon: 'user' },
   { id: 'collectors', label: 'Collectors', icon: 'collectors' },
   { id: 'inventory', label: 'Inventory', icon: 'backpack' },
   { id: 'runs', label: 'Runs', icon: 'scroll' },

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { isCollectorRevealed } from '../src/game/logic/discovery';
 import { getCollector } from '../src/game/content/collectors';
 import { getRequiredVersionIds } from '../src/game/logic/masterSet';
+import { createInitialCharacter } from '../src/game/logic/leveling';
 import type { PlayerMeta } from '../src/game/types/player';
 
 function emptyMeta(): PlayerMeta {
@@ -13,6 +14,8 @@ function emptyMeta(): PlayerMeta {
     carryCapacity: 10,
     ownedGearIds: [],
     equippedGearIds: {},
+    pastRuns: [],
+    character: createInitialCharacter(),
   };
 }
 

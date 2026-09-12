@@ -4,11 +4,19 @@ import type { PlayerMeta } from '../game/types/player';
 import type { ItemInstance } from '../game/types/item';
 import type { GearSlot } from '../game/types/gear';
 import type { PastRunRecord } from '../game/types/pastRun';
+import type { AttributeId } from '../game/types/character';
 import { getCollector } from '../game/content/collectors';
 import { getVersion } from '../game/content/versions';
 import { GEAR_CATALOG } from '../game/content/gear';
+import { getTrait } from '../game/content/traits';
 import { getRequiredVersionIds } from '../game/logic/masterSet';
 import { qualityScore } from '../game/logic/quality';
+import {
+  applyCharacterXp,
+  applyTagSkillXp,
+  createInitialCharacter,
+  xpGainForExtraction,
+} from '../game/logic/leveling';
 import { createIdbStorage } from '../persistence/storage';
 
 interface MetaStore {
@@ -18,6 +26,8 @@ interface MetaStore {
   setEquipped: (slot: GearSlot, gearId: string) => void;
   loseGear: (gearIds: string[]) => void;
   recordRun: (record: PastRunRecord) => void;
+  allocateAttributePoint: (attributeId: AttributeId) => void;
+  selectTrait: (traitId: string) => void;
 }
 
 const MAX_PAST_RUNS = 50;
@@ -31,6 +41,7 @@ const INITIAL_META: PlayerMeta = {
   ownedGearIds: GEAR_CATALOG.map((g) => g.id),
   equippedGearIds: { weapon: 'rusty-crowbar', armor: 'patched-jacket', tool: 'hand-lamp' },
   pastRuns: [],
+  character: createInitialCharacter(),
 };
 
 export const useMetaStore = create<MetaStore>()(
@@ -93,12 +104,70 @@ export const useMetaStore = create<MetaStore>()(
       recordRun: (record) => {
         const { meta } = get();
         const pastRuns = [record, ...(meta.pastRuns ?? [])].slice(0, MAX_PAST_RUNS);
-        set({ meta: { ...meta, pastRuns } });
+
+        let character = applyTagSkillXp(meta.character, record);
+        if (record.outcome === 'extracted') {
+          character = applyCharacterXp(character, xpGainForExtraction(record));
+        }
+
+        set({ meta: { ...meta, pastRuns, character } });
+      },
+
+      allocateAttributePoint: (attributeId) => {
+        const { meta } = get();
+        const { character } = meta;
+        if (character.attributePoints <= 0) return;
+
+        set({
+          meta: {
+            ...meta,
+            character: {
+              ...character,
+              attributePoints: character.attributePoints - 1,
+              attributes: {
+                ...character.attributes,
+                [attributeId]: character.attributes[attributeId] + 1,
+              },
+            },
+          },
+        });
+      },
+
+      selectTrait: (traitId) => {
+        const { meta } = get();
+        const { character } = meta;
+        const trait = getTrait(traitId);
+        if (character.traitPoints <= 0) return;
+        if (character.level < trait.requiredLevel) return;
+        if (character.traitIds.includes(traitId)) return;
+
+        set({
+          meta: {
+            ...meta,
+            character: {
+              ...character,
+              traitPoints: character.traitPoints - 1,
+              traitIds: [...character.traitIds, traitId],
+            },
+          },
+        });
       },
     }),
     {
       name: 'tof-meta-v3',
       storage: createJSONStorage(createIdbStorage),
+      merge: (persistedState, currentState) => {
+        const persistedMeta = (persistedState as { meta?: Partial<PlayerMeta> } | undefined)?.meta;
+        if (!persistedMeta) return currentState;
+        return {
+          ...currentState,
+          meta: {
+            ...currentState.meta,
+            ...persistedMeta,
+            character: persistedMeta.character ?? createInitialCharacter(),
+          },
+        };
+      },
     },
   ),
 );

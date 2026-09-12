@@ -17,4 +17,6 @@ export type IconName =
   | 'scroll'
   | 'book'
   | 'search'
-  | 'help';
+  | 'help'
+  | 'user'
+  | 'star';

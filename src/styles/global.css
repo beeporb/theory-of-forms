@@ -936,6 +936,191 @@ button {
   font-size: 0.75rem;
 }
 
+/* Character view */
+.character-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.character-header__level {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.character-header__level .icon {
+  color: var(--accent);
+}
+
+.character-view__points {
+  margin-left: 8px;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.progress-track {
+  background: var(--border);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: var(--accent);
+  height: 100%;
+}
+
+.stat-row-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.stat-row__icon {
+  font-size: 1.2rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.stat-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-row__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.stat-row__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.stat-row__value {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.stat-row__description {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.stat-row__allocate {
+  background: var(--accent);
+  color: #1a1400;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+.trait-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.trait-card {
+  background: #14141a;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trait-card--owned {
+  border-color: var(--good);
+}
+
+.trait-card--locked {
+  opacity: 0.6;
+}
+
+.trait-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trait-card__icon {
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.trait-card__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.trait-card__badge {
+  margin-left: auto;
+  color: var(--good);
+  border-color: var(--good);
+}
+
+.trait-card__description {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.trait-card__take {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-height: 36px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.trait-card__take:disabled {
+  border-color: var(--border);
+  color: var(--text-dim);
+  cursor: default;
+}
+
+@media (min-width: 768px) {
+  .character-view {
+    max-width: 720px;
+  }
+
+  .trait-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
 /* Death screen */
 .death-screen h1 {
   color: var(--danger);
