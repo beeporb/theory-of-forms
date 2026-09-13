@@ -3,6 +3,19 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.8.0] - 2026-09-13
+
+### Added
+
+- Ten new mid-run events (up from two), covering a much wider spread of
+  good, bad, and weird: a vending machine worth risking a hit, something
+  asleep in a corner best left alone, a leaning shelf, a fridge that's
+  stayed cold too long, a wall of shaky handwriting, an unattended
+  toolbox, a radio catching something almost like a voice, a choice
+  between two unmarked doors, a careful-vs-quick search with no purely
+  safe option, and food that might be a trap. Every event still leaves at
+  least one choice completely risk-free.
+
 ## [1.7.0] - 2026-09-13
 
 ### Added
