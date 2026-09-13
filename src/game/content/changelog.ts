@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.5.0',
+    date: '2026-09-13',
+    changes: [
+      'Pocket dimension threat levels: every run now rolls one of five threat tiers (Safe, Low, Medium, High, Danger Zone), shown before you commit and for the rest of the run. Higher tiers mean more roaming ferals, hazards that crop up more often, and better loot quality — but healing gets scarcer (none at all in a Danger Zone) and extraction gets harder, with a Danger Zone run forcing a single, far-flung extraction point and more moves required to reach it. The same dimension can come up calm one run and brutal the next.',
+      'Past run history now records and shows which threat level a run was.',
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-09-13',
     changes: [

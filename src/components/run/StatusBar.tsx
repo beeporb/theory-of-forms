@@ -1,8 +1,11 @@
+import type { ThreatLevel } from '../../game/types/threat';
+import { THREAT_LEVEL_LABEL } from '../../game/types/threat';
 import { Icon } from '../common/Icon';
 
 interface StatusBarProps {
   health: number;
   maxHealth: number;
+  threatLevel: ThreatLevel;
   canExtract: boolean;
   minMovesToExtract: number;
   movesMade: number;
@@ -14,6 +17,7 @@ interface StatusBarProps {
 export function StatusBar({
   health,
   maxHealth,
+  threatLevel,
   canExtract,
   minMovesToExtract,
   movesMade,
@@ -39,6 +43,7 @@ export function StatusBar({
           {health} / {maxHealth} HP
         </span>
       </div>
+      <span className={`badge badge--threat-${threatLevel} status-bar__threat`}>{THREAT_LEVEL_LABEL[threatLevel]}</span>
       <button type="button" className="status-bar__log" onClick={onOpenLog}>
         Log
       </button>

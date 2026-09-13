@@ -286,4 +286,51 @@ describe('generateDimension', () => {
     }
     expect(sawHazard).toBe(true);
   });
+
+  it('defaults to the low threat tier, reproducing a dimension’s own ranges exactly', () => {
+    for (let i = 0; i < 30; i++) {
+      const instance = generateDimension(definition, undefined, [], 'low');
+      const defaultInstance = generateDimension(definition);
+      expect(instance.actors.length).toBeGreaterThanOrEqual(definition.actorCountRange[0]);
+      expect(instance.actors.length).toBeLessThanOrEqual(definition.actorCountRange[1]);
+      expect(defaultInstance.minMovesToExtract).toBeGreaterThanOrEqual(definition.minMovesToExtractRange[0]);
+      expect(defaultInstance.minMovesToExtract).toBeLessThanOrEqual(definition.minMovesToExtractRange[1]);
+    }
+  });
+
+  it('spawns more actors and demands more moves to extract at higher threat levels', () => {
+    let safeActorSum = 0;
+    let dangerActorSum = 0;
+    let safeMovesSum = 0;
+    let dangerMovesSum = 0;
+    const samples = 40;
+    for (let i = 0; i < samples; i++) {
+      const safeInstance = generateDimension(definition, undefined, [], 'safe');
+      const dangerInstance = generateDimension(definition, undefined, [], 'danger');
+      safeActorSum += safeInstance.actors.length;
+      dangerActorSum += dangerInstance.actors.length;
+      safeMovesSum += safeInstance.minMovesToExtract;
+      dangerMovesSum += dangerInstance.minMovesToExtract;
+    }
+    expect(dangerActorSum / samples).toBeGreaterThan(safeActorSum / samples);
+    expect(dangerMovesSum / samples).toBeGreaterThan(safeMovesSum / samples);
+  });
+
+  it('forces a single extraction point at the danger threat level', () => {
+    for (let i = 0; i < 20; i++) {
+      const instance = generateDimension(definition, undefined, [], 'danger');
+      expect(instance.extractionPoints).toHaveLength(1);
+    }
+  });
+
+  it('never rolls a positive outcome at the danger threat level (no healing available)', () => {
+    for (let i = 0; i < 20; i++) {
+      const instance = generateDimension(definition, undefined, [], 'danger');
+      for (const row of instance.cells) {
+        for (const cell of row) {
+          expect(cell.outcome?.kind).not.toBe('positive');
+        }
+      }
+    }
+  });
 });

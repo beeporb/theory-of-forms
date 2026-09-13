@@ -3,6 +3,20 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-09-13
+
+### Added
+
+- Pocket dimension threat levels: every run now rolls one of five threat
+  tiers (Safe, Low, Medium, High, Danger Zone), shown before you commit
+  and for the rest of the run. Higher tiers mean more roaming ferals,
+  hazards that crop up more often, and better loot quality — but healing
+  gets scarcer (none at all in a Danger Zone) and extraction gets harder,
+  with a Danger Zone run forcing a single, far-flung extraction point and
+  more moves required to reach it. The same dimension can come up calm
+  one run and brutal the next.
+- Past run history now records and shows which threat level a run was.
+
 ## [1.4.0] - 2026-09-13
 
 ### Added

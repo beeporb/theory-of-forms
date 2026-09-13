@@ -6,6 +6,7 @@ import type { FoundGear, GearItem, GearSlot } from './gear';
 import type { RunLogEntry } from './runLog';
 import type { PastRunRecord } from './pastRun';
 import type { CharacterProgress } from './character';
+import type { ThreatLevel } from './threat';
 
 /** Persisted forever: meta-progression that survives across runs. */
 export interface PlayerMeta {
@@ -31,6 +32,8 @@ export interface PlayerMeta {
 /** Ephemeral: exists only for the duration of a single pocket-dimension run. */
 export interface RunState {
   dimension: PocketDimensionInstance;
+  /** Rolled once when the run starts — re-rolled fresh each time, independent of past runs on this dimension. */
+  threatLevel: ThreatLevel;
   health: number;
   maxHealth: number;
   loadout: GearItem[];

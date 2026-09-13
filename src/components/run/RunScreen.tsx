@@ -51,6 +51,7 @@ export function RunScreen({ run }: RunScreenProps) {
       <StatusBar
         health={run.health}
         maxHealth={run.maxHealth}
+        threatLevel={run.threatLevel}
         canExtract={canExtract(run)}
         minMovesToExtract={run.dimension.minMovesToExtract}
         movesMade={run.moveCount}
