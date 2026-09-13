@@ -3,6 +3,15 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.6.0] - 2026-09-13
+
+### Added
+
+- Roaming actors now have a chance to pick up an unclaimed loot or gear
+  cell as they wander past it, leaving it opened and empty by the time
+  you get there. Dawdling — or backtracking through ground actors have
+  had time to cross — now has a real cost.
+
 ## [1.5.0] - 2026-09-13
 
 ### Added

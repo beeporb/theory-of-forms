@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.6.0',
+    date: '2026-09-13',
+    changes: [
+      'Roaming actors now have a chance to pick up an unclaimed loot or gear cell as they wander past it, leaving it opened and empty by the time you get there. Dawdling — or backtracking through ground actors have had time to cross — now has a real cost.',
+    ],
+  },
+  {
     version: '1.5.0',
     date: '2026-09-13',
     changes: [

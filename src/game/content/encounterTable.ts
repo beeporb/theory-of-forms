@@ -41,3 +41,16 @@ export const EMPTY_MESSAGES = [
   'Just an empty crate.',
   'A dead end. Nothing worth taking.',
 ];
+
+// Chance a roaming actor grabs an unopened loot/gear cell it steps onto
+// while wandering, rolled independently per actor per move — see
+// advanceActors. Rewards not dawdling: ground you haven't covered yet stays
+// untouched, but a cell you're slow to reach might not be there when you get
+// there.
+export const ACTOR_ITEM_PICKUP_CHANCE = 0.2;
+
+export const ACTOR_PICKUP_MESSAGES = [
+  'Empty. Something got here first.',
+  'Whatever this held is already gone.',
+  "Picked clean — you weren't the first through here.",
+];

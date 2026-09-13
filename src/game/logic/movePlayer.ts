@@ -37,8 +37,17 @@ export function movePlayer(run: RunState, x: number, y: number): MovePlayerResul
 
   // The rest of the board takes its turn too, unless the move above already ended the run.
   if (nextRun.status === 'active') {
-    const { actors, encounteredInstanceId } = advanceActors(nextRun.dimension.cells, nextRun.dimension.actors, position);
-    nextRun = { ...nextRun, dimension: { ...nextRun.dimension, actors } };
+    const { actors, cells, encounteredInstanceId, pickedUpAt } = advanceActors(
+      nextRun.dimension.cells,
+      nextRun.dimension.actors,
+      position,
+    );
+    const pickupLog = pickedUpAt.map((p) => ({ x: p.x, y: p.y, outcome: cells[p.y][p.x].outcome! }));
+    nextRun = {
+      ...nextRun,
+      dimension: { ...nextRun.dimension, cells, actors },
+      log: [...nextRun.log, ...pickupLog],
+    };
     if (!encounteredActor && encounteredInstanceId) {
       encounteredActor = actors.find((a) => a.instanceId === encounteredInstanceId) ?? null;
     }
