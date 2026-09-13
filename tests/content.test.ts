@@ -36,6 +36,16 @@ describe('content integrity', () => {
     }
   });
 
+  it('gives every dimension at least one item form found nowhere else (#80)', () => {
+    for (const dimension of DIMENSIONS) {
+      const others = DIMENSIONS.filter((d) => d.id !== dimension.id);
+      const exclusive = dimension.itemPoolFormIds.filter(
+        (formId) => !others.some((d) => d.itemPoolFormIds.includes(formId)),
+      );
+      expect(exclusive.length).toBeGreaterThan(0);
+    }
+  });
+
   it('resolves every dimension actor pool entry to a real actor definition', () => {
     for (const dimension of DIMENSIONS) {
       for (const actorId of dimension.actorPool) {

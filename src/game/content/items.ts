@@ -127,6 +127,51 @@ export const ITEM_FORMS: ItemForm[] = [
     icon: 'key',
     flavorText: "Doesn't fit any lock still standing in this place.",
   },
+  // The following forms are each exclusive to a single pocket dimension's
+  // itemPoolFormIds (see dimensions.ts) — see tests/content.test.ts's
+  // "at least one exclusive item form" check.
+  {
+    id: 'forklift-fork',
+    name: 'Forklift Fork',
+    setId: 'mining-equipment',
+    icon: 'wrench',
+    flavorText: 'Snapped clean off the machine. The tine is still sharp enough to worry about.',
+  },
+  {
+    id: 'inventory-clipboard',
+    name: 'Inventory Clipboard',
+    setId: 'office-relics',
+    icon: 'scroll',
+    flavorText: "The tally sheet's rain-warped, but the numbers never added up anyway.",
+  },
+  {
+    id: 'carbon-copy-ledger',
+    name: 'Carbon-Copy Ledger',
+    setId: 'office-relics',
+    icon: 'book',
+    flavorText: 'Every entry duplicated in fading purple ink. Nobody left to read either copy.',
+  },
+  {
+    id: 'engraved-cufflink',
+    name: 'Engraved Cufflink',
+    setId: 'personal-effects',
+    icon: 'star',
+    flavorText: "Just the one. Whoever wore its pair isn't coming back for it.",
+  },
+  {
+    id: 'seam-crystal',
+    name: 'Seam Crystal',
+    setId: 'minerals',
+    icon: 'diamond',
+    flavorText: "Grows only where the rock's been split just right. Hums faintly if held too long.",
+  },
+  {
+    id: 'drill-bit-core',
+    name: 'Drill Bit Core',
+    setId: 'mining-equipment',
+    icon: 'cog',
+    flavorText: "Chewed down to a nub by rock that shouldn't have been this hard.",
+  },
 ];
 
 export function getItemForm(formId: string): ItemForm {

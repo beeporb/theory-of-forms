@@ -3,6 +3,15 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.7.0] - 2026-09-13
+
+### Added
+
+- Six new items, two exclusive to each pocket dimension: Forklift Fork and
+  Inventory Clipboard only turn up in The Old Warehouse, Carbon-Copy
+  Ledger and Engraved Cufflink only in The Records Office, and Seam
+  Crystal and Drill Bit Core only in The Deep Vein.
+
 ## [1.6.0] - 2026-09-13
 
 ### Added
