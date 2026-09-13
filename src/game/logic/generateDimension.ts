@@ -52,7 +52,7 @@ function spawnActors(
 function biasedPick<T>(order: readonly T[], picked: T, bias: number): T {
   if (bias === 0) return picked;
   const index = order.indexOf(picked);
-  const biasedIndex = Math.min(order.length - 1, Math.max(0, index + bias));
+  const biasedIndex = Math.min(order.length - 1, Math.max(0, Math.round(index + bias)));
   return order[biasedIndex];
 }
 

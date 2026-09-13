@@ -1,5 +1,6 @@
 import type { GearSlot } from '../../game/types/gear';
 import { getGear, getGearForSlot } from '../../game/content/gear';
+import { describeGearEffect } from '../../game/logic/gearStats';
 import { useMetaStore } from '../../state/metaStore';
 import { Icon } from '../common/Icon';
 import { ItemCard } from './ItemCard';
@@ -45,6 +46,7 @@ export function LoadoutManager() {
                       flavorText={gear.flavorText}
                       weirdness={gear.rarity}
                       condition={meta.gearCondition[gear.id] ?? 'sound'}
+                      statLines={describeGearEffect(gear.effect)}
                       selected={gear.id === equippedId}
                       onClick={gear.id === equippedId ? undefined : () => setEquipped(slot, gear.id)}
                     />

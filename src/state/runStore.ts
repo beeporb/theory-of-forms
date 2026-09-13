@@ -56,10 +56,14 @@ export const useRunStore = create<RunStore>()(
 
       startRun: (dimensionId) => {
         const definition = getDimensionDefinition(dimensionId);
-        const modifiers = computeRunModifiers(useMetaStore.getState().meta.character);
-        const maxHealth = STARTING_HEALTH + modifiers.maxHealthBonus;
         const equippedGearIds = useMetaStore.getState().meta.equippedGearIds;
         const loadout = buildLoadoutFromEquipped(equippedGearIds);
+        const modifiers = computeRunModifiers(
+          useMetaStore.getState().meta.character,
+          loadout,
+          useMetaStore.getState().meta.gearCondition,
+        );
+        const maxHealth = STARTING_HEALTH + modifiers.maxHealthBonus;
         // Keys only unlock anything while equipped (brought into the run), so
         // event key checks use this same equipped set, not everything owned.
         const dimension = generateDimension(definition, modifiers, loadout.map((g) => g.id));

@@ -14,6 +14,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'sword',
     rarity: 'mundane',
     flavorText: 'Dented, dull, and somehow still swinging. Better than fists.',
+    effect: { hazardDamageMultiplierBonus: -0.05 },
   },
   {
     id: 'bent-pipe',
@@ -22,6 +23,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'sword',
     rarity: 'odd',
     flavorText: 'Pulled from somewhere it shouldn’t have fit. Rings faintly when it connects.',
+    effect: { hazardDamageMultiplierBonus: -0.08 },
   },
   {
     id: 'scavenged-cleaver',
@@ -30,6 +32,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'sword',
     rarity: 'uncanny',
     flavorText: 'Somebody’s kitchen knife, sharpened past recognition. Still remembers what it was for.',
+    effect: { hazardDamageMultiplierBonus: -0.12 },
   },
   {
     id: 'arc-welder-torch',
@@ -38,6 +41,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'flame',
     rarity: 'unstable',
     flavorText: 'The tank hisses when you don’t expect it to. Cuts through more than metal.',
+    effect: { hazardDamageMultiplierBonus: -0.18 },
   },
   {
     id: 'patched-jacket',
@@ -46,6 +50,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'shield',
     rarity: 'mundane',
     flavorText: 'Held together by tape and stubbornness. Keeps most of the cold out.',
+    effect: { hazardStealChanceMultiplierBonus: -0.05 },
   },
   {
     id: 'work-overalls',
@@ -54,6 +59,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'shield',
     rarity: 'odd',
     flavorText: 'The stains never wash out, and the pockets are somehow bigger inside than out.',
+    effect: { hazardStealChanceMultiplierBonus: -0.08, maxHealthBonus: 5 },
   },
   {
     id: 'riot-vest',
@@ -62,6 +68,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'shield',
     rarity: 'uncanny',
     flavorText: 'Government-issue, decades expired. The plates still stop most of what matters.',
+    effect: { hazardStealChanceMultiplierBonus: -0.12, maxHealthBonus: 10 },
   },
   {
     id: 'lead-lined-coat',
@@ -70,6 +77,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'shield',
     rarity: 'impossible',
     flavorText: 'Heavier than it should be, and the lining hums faintly if you stand still too long.',
+    effect: { hazardStealChanceMultiplierBonus: -0.2, maxHealthBonus: 15 },
   },
   {
     id: 'hand-lamp',
@@ -78,6 +86,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'lamp',
     rarity: 'mundane',
     flavorText: 'Dim, reliable, and always exactly as bright as you need it to be.',
+    effect: { lootWeightBonus: 3 },
   },
   {
     id: 'pocket-multitool',
@@ -86,6 +95,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'wrench',
     rarity: 'odd',
     flavorText: 'Has more attachments than it should. One of them doesn’t have a name.',
+    effect: { lootWeightBonus: 5, positiveHealMultiplierBonus: 0.05 },
   },
   {
     id: 'geiger-counter',
@@ -94,6 +104,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'gauge',
     rarity: 'uncanny',
     flavorText: 'Clicks more than it should, even in rooms that seem perfectly normal.',
+    effect: { lootWeightBonus: 6, weirdnessTierBias: 1 },
   },
   {
     id: 'signal-booster',
@@ -102,6 +113,7 @@ export const GEAR_CATALOG: GearItem[] = [
     icon: 'radio',
     rarity: 'unstable',
     flavorText: 'Picks up broadcasts from stations that stopped transmitting years ago.',
+    effect: { lootWeightBonus: 10, positiveHealMultiplierBonus: 0.1 },
   },
   {
     id: 'warehouse-keycard',

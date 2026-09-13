@@ -14,6 +14,7 @@ interface ItemDetailModalProps {
   condition?: Condition;
   count?: number;
   metaLabel?: string;
+  statLines?: string[];
   breakDownLabel?: string;
   onBreakDown?: () => void;
   onDismiss: () => void;
@@ -27,6 +28,7 @@ export function ItemDetailModal({
   condition,
   count,
   metaLabel,
+  statLines,
   breakDownLabel,
   onBreakDown,
   onDismiss,
@@ -50,6 +52,13 @@ export function ItemDetailModal({
           <span className="badge">{WEIRDNESS_LABEL[weirdness]}</span>
         </span>
         <p className="item-card__flavor item-card__flavor--large">{flavorText}</p>
+        {statLines && statLines.length > 0 && (
+          <ul className="item-card__stats item-card__stats--large">
+            {statLines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        )}
         <div className="item-detail-modal__actions">
           {onBreakDown && (
             <button type="button" className="item-detail-modal__breakdown" onClick={onBreakDown}>

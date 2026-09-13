@@ -1,4 +1,6 @@
 import type { CharacterProgress } from '../types/character';
+import type { GearItem } from '../types/gear';
+import type { Condition } from '../types/condition';
 import { getTrait } from '../content/traits';
 import { tagSkillLevel } from './leveling';
 
@@ -23,7 +25,19 @@ export const BASE_RUN_MODIFIERS: RunModifiers = {
   maxHealthBonus: 0,
 };
 
-export function computeRunModifiers(character: CharacterProgress): RunModifiers {
+/** A beat-up piece of gear delivers less of its effect than a pristine one. */
+export const GEAR_EFFECT_CONDITION_MULTIPLIER: Record<Condition, number> = {
+  wrecked: 0.5,
+  worn: 0.75,
+  sound: 1,
+  pristine: 1.25,
+};
+
+export function computeRunModifiers(
+  character: CharacterProgress,
+  loadout: GearItem[] = [],
+  gearCondition: Record<string, Condition> = {},
+): RunModifiers {
   const modifiers = { ...BASE_RUN_MODIFIERS };
   const { grit, perception, luck, finesse } = character.attributes;
 
@@ -51,6 +65,18 @@ export function computeRunModifiers(character: CharacterProgress): RunModifiers 
     modifiers.hazardStealChanceMultiplier *= 1 + (effect.hazardStealChanceMultiplierBonus ?? 0);
     modifiers.positiveHealMultiplier *= 1 + (effect.positiveHealMultiplierBonus ?? 0);
     modifiers.maxHealthBonus += effect.maxHealthBonus ?? 0;
+  }
+
+  for (const gear of loadout) {
+    if (!gear.effect) continue;
+    const scale = GEAR_EFFECT_CONDITION_MULTIPLIER[gearCondition[gear.id] ?? 'sound'];
+    modifiers.lootWeightBonus += (gear.effect.lootWeightBonus ?? 0) * scale;
+    modifiers.conditionTierBias += (gear.effect.conditionTierBias ?? 0) * scale;
+    modifiers.weirdnessTierBias += (gear.effect.weirdnessTierBias ?? 0) * scale;
+    modifiers.hazardDamageMultiplier *= 1 + (gear.effect.hazardDamageMultiplierBonus ?? 0) * scale;
+    modifiers.hazardStealChanceMultiplier *= 1 + (gear.effect.hazardStealChanceMultiplierBonus ?? 0) * scale;
+    modifiers.positiveHealMultiplier *= 1 + (gear.effect.positiveHealMultiplierBonus ?? 0) * scale;
+    modifiers.maxHealthBonus += (gear.effect.maxHealthBonus ?? 0) * scale;
   }
 
   modifiers.hazardDamageMultiplier = Math.max(0.3, modifiers.hazardDamageMultiplier);
