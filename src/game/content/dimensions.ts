@@ -25,6 +25,9 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'leather-wallet',
       'reading-glasses',
       'brass-key',
+      // Exclusive to the Warehouse — see tests/content.test.ts.
+      'forklift-fork',
+      'inventory-clipboard',
     ],
     gearPool: ['bent-pipe', 'work-overalls', 'pocket-multitool', 'warehouse-keycard'],
     // Floor plan is regenerated (size, shape, entry, extraction points) each time the warehouse is entered.
@@ -50,6 +53,9 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'leather-wallet',
       'reading-glasses',
       'brass-key',
+      // Exclusive to the Records Office — see tests/content.test.ts.
+      'carbon-copy-ledger',
+      'engraved-cufflink',
     ],
     gearPool: ['pocket-multitool', 'riot-vest', 'signal-booster', 'override-chip'],
     // A denser maze of cubicles and filing rooms rather than open warehouse floor.
@@ -78,6 +84,9 @@ export const DIMENSIONS: PocketDimensionDefinition[] = [
       'ore-cart-wheel',
       'pressure-gauge',
       'blasting-fuse',
+      // Exclusive to the Deep Vein — see tests/content.test.ts.
+      'seam-crystal',
+      'drill-bit-core',
     ],
     gearPool: ['scavenged-cleaver', 'arc-welder-torch', 'geiger-counter', 'lead-lined-coat'],
     // Bigger and sparser than the warehouse — a real mine, not a storeroom.

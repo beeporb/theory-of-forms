@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.7.0',
+    date: '2026-09-13',
+    changes: [
+      'Six new items, two exclusive to each pocket dimension: Forklift Fork and Inventory Clipboard only turn up in The Old Warehouse, Carbon-Copy Ledger and Engraved Cufflink only in The Records Office, and Seam Crystal and Drill Bit Core only in The Deep Vein.',
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-09-13',
     changes: [
