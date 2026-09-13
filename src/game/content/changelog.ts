@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.4.0',
+    date: '2026-09-13',
+    changes: [
+      'Equipment now has real mechanical effects instead of being purely cosmetic/collectible: weapons cut incoming hazard damage, armor cuts the chance a hazard steals an item and adds max health, and tools skew loot odds, healing, and (for the Geiger Counter) how weird what you find gets. A piece’s effect scales with its current condition, so a wrecked weapon or tool pulls noticeably less weight than a pristine one.',
+      'Gear cards and their detail view now show what a piece actually does.',
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-09-12',
     changes: [

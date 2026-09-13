@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { GearItem } from '../../game/types/gear';
 import type { Condition } from '../../game/types/condition';
+import { describeGearEffect } from '../../game/logic/gearStats';
 import { ItemCard } from './ItemCard';
 import { ItemDetailModal } from './ItemDetailModal';
 
@@ -27,6 +28,7 @@ export function LoadoutPanel({ loadout, gearCondition }: LoadoutPanelProps) {
             flavorText={item.flavorText}
             weirdness={item.rarity}
             condition={gearCondition?.[item.id]}
+            statLines={describeGearEffect(item.effect)}
             onClick={() => setOpenId(item.id)}
           />
         ))}
@@ -39,6 +41,7 @@ export function LoadoutPanel({ loadout, gearCondition }: LoadoutPanelProps) {
           weirdness={openGear.rarity}
           condition={gearCondition?.[openGear.id]}
           metaLabel={SLOT_LABEL[openGear.slot]}
+          statLines={describeGearEffect(openGear.effect)}
           onDismiss={() => setOpenId(null)}
         />
       )}

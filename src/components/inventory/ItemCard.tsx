@@ -14,6 +14,7 @@ interface ItemCardProps {
   condition?: Condition;
   count?: number;
   selected?: boolean;
+  statLines?: string[];
   onClick?: () => void;
 }
 
@@ -25,6 +26,7 @@ export function ItemCard({
   condition,
   count,
   selected,
+  statLines,
   onClick,
 }: ItemCardProps) {
   const filter = condition ? itemQualityFilter(condition, weirdness) : rarityFilter(weirdness);
@@ -47,6 +49,13 @@ export function ItemCard({
         <span className="badge">{WEIRDNESS_LABEL[weirdness]}</span>
       </span>
       <span className="item-card__flavor">{flavorText}</span>
+      {statLines && statLines.length > 0 && (
+        <ul className="item-card__stats">
+          {statLines.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      )}
     </button>
   );
 }

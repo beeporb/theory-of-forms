@@ -1,4 +1,5 @@
 import type { IconName } from './icon';
+import type { StatEffect } from './effect';
 
 /** Latent stats that shape a run without the player directly controlling them. */
 export type AttributeId = 'grit' | 'perception' | 'luck' | 'finesse';
@@ -22,15 +23,7 @@ export interface TagSkillDefinition {
   icon: IconName;
 }
 
-export interface TraitEffect {
-  lootWeightBonus?: number;
-  conditionTierBias?: number;
-  weirdnessTierBias?: number;
-  hazardDamageMultiplierBonus?: number;
-  hazardStealChanceMultiplierBonus?: number;
-  positiveHealMultiplierBonus?: number;
-  maxHealthBonus?: number;
-}
+export type TraitEffect = StatEffect;
 
 export interface TraitDefinition {
   id: string;
