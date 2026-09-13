@@ -690,6 +690,18 @@ button {
   margin: 0;
 }
 
+.run-launcher__confirm-threat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.run-launcher__confirm-threat-description {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
 .run-launcher__nav {
   display: flex;
   gap: 10px;
@@ -761,6 +773,11 @@ button {
 .destination-card__meta {
   color: var(--text-dim);
   font-size: 0.8rem;
+}
+
+.destination-card__threat {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 @media (min-width: 768px) {
@@ -856,6 +873,26 @@ button {
 .badge--condition-pristine {
   color: var(--good);
   border-color: var(--good);
+}
+
+.badge--threat-safe {
+  color: var(--good);
+  border-color: var(--good);
+}
+
+.badge--threat-medium {
+  color: #d9a34a;
+  border-color: #d9a34a;
+}
+
+.badge--threat-high {
+  color: #e0793c;
+  border-color: #e0793c;
+}
+
+.badge--threat-danger {
+  color: var(--danger);
+  border-color: var(--danger);
 }
 
 .item-list__count {
@@ -1464,6 +1501,10 @@ button {
 .status-bar__health-label {
   font-size: 0.75rem;
   color: var(--text-dim);
+}
+
+.status-bar__threat {
+  flex-shrink: 0;
 }
 
 .status-bar__extract {

@@ -1,4 +1,5 @@
 import type { PastRunRecord } from '../../game/types/pastRun';
+import { THREAT_LEVEL_LABEL } from '../../game/types/threat';
 import { getDimensionDefinition } from '../../game/content/dimensions';
 import { RUN_OUTCOME_LABEL } from '../../game/logic/pastRun';
 import { InventoryPanel } from '../inventory/InventoryPanel';
@@ -21,6 +22,11 @@ export function PastRunDetailModal({ run, onDismiss }: PastRunDetailModalProps) 
         <p className={`run-history-card__outcome run-history-card__outcome--${run.outcome}`}>
           {RUN_OUTCOME_LABEL[run.outcome]}
         </p>
+        {run.threatLevel && (
+          <p>
+            <span className={`badge badge--threat-${run.threatLevel}`}>{THREAT_LEVEL_LABEL[run.threatLevel]}</span>
+          </p>
+        )}
 
         <LoadoutPanel loadout={run.loadout} />
         {!extracted && run.loadout.length > 0 && (

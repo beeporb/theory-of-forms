@@ -14,6 +14,8 @@ import { applyLeafOutcome } from '../game/logic/applyOutcome';
 import { canExtract } from '../game/logic/extraction';
 import { canDonate } from '../game/logic/donation';
 import { computeRunModifiers } from '../game/logic/characterEffects';
+import { rollThreatLevel } from '../game/logic/threat';
+import type { ThreatLevel } from '../game/types/threat';
 import { createIdbStorage } from '../persistence/storage';
 import { useMetaStore } from './metaStore';
 
@@ -26,7 +28,7 @@ export interface MoveResult {
 
 interface RunStore {
   run: RunState | null;
-  startRun: (dimensionId: string) => void;
+  startRun: (dimensionId: string, threatLevel?: ThreatLevel) => void;
   moveTo: (x: number, y: number) => MoveResult;
   resolveEventChoice: (outcome: LeafOutcome) => void;
   donateToCollector: (collectorId: string, instanceId: string) => void;
@@ -46,6 +48,7 @@ function toPastRunRecord(run: RunState, outcome: RunOutcome): PastRunRecord {
     loadout: run.loadout,
     items: run.inventory,
     log: run.log,
+    threatLevel: run.threatLevel,
   };
 }
 
@@ -54,7 +57,7 @@ export const useRunStore = create<RunStore>()(
     (set, get) => ({
       run: null,
 
-      startRun: (dimensionId) => {
+      startRun: (dimensionId, threatLevel = rollThreatLevel()) => {
         const definition = getDimensionDefinition(dimensionId);
         const equippedGearIds = useMetaStore.getState().meta.equippedGearIds;
         const loadout = buildLoadoutFromEquipped(equippedGearIds);
@@ -66,9 +69,10 @@ export const useRunStore = create<RunStore>()(
         const maxHealth = STARTING_HEALTH + modifiers.maxHealthBonus;
         // Keys only unlock anything while equipped (brought into the run), so
         // event key checks use this same equipped set, not everything owned.
-        const dimension = generateDimension(definition, modifiers, loadout.map((g) => g.id));
+        const dimension = generateDimension(definition, modifiers, loadout.map((g) => g.id), threatLevel);
         const baseRun: RunState = {
           dimension,
+          threatLevel,
           health: maxHealth,
           maxHealth,
           loadout,

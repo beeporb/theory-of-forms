@@ -1,6 +1,7 @@
 import type { ItemInstance } from './item';
 import type { GearItem } from './gear';
 import type { RunLogEntry } from './runLog';
+import type { ThreatLevel } from './threat';
 
 export type RunOutcome = 'extracted' | 'died' | 'abandoned';
 
@@ -13,4 +14,6 @@ export interface PastRunRecord {
   loadout: GearItem[];
   items: ItemInstance[];
   log: RunLogEntry[];
+  /** Absent on runs recorded before threat levels shipped. */
+  threatLevel?: ThreatLevel;
 }

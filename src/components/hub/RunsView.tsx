@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { PastRunRecord } from '../../game/types/pastRun';
+import { THREAT_LEVEL_LABEL } from '../../game/types/threat';
 import { getDimensionDefinition } from '../../game/content/dimensions';
 import { RUN_OUTCOME_LABEL } from '../../game/logic/pastRun';
 import { useMetaStore } from '../../state/metaStore';
@@ -30,6 +31,9 @@ export function RunsView() {
                   <span className={`run-history-card__outcome run-history-card__outcome--${run.outcome}`}>
                     {RUN_OUTCOME_LABEL[run.outcome]}
                   </span>
+                  {run.threatLevel && (
+                    <span className={`badge badge--threat-${run.threatLevel}`}>{THREAT_LEVEL_LABEL[run.threatLevel]}</span>
+                  )}
                   <span className="run-history-card__meta">
                     {run.moveCount} moves · {run.items.length} item{run.items.length === 1 ? '' : 's'} ·{' '}
                     {new Date(run.endedAt).toLocaleString()}

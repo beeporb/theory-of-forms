@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import type { ThreatLevel } from '../../game/types/threat';
+import { THREAT_LEVEL_DESCRIPTION, THREAT_LEVEL_LABEL } from '../../game/types/threat';
 import { DIMENSIONS } from '../../game/content/dimensions';
 import { buildLoadoutFromEquipped } from '../../game/logic/loadout';
+import { rollThreatLevel } from '../../game/logic/threat';
 import { useMetaStore } from '../../state/metaStore';
 import { useRunStore } from '../../state/runStore';
 import { LoadoutManager } from '../inventory/LoadoutManager';
@@ -27,6 +30,14 @@ export function RunLauncher() {
   const selected = destinations.find((d) => d.id === selectedId) ?? null;
   const [step, setStep] = useState<Step>('destination');
   const stepIndex = STEPS.indexOf(step);
+  // Re-rolled every time a destination is (re-)picked, so the same dimension
+  // can come up calm one attempt and brutal the next — see issue #81.
+  const [threatLevel, setThreatLevel] = useState<ThreatLevel>(() => rollThreatLevel());
+
+  const selectDestination = (id: string) => {
+    setSelectedId(id);
+    setThreatLevel(rollThreatLevel());
+  };
 
   const goNext = () => setStep(STEPS[Math.min(STEPS.length - 1, stepIndex + 1)]);
   const goBack = () => setStep(STEPS[Math.max(0, stepIndex - 1)]);
@@ -47,7 +58,7 @@ export function RunLauncher() {
                   key={d.id}
                   type="button"
                   className={`destination-card${d.id === selectedId ? ' destination-card--selected' : ''}`}
-                  onClick={() => setSelectedId(d.id)}
+                  onClick={() => selectDestination(d.id)}
                 >
                   <span className="destination-card__icon">
                     <Icon name="door" />
@@ -59,6 +70,11 @@ export function RunLauncher() {
                       {formatRange(...d.minMovesToExtractRange)}+ moves to extract
                     </span>
                   </span>
+                  {d.id === selectedId && (
+                    <span className={`badge badge--threat-${threatLevel} destination-card__threat`}>
+                      {THREAT_LEVEL_LABEL[threatLevel]}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -73,6 +89,14 @@ export function RunLauncher() {
           <section className="panel">
             <h3 className="panel__title">Destination</h3>
             <p className="run-launcher__confirm-destination">{selected?.name ?? 'No destination selected'}</p>
+            {selected && (
+              <p className="run-launcher__confirm-threat">
+                <span className={`badge badge--threat-${threatLevel}`}>{THREAT_LEVEL_LABEL[threatLevel]}</span>
+                <span className="run-launcher__confirm-threat-description">
+                  {THREAT_LEVEL_DESCRIPTION[threatLevel]}
+                </span>
+              </p>
+            )}
           </section>
           <LoadoutPanel loadout={buildLoadoutFromEquipped(equippedGearIds)} gearCondition={gearCondition} />
         </>
@@ -98,7 +122,7 @@ export function RunLauncher() {
             type="button"
             className="primary-button"
             disabled={!selected}
-            onClick={() => selected && startRun(selected.id)}
+            onClick={() => selected && startRun(selected.id, threatLevel)}
           >
             {selected ? `Enter ${selected.name}` : 'Enter Dimension'}
           </button>

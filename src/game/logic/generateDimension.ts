@@ -1,6 +1,7 @@
 import type { Cell, GridPoint, PocketDimensionDefinition, PocketDimensionInstance } from '../types/grid';
 import type { LeafOutcome, Outcome } from '../types/outcome';
 import type { ActorInstance } from '../types/actor';
+import type { ThreatLevel } from '../types/threat';
 import { CONDITION_ORDER } from '../types/condition';
 import { WEIRDNESS_ORDER } from '../types/weirdness';
 import { getVersionsForForm } from '../content/versions';
@@ -23,6 +24,7 @@ import {
 import { pickOne, randomInt, weightedPick } from '../utils/rng';
 import { BASE_RUN_MODIFIERS, type RunModifiers } from './characterEffects';
 import { generateLayout, pointKey } from './generateLayout';
+import { getThreatModifiers, scaleRange, type ThreatModifiers } from './threat';
 
 function spawnActors(
   shape: boolean[][],
@@ -150,12 +152,19 @@ function rollOutcome(
   itemPoolFormIds: string[],
   gearPoolIds: string[],
   modifiers: RunModifiers,
+  threatModifiers: ThreatModifiers,
   depthFactor: number,
   carriedGearIds: string[],
 ): Outcome {
   const outcomeWeights = OUTCOME_KIND_WEIGHTS.map((entry) => {
     if (entry.value === 'loot') return { ...entry, weight: entry.weight + modifiers.lootWeightBonus };
-    if (entry.value === 'hazard') return { ...entry, weight: entry.weight + depthFactor * HAZARD_DEPTH_WEIGHT_BONUS };
+    if (entry.value === 'hazard') {
+      return {
+        ...entry,
+        weight: entry.weight + depthFactor * HAZARD_DEPTH_WEIGHT_BONUS + threatModifiers.hazardWeightBonus,
+      };
+    }
+    if (entry.value === 'positive') return { ...entry, weight: entry.weight * threatModifiers.positiveWeightMultiplier };
     return entry;
   });
   const kind = weightedPick(outcomeWeights);
@@ -173,8 +182,19 @@ export function generateDimension(
   definition: PocketDimensionDefinition,
   modifiers: RunModifiers = BASE_RUN_MODIFIERS,
   carriedGearIds: string[] = [],
+  threatLevel: ThreatLevel = 'low',
 ): PocketDimensionInstance {
-  const { shape, entry, extractionPoints, distances } = generateLayout(definition);
+  const threatModifiers = getThreatModifiers(threatLevel);
+  const effectiveModifiers: RunModifiers = {
+    ...modifiers,
+    conditionTierBias: modifiers.conditionTierBias + threatModifiers.conditionTierBias,
+    weirdnessTierBias: modifiers.weirdnessTierBias + threatModifiers.weirdnessTierBias,
+  };
+  const extractionPointCountRange = threatModifiers.extractionPointCountOverride ?? definition.extractionPointCountRange;
+  const minMovesToExtractRange = scaleRange(definition.minMovesToExtractRange, threatModifiers.minMovesMultiplier);
+  const actorCountRange = scaleRange(definition.actorCountRange, threatModifiers.actorCountMultiplier);
+
+  const { shape, entry, extractionPoints, distances } = generateLayout({ ...definition, extractionPointCountRange });
   const maxDistance = Math.max(1, ...distances.values());
 
   const cells: Cell[][] = shape.map((row, y) =>
@@ -186,14 +206,21 @@ export function generateDimension(
         exists,
         status: 'unopened',
         outcome: exists
-          ? rollOutcome(definition.itemPoolFormIds, definition.gearPool, modifiers, depthFactor, carriedGearIds)
+          ? rollOutcome(
+              definition.itemPoolFormIds,
+              definition.gearPool,
+              effectiveModifiers,
+              threatModifiers,
+              depthFactor,
+              carriedGearIds,
+            )
           : null,
       };
     }),
   );
 
-  const minMovesToExtract = randomInt(...definition.minMovesToExtractRange);
-  const actors = spawnActors(shape, entry, definition.actorPool, definition.actorCountRange);
+  const minMovesToExtract = randomInt(...minMovesToExtractRange);
+  const actors = spawnActors(shape, entry, definition.actorPool, actorCountRange);
 
   return { definitionId: definition.id, cells, entry, extractionPoints, minMovesToExtract, actors };
 }
