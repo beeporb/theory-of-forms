@@ -89,6 +89,38 @@ describe('content integrity', () => {
     }
   });
 
+  it('has a unique id per event', () => {
+    const ids = EVENTS.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('gives every event a non-empty prompt and at least two choices', () => {
+    for (const event of EVENTS) {
+      expect(event.prompt.length).toBeGreaterThan(0);
+      expect(event.choices.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('gives every event choice a non-empty label/description and at least one outcome weight', () => {
+    for (const event of EVENTS) {
+      for (const choice of event.choices) {
+        expect(choice.label.length).toBeGreaterThan(0);
+        expect(choice.description.length).toBeGreaterThan(0);
+        expect(choice.outcomeWeights.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('gives every event at least one choice with no chance of a hazard outcome', () => {
+    // Preserves the player's ability to always back out of an event risk-free.
+    for (const event of EVENTS) {
+      const hasSafeChoice = event.choices.some(
+        (c) => !c.outcomeWeights.some((w) => w.value === 'hazard' && w.weight > 0),
+      );
+      expect(hasSafeChoice).toBe(true);
+    }
+  });
+
   it('has exactly one condition weight per condition tier', () => {
     const weighted = CONDITION_WEIGHTS.map((w) => w.value).sort();
     expect(weighted).toEqual([...CONDITION_ORDER].sort());
