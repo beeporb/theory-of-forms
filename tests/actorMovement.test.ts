@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { advanceActors } from '../src/game/logic/actorMovement';
 import type { Cell } from '../src/game/types/grid';
 import type { ActorInstance } from '../src/game/types/actor';
@@ -52,5 +52,53 @@ describe('advanceActors', () => {
     expect(next).toHaveLength(2);
     expect(next.find((a) => a.instanceId === 'a1')?.position).toEqual({ x: 0, y: 1 });
     expect(next.find((a) => a.instanceId === 'a2')?.position).toEqual({ x: 0, y: 1 });
+  });
+
+  it('picks up an unopened loot cell it steps onto when the roll succeeds', () => {
+    const cells = makeCells([[true], [true]]);
+    cells[1][0].outcome = { kind: 'loot', versionId: 'v1', condition: 'sound', weirdness: 'mundane' };
+    vi.spyOn(Math, 'random').mockReturnValue(0); // always below ACTOR_ITEM_PICKUP_CHANCE, and picks the first neighbor option
+
+    const { cells: nextCells, pickedUpAt } = advanceActors(cells, [makeActor(0, 0)], { x: 5, y: 5 });
+
+    expect(pickedUpAt).toEqual([{ x: 0, y: 1 }]);
+    expect(nextCells[1][0].status).toBe('opened');
+    expect(nextCells[1][0].outcome?.kind).toBe('empty');
+
+    vi.restoreAllMocks();
+  });
+
+  it('leaves the cell alone when the pickup roll fails', () => {
+    const cells = makeCells([[true], [true]]);
+    cells[1][0].outcome = { kind: 'gear', gearId: 'rusty-crowbar', condition: 'sound' };
+    vi.spyOn(Math, 'random').mockReturnValue(0.999);
+
+    const { cells: nextCells, pickedUpAt } = advanceActors(cells, [makeActor(0, 0)], { x: 5, y: 5 });
+
+    expect(pickedUpAt).toEqual([]);
+    expect(nextCells[1][0].status).toBe('unopened');
+    expect(nextCells[1][0].outcome?.kind).toBe('gear');
+
+    vi.restoreAllMocks();
+  });
+
+  it('never touches hazard, positive, empty, or event cells', () => {
+    const cells = makeCells([[true], [true]]);
+    cells[1][0].outcome = { kind: 'hazard', damage: 10, stealsItem: false, message: 'ouch' };
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const { cells: nextCells, pickedUpAt } = advanceActors(cells, [makeActor(0, 0)], { x: 5, y: 5 });
+
+    expect(pickedUpAt).toEqual([]);
+    expect(nextCells[1][0].status).toBe('unopened');
+
+    vi.restoreAllMocks();
+  });
+
+  it('leaves the cells array untouched by reference when nothing is picked up', () => {
+    const cells = makeCells([[true], [true]]);
+    const { cells: nextCells } = advanceActors(cells, [makeActor(0, 0)], { x: 5, y: 5 });
+
+    expect(nextCells).toBe(cells);
   });
 });
