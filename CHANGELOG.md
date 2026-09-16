@@ -3,6 +3,14 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.8.1] - 2026-09-16
+
+### Fixed
+
+- The home screen's account row (avatar, username, log out) sat flush
+  against the tagline text above it with no breathing room. Added spacing
+  between them.
+
 ## [1.8.0] - 2026-09-13
 
 ### Added
