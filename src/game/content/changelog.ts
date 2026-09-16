@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.8.1',
+    date: '2026-09-16',
+    changes: [
+      "The home screen's account row (avatar, username, log out) sat flush against the tagline text above it with no breathing room. Added spacing between them.",
+    ],
+  },
+  {
     version: '1.8.0',
     date: '2026-09-13',
     changes: [
