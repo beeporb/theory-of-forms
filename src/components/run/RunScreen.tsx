@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { RunState } from '../../game/types/player';
 import type { Outcome } from '../../game/types/outcome';
 import type { ActorEncounter } from '../../game/types/actor';
@@ -33,6 +33,14 @@ export function RunScreen({ run }: RunScreenProps) {
   const [activeEncounter, setActiveEncounter] = useState<ActorEncounter | null>(null);
   const [showLog, setShowLog] = useState(false);
   const [showAbandonConfirm, setShowAbandonConfirm] = useState(false);
+
+  // RunScreen only mounts when a run actually starts (see App.tsx), so this
+  // fires exactly once per run — right as prep hands off to the live grid.
+  // Run-prep (RunLauncher) can leave the page scrolled down (e.g. from the
+  // loadout step); snap back to the top so the grid is in view. See #88.
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
 
   const handleMoveTo = (x: number, y: number) => {
     const { outcome, actorEncounter } = moveTo(x, y);

@@ -3,6 +3,14 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.8.2] - 2026-09-16
+
+### Fixed
+
+- Starting a run while scrolled down on the loadout step (or any other
+  prep step) could leave the live grid out of view once the run began.
+  The page now snaps back to the top the moment a run starts.
+
 ## [1.8.1] - 2026-09-16
 
 ### Fixed
