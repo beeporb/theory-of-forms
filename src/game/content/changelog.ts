@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 // for in-app display instead of markdown.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.9.0',
+    date: '2026-11-02',
+    changes: [
+      'Added a "Continue without logging in" option to the login screen, so you can play without a Discord account. Your progress is saved in this browser either way, and you can still log in with Discord later from the home screen.',
+    ],
+  },
+  {
     version: '1.8.1',
     date: '2026-09-16',
     changes: [
