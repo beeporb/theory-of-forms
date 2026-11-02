@@ -112,6 +112,24 @@ button {
   align-self: center;
 }
 
+.login-gate__guest {
+  align-self: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.login-gate__note {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
 /* Hub shell + navigation */
 .hub-shell {
   display: flex;

@@ -56,4 +56,6 @@ To enable it locally, create a Discord application at the
 add an OAuth2 redirect matching the URL you run the app at (e.g.
 `http://localhost:5173/`), then copy `.env.example` to `.env` and set
 `VITE_DISCORD_CLIENT_ID` to the application's client ID. Without that
-variable set, the login button logs an error instead of redirecting.
+variable set, the login button logs an error instead of redirecting. Players
+can also pick "Continue without logging in" on the login screen; progress is
+stored locally either way, so a Discord login is optional.

@@ -3,6 +3,15 @@
 All notable changes to Theory of Forms are documented here. This project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.9.0] - 2026-11-02
+
+### Added
+
+- Added a "Continue without logging in" option to the login screen, so you
+  can play without a Discord account. Your progress is saved in this
+  browser either way, and you can still log in with Discord later from the
+  home screen.
+
 ## [1.8.1] - 2026-09-16
 
 ### Fixed

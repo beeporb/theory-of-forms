@@ -11,9 +11,12 @@ import { createIdbStorage } from '../persistence/storage';
 interface AuthStore {
   discordUser: DiscordUser | null;
   accessToken: string | null;
+  /** Player chose "Continue without logging in" on the login gate. */
+  guest: boolean;
   status: 'idle' | 'authenticating' | 'error';
   loginWithDiscord: () => void;
   completeDiscordLogin: (locationHash: string) => Promise<boolean>;
+  continueAsGuest: () => void;
   logout: () => void;
 }
 
@@ -22,6 +25,7 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       discordUser: null,
       accessToken: null,
+      guest: false,
       status: 'idle',
 
       loginWithDiscord: () => {
@@ -41,7 +45,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ status: 'authenticating' });
         try {
           const discordUser = await fetchDiscordUser(fragment.accessToken);
-          set({ discordUser, accessToken: fragment.accessToken, status: 'idle' });
+          set({ discordUser, accessToken: fragment.accessToken, guest: false, status: 'idle' });
           return true;
         } catch (error) {
           console.error('Failed to complete Discord login:', error);
@@ -50,14 +54,22 @@ export const useAuthStore = create<AuthStore>()(
         }
       },
 
+      continueAsGuest: () => {
+        set({ guest: true, status: 'idle' });
+      },
+
       logout: () => {
-        set({ discordUser: null, accessToken: null, status: 'idle' });
+        set({ discordUser: null, accessToken: null, guest: false, status: 'idle' });
       },
     }),
     {
       name: 'tof-auth-v1',
       storage: createJSONStorage(createIdbStorage),
-      partialize: (state) => ({ discordUser: state.discordUser, accessToken: state.accessToken }),
+      partialize: (state) => ({
+        discordUser: state.discordUser,
+        accessToken: state.accessToken,
+        guest: state.guest,
+      }),
     },
   ),
 );

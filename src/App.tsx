@@ -10,6 +10,7 @@ export default function App() {
   const run = useRunStore((s) => s.run);
   const abandonDeadRun = useRunStore((s) => s.abandonDeadRun);
   const discordUser = useAuthStore((s) => s.discordUser);
+  const guest = useAuthStore((s) => s.guest);
   const completeDiscordLogin = useAuthStore((s) => s.completeDiscordLogin);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function App() {
     });
   }, [completeDiscordLogin]);
 
-  if (!discordUser) return <LoginGate />;
+  if (!discordUser && !guest) return <LoginGate />;
   if (!run) return <HubShell />;
   if (run.status === 'died') return <DeathScreen run={run} onReturnToHub={abandonDeadRun} />;
   return <RunScreen run={run} />;
